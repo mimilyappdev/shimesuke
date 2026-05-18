@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2E3460">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>SchedulEX（〆スケ）— 締め切りが、見える。〆スケで、守ろう。</title>
+<meta name="description" content="ラフ・修正・清書のフェーズを納期から逆算。カレンダーで全案件を一目で確認できる、クリエイターのための納期管理ツール。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Kaisei+Opti:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #F5F1EB;
+  --bg-alt:   #EDE8E0;
+  --surface:  #FFFFFF;
+  --ink:      #2A2620;
+  --muted:    #7A7468;
+  --main:     #2E3460;
+  --main-dk:  #1E2248;
+  --main-lt:  #ECEEF8;
+  --light:    #8A90CC;
+  --gold:     #C8943A;
+  --gold-lt:  #F5E8CF;
+  --border:   #DDD5C8;
+  --border-dk:#C0B8AE;
+  --white:    #FFFFFF;
+  --safe:     #3A9A88;
+  --caution:  #E3CF57;
+  --danger:   #E07820;
+  --crisis:   #C83030;
+}
+*  { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  background: var(--bg); color: var(--ink);
+  line-height: 1.7; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245,241,235,0.93);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hd-logo { font-family: 'Tilt Warp', cursive; font-size: 22px; color: var(--main); }
+.hd-kana { font-size: 11px; color: var(--muted); margin-left: 8px; }
+.btn-nav {
+  padding: 9px 24px; background: var(--main); color: var(--white);
+  border: none; border-radius: 8px;
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.18s; display: inline-block;
+}
+.btn-nav:hover { background: var(--main-dk); }
+
+/* ── HERO ── */
+.hero {
+  max-width: 1120px; margin: 0 auto;
+  padding: 104px 48px 88px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+.eyebrow {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.15em; color: var(--gold);
+  margin-bottom: 20px; text-transform: uppercase;
+}
+h1 {
+  font-family: 'Kaisei Opti', serif;
+  font-size: 52px; line-height: 1.35;
+  color: var(--main); margin-bottom: 24px;
+}
+.hero-desc { font-size: 15px; color: var(--muted); line-height: 1.95; margin-bottom: 40px; }
+.cta-group { display: flex; gap: 16px; align-items: center; }
+.btn-primary {
+  padding: 14px 34px; background: var(--main); color: var(--white);
+  border: none; border-radius: 10px;
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; display: inline-block; transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--main-dk); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,52,96,0.28); }
+.cta-note { font-size: 12px; color: var(--border-dk); }
+
+/* ── HERO MOCKUP ── */
+.mockup {
+  background: var(--white); border-radius: 16px;
+  box-shadow: 0 16px 56px rgba(46,42,38,0.13);
+  border: 1px solid var(--border); overflow: hidden;
+  transform: rotate(-1.5deg);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.mockup:hover { transform: rotate(0deg) scale(1.01); }
+.mk-hd {
+  background: var(--main); padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mk-logo { font-family: 'Tilt Warp', cursive; font-size: 15px; color: white; }
+.mk-kana { font-size: 9px; color: rgba(255,255,255,0.4); }
+.mk-gold { height: 2px; background: linear-gradient(90deg,#8A90CC,#B0B6E8,#8A90CC); }
+.mk-body { display: flex; flex-direction: column; background: #F5F1EB; }
+
+/* mini calendar */
+.mk-cal {
+  padding: 10px 10px 6px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.mk-cal-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.mk-cal-month { font-family: 'Tilt Warp', cursive; font-size: 10px; color: var(--main); }
+.mk-dow-row { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; margin-bottom: 2px; }
+.mk-dow { font-size: 7px; text-align: center; color: var(--muted); font-weight: 700; }
+.mk-dow.s { color: #C05050; }
+.mk-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; }
+.mk-cell {
+  min-height: 22px; border-radius: 4px;
+  display: flex; flex-direction: column;
+  align-items: center; padding-top: 2px; gap: 1px;
+}
+.mk-cell:hover { background: #EEF0FA; }
+.mk-cell.today .mk-day { background: var(--main); color: white; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
+.mk-day { font-size: 8px; color: var(--ink); }
+.mk-cell.s .mk-day { color: #C05050; }
+.mk-cell.dm .mk-day { color: var(--border-dk); }
+.mk-cell.dl-a .mk-day { border: 1.5px solid #3E4880; color: #3E4880; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.mk-cell.dl-b .mk-day { border: 1.5px solid #3A9A88; color: #3A9A88; border-radius: 50%; width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.mk-bars { display: flex; flex-direction: column; gap: 1px; width: 100%; padding: 0 1px; }
+.mk-bar { height: 2px; border-radius: 1px; }
+
+/* mini order cards */
+.mk-orders { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.mk-card {
+  border-radius: 7px; padding: 7px 34px 7px 9px;
+  display: flex; flex-direction: column; gap: 3px;
+  position: relative; box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.mk-card-tab {
+  position: absolute; right: -3px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 36px; border-radius: 6px;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  line-height: 1.1;
+}
+.tab-a { font-size: 5px; color: rgba(255,255,255,0.8); font-weight: 700; }
+.tab-n { font-size: 12px; color: white; font-weight: 700; }
+.tab-d { font-size: 5px; color: rgba(255,255,255,0.8); font-weight: 700; }
+.tab-n.dk { color: #3A3000; }
+.tab-a.dk, .tab-d.dk { color: rgba(60,50,0,0.65); }
+.mk-card-name { font-size: 8px; font-weight: 700; color: var(--ink); }
+.mk-card-type { font-size: 7px; color: var(--muted); }
+.mk-card-dl { font-size: 7px; font-weight: 700; }
+.mk-phase-bar { display: flex; gap: 1px; height: 3px; margin-top: 1px; }
+.mk-ps { flex: 1; border-radius: 1px; }
+
+/* ── PAIN ── */
+.pain {
+  background: var(--bg-alt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 88px 48px;
+}
+.pain-inner { max-width: 1120px; margin: 0 auto; }
+.sec-title {
+  font-family: 'Kaisei Opti', serif;
+  font-size: 38px; text-align: center;
+  color: var(--main); margin-bottom: 60px; line-height: 1.5;
+}
+.pain-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.pain-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px 24px;
+  position: relative; overflow: hidden;
+}
+.pain-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--gold); opacity: 0.55;
+}
+.pain-icon { font-size: 30px; margin-bottom: 14px; }
+.pain-head { font-size: 15px; font-weight: 700; color: var(--main); margin-bottom: 10px; }
+.pain-body { font-size: 13px; color: var(--muted); line-height: 1.85; }
+
+/* ── FEATURES ── */
+.features { max-width: 1120px; margin: 0 auto; padding: 104px 48px; }
+.feat-list { display: flex; flex-direction: column; gap: 72px; margin-top: 64px; }
+.feat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.feat-row.rev { direction: rtl; }
+.feat-row.rev > * { direction: ltr; }
+.feat-eye { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--light); margin-bottom: 12px; }
+.feat-head { font-family: 'Kaisei Opti', serif; font-size: 28px; color: var(--main); margin-bottom: 14px; line-height: 1.5; }
+.feat-body { font-size: 14px; color: var(--muted); line-height: 1.95; }
+.feat-vis { background: var(--main-lt); border-radius: 14px; border: 1px solid var(--border); padding: 24px; }
+
+/* ── PLANS ── */
+.plans { background: var(--main); padding: 104px 48px; }
+.plans-inner { max-width: 900px; margin: 0 auto; }
+.plans-title { font-family: 'Kaisei Opti', serif; font-size: 38px; color: var(--white); text-align: center; margin-bottom: 8px; }
+.plans-sub { font-size: 14px; color: rgba(255,255,255,0.55); text-align: center; margin-bottom: 60px; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.plan { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; padding: 32px 28px; }
+.plan.pro { background: var(--white); border: 2px solid var(--gold); position: relative; }
+.plan-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--gold); color: white; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap; }
+.plan-name { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 8px; }
+.plan:not(.pro) .plan-name { color: rgba(255,255,255,0.55); }
+.plan.pro .plan-name { color: var(--gold); }
+.plan-price { font-family: 'Kaisei Opti', serif; font-size: 42px; line-height: 1; margin-bottom: 4px; }
+.plan:not(.pro) .plan-price { color: white; }
+.plan.pro .plan-price { color: var(--main); }
+.plan-note { font-size: 12px; margin-bottom: 28px; }
+.plan:not(.pro) .plan-note { color: rgba(255,255,255,0.4); }
+.plan.pro .plan-note { color: var(--muted); }
+.plan-items { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.pi { font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+.plan:not(.pro) .pi { color: rgba(255,255,255,0.8); }
+.plan.pro .pi { color: var(--ink); }
+.pi .ck { color: var(--gold); font-weight: 700; flex-shrink: 0; }
+.pi .na { color: rgba(255,255,255,0.3); flex-shrink: 0; }
+.plan.pro .pi .na { color: var(--border); }
+.pi small { display: block; font-size: 11px; margin-top: 1px; }
+.plan:not(.pro) .pi small { color: rgba(255,255,255,0.45); }
+.plan.pro .pi small { color: var(--muted); }
+.btn-free { display: block; width: 100%; padding: 12px; text-align: center; background: rgba(255,255,255,0.11); color: white; border: 1px solid rgba(255,255,255,0.22); border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.18s; }
+.btn-free:hover { background: rgba(255,255,255,0.2); }
+.btn-soon { display: block; width: 100%; padding: 12px; text-align: center; background: var(--main-lt); color: var(--muted); border-radius: 9px; font-size: 13px; font-weight: 700; }
+
+/* ── FOOTER CTA ── */
+.fcta { padding: 104px 48px; text-align: center; }
+.fcta-title { font-family: 'Kaisei Opti', serif; font-size: 50px; color: var(--main); margin-bottom: 20px; line-height: 1.4; }
+.fcta-sub { font-size: 15px; color: var(--muted); margin-bottom: 44px; }
+
+/* ── FOOTER ── */
+footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); gap: 24px; flex-wrap: wrap; }
+.ft-logo { font-family: 'Tilt Warp', cursive; font-size: 18px; color: var(--main); }
+.ft-by { font-size: 11px; color: var(--muted); margin-left: 8px; }
+.ft-links { display: flex; gap: 24px; }
+.ft-link { font-size: 12px; color: var(--muted); transition: color 0.15s; }
+.ft-link:hover { color: var(--main); }
+.ft-copy { font-size: 11px; color: var(--border-dk); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  header { padding: 0 20px; }
+  .hero { grid-template-columns: 1fr; padding: 64px 20px 40px; gap: 40px; }
+  h1 { font-size: 38px; }
+  .pain { padding: 64px 20px; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .sec-title { font-size: 30px; margin-bottom: 40px; }
+  .features { padding: 64px 20px; }
+  .feat-list { gap: 48px; margin-top: 40px; }
+  .feat-row { grid-template-columns: 1fr; }
+  .feat-row.rev { direction: ltr; }
+  .plans { padding: 64px 20px; }
+  .plan-grid { grid-template-columns: 1fr; }
+  .plans-title { font-size: 30px; }
+  .fcta { padding: 64px 20px; }
+  .fcta-title { font-size: 36px; }
+  footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+  .ft-links { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <span class="hd-logo">SchedulEX</span>
+    <span class="hd-kana">〆スケ</span>
+  </div>
+  <a href="./app/" class="btn-nav">無料で使う →</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <p class="eyebrow">For Creators</p>
+    <h1>締め切りが、見える。<br>〆スケで、守ろう。</h1>
+    <p class="hero-desc">
+      ラフ・修正・清書のフェーズを納期から逆算。<br>
+      カレンダーで全案件を一目で確認できる、<br>
+      クリエイターのための納期管理ツールです。
+    </p>
+    <div class="cta-group">
+      <a href="./app/" class="btn-primary">無料で使い始める →</a>
+      <span class="cta-note">登録不要 · ブラウザで即使用</span>
+    </div>
+  </div>
+
+  <!-- MINI APP MOCKUP -->
+  <div class="mockup">
+    <div class="mk-hd">
+      <span class="mk-logo">SchedulEX</span>
+      <span class="mk-kana">〆スケ</span>
+    </div>
+    <div class="mk-gold"></div>
+    <div class="mk-body">
+
+      <!-- mini calendar -->
+      <div class="mk-cal">
+        <div class="mk-cal-hd">
+          <span style="font-size:8px;color:var(--muted);">‹</span>
+          <span class="mk-cal-month">2026年 5月</span>
+          <span style="font-size:8px;color:var(--muted);">›</span>
+        </div>
+        <div class="mk-dow-row">
+          <div class="mk-dow s">日</div><div class="mk-dow">月</div><div class="mk-dow">火</div>
+          <div class="mk-dow">水</div><div class="mk-dow">木</div><div class="mk-dow">金</div>
+          <div class="mk-dow">土</div>
+        </div>
+        <div class="mk-grid">
+          <!-- row 0 empty -->
+          <div class="mk-cell dm"><div class="mk-day"></div></div>
+          <div class="mk-cell dm"><div class="mk-day"></div></div>
+          <div class="mk-cell dm"><div class="mk-day"></div></div>
+          <div class="mk-cell dm"><div class="mk-day"></div></div>
+          <div class="mk-cell dm"><div class="mk-day"></div></div>
+          <div class="mk-cell"><div class="mk-day">1</div></div>
+          <div class="mk-cell"><div class="mk-day">2</div></div>
+          <!-- row 1 -->
+          <div class="mk-cell s"><div class="mk-day">3</div></div>
+          <div class="mk-cell"><div class="mk-day">4</div></div>
+          <div class="mk-cell"><div class="mk-day">5</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">6</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">7</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">8</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;opacity:0.35;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">9</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
+          <!-- row 2 -->
+          <div class="mk-cell s"><div class="mk-day">10</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">11</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;opacity:0.35;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">12</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;opacity:0.35;"></div><div class="mk-bar" style="background:#E07820;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">13</div><div class="mk-bars"><div class="mk-bar" style="background:#E07820;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">14</div><div class="mk-bars"><div class="mk-bar" style="background:#E07820;"></div></div></div>
+          <div class="mk-cell dl-b"><div class="mk-day">15</div></div>
+          <div class="mk-cell"><div class="mk-day">16</div></div>
+          <!-- row 3 -->
+          <div class="mk-cell s"><div class="mk-day">17</div></div>
+          <div class="mk-cell today"><div class="mk-day">18</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">19</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;opacity:0.35;"></div></div></div>
+          <div class="mk-cell"><div class="mk-day">20</div></div>
+          <div class="mk-cell"><div class="mk-day">21</div></div>
+          <div class="mk-cell"><div class="mk-day">22</div></div>
+          <div class="mk-cell"><div class="mk-day">23</div></div>
+          <!-- row 4 -->
+          <div class="mk-cell s"><div class="mk-day">24</div></div>
+          <div class="mk-cell"><div class="mk-day">25</div></div>
+          <div class="mk-cell"><div class="mk-day">26</div></div>
+          <div class="mk-cell dl-a"><div class="mk-day">27</div></div>
+          <div class="mk-cell"><div class="mk-day">28</div></div>
+          <div class="mk-cell"><div class="mk-day">29</div></div>
+          <div class="mk-cell"><div class="mk-day">30</div></div>
+          <!-- row 5 -->
+          <div class="mk-cell s"><div class="mk-day">31</div></div>
+        </div>
+      </div>
+
+      <!-- mini order cards -->
+      <div class="mk-orders">
+        <!-- safe -->
+        <div class="mk-card" style="background:#E8F5F3;">
+          <div class="mk-card-tab" style="background:#3A9A88;">
+            <span class="tab-a">あと</span><span class="tab-n">9</span><span class="tab-d">日</span>
+          </div>
+          <div class="mk-card-name">イラスト依頼 / サトウスズキ様</div>
+          <div class="mk-card-type">🎨 イラスト — ラフ中</div>
+          <div class="mk-phase-bar">
+            <div class="mk-ps" style="background:#3A9A88;"></div>
+            <div class="mk-ps" style="background:rgba(58,154,136,0.25);"></div>
+            <div class="mk-ps" style="background:#DDD5C8;"></div>
+          </div>
+          <div class="mk-card-dl" style="color:#3A9A88;">🗓 〆 5月27日</div>
+        </div>
+        <!-- danger -->
+        <div class="mk-card" style="background:#FFF2E0;">
+          <div class="mk-card-tab" style="background:#E07820;">
+            <span class="tab-a">あと</span><span class="tab-n">4</span><span class="tab-d">日</span>
+          </div>
+          <div class="mk-card-name">デザイン依頼 / タナカナカムラ様</div>
+          <div class="mk-card-type">✏️ デザイン — 清書中</div>
+          <div class="mk-phase-bar">
+            <div class="mk-ps" style="background:#E07820;"></div>
+            <div class="mk-ps" style="background:#E07820;"></div>
+            <div class="mk-ps" style="background:rgba(224,120,32,0.3);"></div>
+          </div>
+          <div class="mk-card-dl" style="color:#E07820;">🗓 〆 5月22日</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="pain-inner">
+    <p class="eyebrow" style="text-align:center;">Problem</p>
+    <h2 class="sec-title">こんなこと、<br>ありませんか？</h2>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">😰</div>
+        <p class="pain-head">「ラフ、いつまでだっけ？」</p>
+        <p class="pain-body">締め切りから逆算した工程が頭の中だけにある。いつの間にかラフが間に合わなくなっている。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🌀</div>
+        <p class="pain-head">複数案件で頭が混乱する</p>
+        <p class="pain-body">Aさんの修正中にBさんのラフが溜まる。どこから手をつければいいか分からなくなる。</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔥</div>
+        <p class="pain-head">締め切り前日に気づく</p>
+        <p class="pain-body">「あと1日しかない」と気づいてから焦る。余裕を持って進められているつもりだったのに。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="eyebrow" style="text-align:center;">How it works</p>
+  <h2 class="sec-title">3つの仕組みで、<br>納期を味方にする</h2>
+
+  <div class="feat-list">
+
+    <!-- Feature 01 -->
+    <div class="feat-row">
+      <div>
+        <p class="feat-eye">Feature 01 — カレンダー</p>
+        <h3 class="feat-head">全案件が、<br>1枚のカレンダーに並ぶ。</h3>
+        <p class="feat-body">
+          月表示のカレンダーに各案件のフェーズバーが色別で表示されます。締め切り日は日付を○で囲んでひと目でわかるように。「今月どこが忙しいか」が俯瞰できます。
+        </p>
+      </div>
+      <div class="feat-vis">
+        <!-- calendar feature visual -->
+        <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--border);">
+          <div style="font-family:'Tilt Warp',cursive;font-size:11px;color:var(--main);margin-bottom:8px;">2026年 5月</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;">
+            <div style="font-size:8px;text-align:center;color:#C05050;font-weight:700;">日</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">月</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">火</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">水</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">木</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">金</div>
+            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">土</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
+            <!-- 5 weeks of days, simplified -->
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:var(--ink);">1</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:var(--ink);">2</span></div>
+
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">3</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">4</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">5</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">6</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">7</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">8</span><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">9</span><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
+
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">10</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">11</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">12</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">13</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">14</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
+            <!-- deadline circle -->
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
+              <span style="font-size:9px;color:#3A9A88;border:1.5px solid #3A9A88;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700;">15</span>
+            </div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">16</span></div>
+
+            <!-- today row -->
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">17</span></div>
+            <div style="height:28px;border-radius:5px;background:#EEF0FA;border:1px solid var(--light);display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
+              <span style="font-size:9px;color:white;background:var(--main);border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">18</span>
+              <div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div>
+            </div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">19</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">20</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">21</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">22</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">23</span></div>
+
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">24</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">25</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">26</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
+              <span style="font-size:9px;color:#3E4880;border:1.5px solid #3E4880;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700;">27</span>
+            </div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">28</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">29</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">30</span></div>
+            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">31</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3E4880;"></div>サトウスズキ様
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
+            <div style="width:10px;height:10px;border-radius:50%;background:#3A9A88;"></div>タナカナカムラ様
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
+            <div style="width:10px;height:10px;border-radius:50%;background:#E07820;"></div>ヤマダイノウエ様
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 02 -->
+    <div class="feat-row rev">
+      <div>
+        <p class="feat-eye">Feature 02 — 緊急度タブ</p>
+        <h3 class="feat-head">「あと〇日」が、<br>色で飛び込んでくる。</h3>
+        <p class="feat-body">
+          残り日数が多いほど落ち着いたティールに、近づくにつれてイエロー・オレンジ・レッドへ。カードを見ただけで「今日何を優先すべきか」がわかります。
+        </p>
+      </div>
+      <div class="feat-vis" style="display:flex;flex-direction:column;gap:10px;">
+        <!-- urgency cards -->
+        <div style="background:#E8F5F3;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#3A9A88;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
+            <span style="font-size:16px;color:white;font-weight:700;">14</span>
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);">イラスト依頼 / サトウスズキ様</div>
+          <div style="font-size:10px;color:#3A9A88;margin-top:2px;">🗓 〆 6月1日 — 余裕あり</div>
+        </div>
+        <div style="background:#FDFBE8;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#E3CF57;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:8px;color:rgba(60,50,0,0.65);font-weight:700;">あと</span>
+            <span style="font-size:16px;color:#3A3000;font-weight:700;">9</span>
+            <span style="font-size:8px;color:rgba(60,50,0,0.65);font-weight:700;">日</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);">デザイン依頼 / タナカナカムラ様</div>
+          <div style="font-size:10px;color:#8A7A10;margin-top:2px;">🗓 〆 5月27日 — 注意</div>
+        </div>
+        <div style="background:#FFF2E0;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#E07820;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
+            <span style="font-size:16px;color:white;font-weight:700;">4</span>
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);">動画制作 / ヤマダイノウエ様</div>
+          <div style="font-size:10px;color:#E07820;margin-top:2px;">🗓 〆 5月22日 — ヤバい</div>
+        </div>
+        <div style="background:#FFECEC;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);outline:1.5px solid #C83030;">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#C83030;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
+            <span style="font-size:16px;color:white;font-weight:700;">1</span>
+            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);">表紙デザイン / スズキキムラ様</div>
+          <div style="font-size:10px;color:#C83030;margin-top:2px;">🗓 〆 明日 — 超ヤバい！</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 03 -->
+    <div class="feat-row">
+      <div>
+        <p class="feat-eye">Feature 03 — 逆算スケジュール</p>
+        <h3 class="feat-head">納期を入れるだけで、<br>フェーズが自動で計算される。</h3>
+        <p class="feat-body">
+          ラフ・修正・清書それぞれに何日かけるかを設定しておくだけ。納期を入力すれば「今日ラフを始めないと間に合わない」が自動でわかります。設定は次回から自動で引き継がれます。
+        </p>
+      </div>
+      <div class="feat-vis" style="display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;">案件名 / 納期</div>
+          <div style="background:white;border:1.5px solid var(--light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--ink);">イラスト依頼 / サトウスズキ様</div>
+          <div style="background:white;border:1.5px solid var(--light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--ink);margin-top:6px;">2026年6月10日</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;">フェーズ日数</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">ラフ</div>
+              <div style="font-size:18px;font-weight:700;color:var(--main);">7</div>
+              <div style="font-size:9px;color:var(--muted);">日</div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">修正</div>
+              <div style="font-size:18px;font-weight:700;color:var(--main);">3</div>
+              <div style="font-size:9px;color:var(--muted);">日</div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">清書</div>
+              <div style="font-size:18px;font-weight:700;color:var(--main);">3</div>
+              <div style="font-size:9px;color:var(--muted);">日</div>
+            </div>
+          </div>
+        </div>
+        <div style="background:white;border-radius:10px;padding:12px;border:1.5px dashed var(--border);">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:0.08em;">逆算スケジュール</div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;">
+              <span style="color:var(--main);font-weight:700;">📐 ラフ開始</span>
+              <span style="color:var(--ink);">5月 28日まで</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;">
+              <span style="color:#3A9A88;font-weight:700;">✏️ 修正期間</span>
+              <span style="color:var(--ink);">6月 4日まで</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;">
+              <span style="color:#E07820;font-weight:700;">🎨 清書・納品</span>
+              <span style="color:var(--ink);">6月 7日まで</span>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:5px;display:flex;justify-content:space-between;font-size:11px;">
+              <span style="color:#C83030;font-weight:700;">🗓 納期</span>
+              <span style="color:#C83030;font-weight:700;">6月 10日</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans">
+  <div class="plans-inner">
+    <p class="eyebrow" style="text-align:center;color:rgba(255,255,255,0.5);">Plans</p>
+    <h2 class="plans-title">シンプルな2プラン</h2>
+    <p class="plans-sub">まずは無料から。使い続けたくなったらPROへ。</p>
+    <div class="plan-grid">
+
+      <div class="plan">
+        <p class="plan-name">FREE</p>
+        <p class="plan-price">¥0</p>
+        <p class="plan-note">ずっと無料</p>
+        <ul class="plan-items">
+          <li class="pi"><span class="ck">✓</span>案件管理（複数対応）</li>
+          <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
+          <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
+          <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
+          <li class="pi"><span class="ck">✓</span>JSONバックアップ・復元</li>
+          <li class="pi"><span class="na">—</span>EasyReplyとの連携</li>
+          <li class="pi"><span class="na">—</span>カラーカスタム</li>
+        </ul>
+        <a href="./app/" class="btn-free">無料で始める</a>
+      </div>
+
+      <div class="plan pro">
+        <div class="plan-badge">もうすぐ公開</div>
+        <p class="plan-name">PRO</p>
+        <p class="plan-price" style="font-size:32px;color:var(--muted);">準備中</p>
+        <p class="plan-note">近日公開予定</p>
+        <ul class="plan-items">
+          <li class="pi"><span class="ck">✓</span>FREEの全機能</li>
+          <li class="pi">
+            <span class="ck">✓</span>
+            <span>EasyReplyとの連携<small>やりとり履歴を案件カードに自動表示</small></span>
+          </li>
+          <li class="pi">
+            <span class="ck">✓</span>
+            <span>カラーカスタム<small>カード・カレンダーの配色を変更</small></span>
+          </li>
+          <li class="pi"><span class="ck">✓</span>スタンプ・デコ機能</li>
+          <li class="pi"><span class="ck">✓</span>クラウドバックアップ</li>
+        </ul>
+        <div class="btn-soon">近日公開</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<section class="fcta">
+  <p class="eyebrow">Get started</p>
+  <h2 class="fcta-title">今日から、締め切りに<br>追われない制作を。</h2>
+  <p class="fcta-sub">登録不要。ブラウザですぐ使えます。</p>
+  <a href="./app/" class="btn-primary">無料で使い始める →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <span class="ft-logo">SchedulEX</span>
+    <span class="ft-by">by Mimily</span>
+  </div>
+  <div class="ft-links">
+    <a href="#" class="ft-link">利用規約</a>
+    <a href="#" class="ft-link">プライバシーポリシー</a>
+    <a href="https://mimilyappdev.github.io/" class="ft-link">Mimilyアプリ一覧</a>
+  </div>
+  <p class="ft-copy">© 2025 Mimily</p>
+</footer>
+
+</body>
+</html>

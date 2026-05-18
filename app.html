@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SchedulEX — 〆スケ</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2E3460">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="〆スケ">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=BIZ+UDGothic:wght@400;700&family=Kaisei+Opti:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── VARIABLES ── */
+:root {
+  --main:    #2E3460;
+  --mid:     #3E4880;
+  --light:   #8A90CC;
+  --light2:  #B0B6E8;
+  --bg:      #F5F1EB;
+  --surface: #FFFFFF;
+  --border:  #DDD8D0;
+  --text:    #2A2A2A;
+  --muted:   #7A8090;
+  --gold-line: linear-gradient(90deg, #8A90CC, #B0B6E8, #8A90CC);
+
+  --safe:       #3A9A88;
+  --safe-bg:    #E8F5F3;
+  --caution:    #E3CF57;
+  --caution-bg: #FDFBE8;
+  --danger:     #E07820;
+  --danger-bg:  #FFF2E0;
+  --crisis:     #C83030;
+  --crisis-bg:  #FFECEC;
+  --overdue:    #7A1010;
+  --overdue-bg: #F5E0E0;
+
+  --sidebar-w: 280px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'BIZ UDGothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ── HEADER ── */
+#header {
+  background: var(--main);
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 10;
+}
+.logo {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo-sub { font-family: 'BIZ UDGothic', sans-serif; font-size: 10px; color: rgba(255,255,255,0.4); }
+.header-actions { display: flex; gap: 8px; }
+.btn-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.22); }
+
+/* gold line */
+.gold-line { height: 3px; background: var(--gold-line); flex-shrink: 0; }
+
+/* ── MAIN LAYOUT ── */
+#main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
+.btn-add {
+  background: var(--main);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-add:hover { background: var(--mid); }
+
+#order-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#order-list::-webkit-scrollbar { width: 4px; }
+#order-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+.empty-state-icon { font-size: 36px; opacity: 0.4; }
+.empty-state-text { font-size: 12px; line-height: 1.8; }
+
+/* ── ORDER CARD ── */
+.order-card {
+  position: relative;
+  border-radius: 10px;
+  padding: 11px 48px 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.order-card:hover { box-shadow: 0 3px 12px rgba(46,52,96,0.12); transform: translateX(-1px); }
+.order-card.selected { box-shadow: 0 0 0 2px var(--main); }
+
+/* post-it tab */
+.card-tab {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 52px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 1;
+}
+.tab-ato   { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num   { font-size: 18px; color: #fff; font-weight: 700; line-height: 1.1; }
+.tab-nichi { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num.dark   { color: #3A3000; }
+.tab-ato.dark   { color: rgba(60,50,0,0.65); }
+.tab-nichi.dark { color: rgba(60,50,0,0.65); }
+
+.card-row1 { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.card-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; flex: 1; }
+.card-phase-badge {
+  font-size: 8px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.card-type-row { display: flex; align-items: center; gap: 5px; }
+.card-type-label { font-size: 10px; }
+.card-deadline-row { font-size: 10px; font-weight: 700; }
+.phase-bar-row { display: flex; gap: 2px; height: 4px; }
+.phase-seg { flex: 1; border-radius: 2px; }
+
+/* urgency themes */
+.card-safe    { background: var(--safe-bg); }
+.card-caution { background: var(--caution-bg); }
+.card-danger  { background: var(--danger-bg); }
+.card-crisis  { background: var(--crisis-bg); outline: 1.5px solid var(--crisis); }
+.card-overdue { background: var(--overdue-bg); outline: 1.5px solid var(--overdue); }
+
+/* ── CALENDAR PANEL ── */
+#calendar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  min-width: 0;
+}
+.cal-header {
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.cal-month-label {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: var(--main);
+}
+.cal-nav-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.cal-nav-btn:hover { background: var(--border); }
+.cal-nav-group { display: flex; gap: 6px; align-items: center; }
+.cal-today-btn {
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.cal-today-btn:hover { background: var(--border); }
+
+/* legend */
+.cal-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* grid */
+.cal-grid-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.cal-grid-wrap::-webkit-scrollbar { width: 4px; }
+.cal-grid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 3px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 4px 0;
+}
+.cal-dow.sun { color: #C05050; }
+.cal-dow.sat { color: #5070C0; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-cell {
+  background: var(--surface);
+  border-radius: 8px;
+  min-height: 68px;
+  padding: 4px 3px 3px;
+  cursor: pointer;
+  transition: background 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+  border: 1px solid transparent;
+}
+.cal-cell:hover { background: #EEF0FA; border-color: var(--light2); }
+.cal-cell.other-month { background: transparent; border-color: transparent; cursor: default; }
+.cal-cell.other-month:hover { background: transparent; border-color: transparent; }
+.cal-cell.today { background: #EEF0FA; border-color: var(--light); }
+
+.cal-day-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+.cal-cell.today .cal-day-num {
+  background: var(--main);
+  color: #fff;
+}
+.cal-cell.sun .cal-day-num { color: #C05050; }
+.cal-cell.sat .cal-day-num { color: #5070C0; }
+.cal-cell.other-month .cal-day-num { color: #CCC; }
+
+/* deadline circle */
+.cal-day-num.deadline-circle {
+  border: 2.5px solid currentColor;
+  font-weight: 700;
+}
+
+/* phase bars in cell */
+.cal-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 2px;
+  flex: 1;
+}
+.cal-bar-row {
+  height: 4px;
+  border-radius: 2px;
+  opacity: 0;
+}
+.cal-bar-row.active { opacity: 1; }
+.cal-bar-row.faded  { opacity: 0.35; }
+
+/* ── BOTTOM NAV (mobile) ── */
+#bottom-nav {
+  display: none;
+  background: var(--main);
+  height: 56px;
+  flex-shrink: 0;
+}
+.bnav-inner {
+  display: flex;
+  height: 100%;
+}
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.15s;
+}
+.bnav-item.active { color: #fff; }
+.bnav-icon { font-size: 20px; line-height: 1; }
+.bnav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
+
+/* ── MODAL ── */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.modal-header {
+  background: var(--main);
+  padding: 16px 20px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: #fff;
+}
+.modal-close {
+  color: rgba(255,255,255,0.6);
+  font-size: 20px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* form fields */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; }
+.field input,
+.field select,
+.field textarea {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.15s;
+  outline: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--light); }
+.field textarea { resize: vertical; min-height: 72px; }
+
+/* type selector */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+}
+.type-btn {
+  padding: 10px 8px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--bg);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.type-btn.selected {
+  border-color: var(--main);
+  color: var(--main);
+  background: #ECEEF8;
+}
+
+/* phase fields */
+.phases-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.phase-field { display: flex; flex-direction: column; gap: 4px; }
+.phase-field label { font-size: 10px; font-weight: 700; color: var(--muted); }
+.phase-field input {
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  background: var(--bg);
+  outline: none;
+}
+.phase-field input:focus { border-color: var(--light); }
+.phase-hint { font-size: 10px; color: var(--muted); text-align: center; margin-top: 2px; }
+
+/* modal actions */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 20px;
+}
+.btn-primary {
+  flex: 1;
+  background: var(--main);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--mid); }
+.btn-secondary {
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--bg);
+}
+.btn-secondary:hover { background: var(--border); }
+.btn-delete {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--crisis);
+  background: var(--crisis-bg);
+  border: 1.5px solid var(--crisis);
+}
+
+/* settings modal */
+.settings-section { display: flex; flex-direction: column; gap: 10px; }
+.settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
+
+/* ── MOBILE ── */
+@media (max-width: 767px) {
+  body { overflow: hidden; }
+  #sidebar { width: 100%; border-right: none; display: none; }
+  #sidebar.mobile-active { display: flex; position: fixed; inset: 0; top: 53px; bottom: 56px; z-index: 5; overflow-y: auto; }
+  #calendar-panel { display: none; }
+  #calendar-panel.mobile-active { display: flex; position: fixed; inset: 0; top: 53px; bottom: 56px; z-index: 5; }
+  #bottom-nav { display: block; }
+  .cal-cell { min-height: 54px; }
+  .logo { font-size: 16px; }
+}
+
+/* ── TABLET+ ── */
+@media (min-width: 768px) {
+  #sidebar { display: flex; }
+  #calendar-panel { display: flex; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo">
+      SchedulEX
+      <span class="logo-sub">〆スケ</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
+      <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
+    </div>
+  </header>
+  <div class="gold-line"></div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title" id="order-count-label">案件一覧</span>
+        <button class="btn-add" onclick="openAddOrder()">＋ 追加</button>
+      </div>
+      <div id="order-list"></div>
+      <!-- AD SLOT START
+      <div id="ad-slot" style="padding:10px;text-align:center;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+        広告エリア
+      </div>
+      AD SLOT END -->
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="calendar-panel">
+      <div class="cal-header">
+        <div class="cal-nav-group">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          <span class="cal-month-label" id="cal-month-label">2026年5月</span>
+        </div>
+        <button class="cal-today-btn" onclick="goToday()">今日</button>
+      </div>
+      <div class="cal-legend" id="cal-legend"></div>
+      <div class="cal-grid-wrap">
+        <div class="cal-dow-row">
+          <div class="cal-dow sun">日</div>
+          <div class="cal-dow">月</div>
+          <div class="cal-dow">火</div>
+          <div class="cal-dow">水</div>
+          <div class="cal-dow">木</div>
+          <div class="cal-dow">金</div>
+          <div class="cal-dow sat">土</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav">
+    <div class="bnav-inner">
+      <button class="bnav-item active" id="bnav-calendar" onclick="switchTab('calendar')">
+        <span class="bnav-icon">🗓</span>
+        <span class="bnav-label">カレンダー</span>
+      </button>
+      <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders')">
+        <span class="bnav-icon">📋</span>
+        <span class="bnav-label">案件</span>
+      </button>
+      <button class="bnav-item" id="bnav-settings" onclick="openSettings()">
+        <span class="bnav-icon">⚙️</span>
+        <span class="bnav-label">設定</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay" onclick="handleOverlayClick(event)">
+
+  <!-- ADD / EDIT ORDER MODAL -->
+  <div class="modal" id="order-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="order-modal-title">案件を追加</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label>案件名 / クライアント名</label>
+        <input type="text" id="f-name" placeholder="例：天音みら / キャラデザ">
+      </div>
+
+      <div class="field">
+        <label>依頼の種類</label>
+        <div class="type-grid" id="type-grid">
+          <button class="type-btn selected" data-type="illustration" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="8" width="26" height="32" rx="4"/>
+              <circle cx="21" cy="19" r="5"/>
+              <path d="M13 36 Q21 27 29 36"/>
+              <path d="M31 28 L41 18"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="currentColor"/>
+            </svg>
+            イラスト
+          </button>
+          <button class="type-btn" data-type="design" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="6" width="26" height="34" rx="4"/>
+              <line x1="12" y1="17" x2="28" y2="17"/>
+              <line x1="12" y1="23" x2="23" y2="23"/>
+              <path d="M27 30 L39 18 L43 22 L31 34 Z" fill="currentColor" stroke="currentColor"/>
+              <circle cx="27" cy="38" r="3" fill="currentColor"/>
+            </svg>
+            デザイン
+          </button>
+          <button class="type-btn" data-type="video" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="38" height="26" rx="5"/>
+              <line x1="22" y1="34" x2="22" y2="42"/>
+              <line x1="14" y1="42" x2="30" y2="42"/>
+              <path d="M17 16 L17 28 L30 22 Z" fill="currentColor" stroke="currentColor"/>
+            </svg>
+            動画
+          </button>
+          <button class="type-btn" data-type="other" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/>
+              <line x1="5" y1="26" x2="43" y2="26"/>
+            </svg>
+            その他
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>納期（締め切り）</label>
+        <input type="date" id="f-deadline">
+      </div>
+
+      <div class="field">
+        <label>現在のフェーズ</label>
+        <select id="f-phase">
+          <option value="0">ラフ中</option>
+          <option value="1">修正中</option>
+          <option value="2">清書中</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>スケジュール設定（日数）</label>
+        <div class="phases-row" id="f-phases-row"></div>
+        <p class="phase-hint">※ デフォルトは設定から変更できます</p>
+      </div>
+
+      <div class="field">
+        <label>メモ</label>
+        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-actions" id="order-modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveOrder()">保存</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title">設定</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-section">
+        <p class="settings-label">デフォルトのフェーズ日数</p>
+        <div class="phases-row" id="s-phases-row"></div>
+        <p class="phase-hint">案件追加時のデフォルト値になります</p>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label">バックアップ / 復元</p>
+        <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
+          📂 JSONから復元
+          <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
+        </label>
+        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">⚠️ 復元すると現在のデータは上書きされます</p>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label">カレンダー連携 (.ics)</p>
+        <button class="btn-primary" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
+          📅 .icsから読み込む
+          <input type="file" id="ics-import-file" accept=".ics" onchange="importICS(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
+        </label>
+        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">※ 読み込んだ予定は既存データに追加されます（名前＋日付が同じものはスキップ）</p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+
+</div><!-- /modal-overlay -->
+
+<script>
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
+let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
+  phases: [
+    { id: 'rough', name: 'ラフ',   days: 7 },
+    { id: 'fix',   name: '修正',   days: 3 },
+    { id: 'final', name: '清書',   days: 3 }
+  ]
+};
+
+let currentMonth = new Date();
+currentMonth.setDate(1);
+currentMonth.setHours(0,0,0,0);
+
+let editingId = null;
+let selectedType = 'illustration';
+let activeTab = 'calendar'; // mobile tab
+
+// Order color palette
+const ORDER_COLORS = [
+  '#3E4880','#3A9A88','#B86A3A','#7A4A80','#5A7A3A','#80503A'
+];
+
+/* ═══════════════════════════════
+   UTILS
+═══════════════════════════════ */
+function today() {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  const d = new Date(s + 'T00:00:00');
+  return d;
+}
+
+function dateKey(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function getDaysUntil(deadlineStr) {
+  const dl = parseDate(deadlineStr);
+  const t  = today();
+  return Math.ceil((dl - t) / 86400000);
+}
+
+function getUrgency(days) {
+  if (days < 0)  return 'overdue';
+  if (days <= 2) return 'crisis';
+  if (days <= 6) return 'danger';
+  if (days <= 13)return 'caution';
+  return 'safe';
+}
+
+function urgencyColor(u) {
+  return { safe:'#3A9A88', caution:'#E3CF57', danger:'#E07820', crisis:'#C83030', overdue:'#7A1010' }[u];
+}
+function urgencyBg(u) {
+  return { safe:'var(--safe-bg)', caution:'var(--caution-bg)', danger:'var(--danger-bg)', crisis:'var(--crisis-bg)', overdue:'var(--overdue-bg)' }[u];
+}
+function urgencyText(u) {
+  return { safe:'var(--safe)', caution:'#8A7A10', danger:'var(--danger)', crisis:'var(--crisis)', overdue:'var(--overdue)' }[u];
+}
+
+function getPhaseSchedule(order) {
+  const dl     = parseDate(order.deadline);
+  const phases = order.phaseDays || settings.phases.map(p => ({ ...p }));
+  const result = [];
+  let end = new Date(dl);
+  for (let i = phases.length - 1; i >= 0; i--) {
+    const start = new Date(end);
+    start.setDate(start.getDate() - phases[i].days);
+    result.unshift({ id: phases[i].id, name: phases[i].name, start, end: new Date(end) });
+    end = new Date(start);
+  }
+  return result;
+}
+
+function orderColor(idx) {
+  return ORDER_COLORS[idx % ORDER_COLORS.length];
+}
+
+function fmtDate(d) {
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function save() {
+  localStorage.setItem('shimesuke_orders',   JSON.stringify(orders));
+  localStorage.setItem('shimesuke_settings', JSON.stringify(settings));
+}
+
+/* ═══════════════════════════════
+   PICTOGRAMS
+═══════════════════════════════ */
+function pict(type, color, size=20) {
+  const s = `stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"`;
+  const svgs = {
+    illustration: `<rect x="8" y="8" width="26" height="32" rx="4"/><circle cx="21" cy="19" r="5"/><path d="M13 36 Q21 27 29 36"/><path d="M31 28 L41 18" stroke-width="2.5"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="${color}" stroke="${color}"/>`,
+    design:       `<rect x="7" y="6" width="26" height="34" rx="4"/><line x1="12" y1="17" x2="28" y2="17"/><line x1="12" y1="23" x2="23" y2="23"/><path d="M27 30 L39 18 L43 22 L31 34 Z" fill="${color}" stroke="${color}"/><circle cx="27" cy="38" r="3" fill="${color}"/>`,
+    video:        `<rect x="3" y="8" width="38" height="26" rx="5"/><line x1="22" y1="34" x2="22" y2="42"/><line x1="14" y1="42" x2="30" y2="42"/><path d="M17 16 L17 28 L30 22 Z" fill="${color}" stroke="${color}"/>`,
+    other:        `<path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/><line x1="5" y1="26" x2="43" y2="26"/>`,
+  };
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" ${s}>${svgs[type]||svgs.other}</svg>`;
+}
+
+function typeLabel(t) {
+  return {illustration:'イラスト', design:'デザイン', video:'動画', other:'その他'}[t] || t;
+}
+
+function phaseName(idx) {
+  return settings.phases[idx]?.name || ['ラフ','修正','清書'][idx] || '';
+}
+
+/* ═══════════════════════════════
+   RENDER ORDERS
+═══════════════════════════════ */
+function renderOrders() {
+  const list = document.getElementById('order-list');
+  const label = document.getElementById('order-count-label');
+  label.textContent = `案件一覧 ${orders.length}件`;
+
+  if (orders.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  orders.forEach((order, idx) => {
+    const days    = getDaysUntil(order.deadline);
+    const urgency = getUrgency(days);
+    const color   = orderColor(idx);
+    const uc      = urgencyColor(urgency);
+    const ubg     = urgencyBg(urgency);
+    const utxt    = urgencyText(urgency);
+    const isDark  = urgency === 'caution';
+
+    const schedule  = getPhaseSchedule(order);
+    const curPhase  = order.currentPhase || 0;
+    const phasesBadge = ['ラフ中','修正中','清書中'][curPhase] || '';
+
+    // phase bar
+    let barHTML = '';
+    for (let i = 0; i < 3; i++) {
+      let bg = 'var(--border)';
+      if (i < curPhase)  bg = uc;
+      if (i === curPhase) bg = uc;
+      if (i > curPhase)  bg = 'var(--border)';
+      const opacity = i < curPhase ? '1' : i === curPhase ? '1' : '0.25';
+      barHTML += `<div class="phase-seg" style="background:${bg};opacity:${opacity};"></div>`;
+    }
+
+    // deadline label
+    const dl      = parseDate(order.deadline);
+    const dlLabel = days < 0
+      ? `超過 ${Math.abs(days)}日`
+      : days === 0 ? '今日が締め切り！'
+      : `あと${days}日`;
+
+    const card = document.createElement('div');
+    card.className = `order-card card-${urgency}`;
+    card.id = `card-${order.id}`;
+    card.onclick = () => openEditOrder(order.id);
+    card.innerHTML = `
+      <div class="card-tab" style="background:${uc};">
+        <span class="tab-ato${isDark?' dark':''}">あと</span>
+        <span class="tab-num${isDark?' dark':''}">
+          ${days < 0 ? '!' : days > 99 ? '∞' : days}
+        </span>
+        <span class="tab-nichi${isDark?' dark':''}">日</span>
+      </div>
+      <div class="card-row1">
+        <div class="card-name">${esc(order.name)}</div>
+        <div class="card-phase-badge" style="background:${uc}22;color:${utxt};">${phasesBadge}</div>
+      </div>
+      <div class="card-type-row">
+        ${pict(order.type, utxt, 18)}
+        <span class="card-type-label" style="color:${utxt};">${typeLabel(order.type)}</span>
+      </div>
+      <div class="phase-bar-row">${barHTML}</div>
+      <div class="card-deadline-row" style="color:${utxt};">
+        🗓 〆 ${fmtDate(dl)} — ${dlLabel}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════
+   RENDER CALENDAR
+═══════════════════════════════ */
+function renderCalendar() {
+  const grid  = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  const legend= document.getElementById('cal-legend');
+
+  const y = currentMonth.getFullYear();
+  const m = currentMonth.getMonth();
+  label.textContent = `${y}年${m+1}月`;
+
+  // legend
+  legend.innerHTML = '';
+  orders.forEach((order, idx) => {
+    const col = orderColor(idx);
+    legend.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${col};"></div>
+        <span>${esc(order.name.split('/')[0].trim())}</span>
+      </div>`;
+  });
+  if (orders.length === 0) {
+    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">案件を追加するとカレンダーに表示されます</span>`;
+  }
+
+  // build order → phase map for quick lookup
+  const orderPhases = orders.map(order => ({
+    id: order.id,
+    schedule: getPhaseSchedule(order),
+    deadline: dateKey(parseDate(order.deadline))
+  }));
+
+  // calendar grid
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const prevDays = new Date(y, m, 0).getDate();
+  const todayKey = dateKey(today());
+
+  grid.innerHTML = '';
+
+  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    let date, dayNum, isOther = false;
+    if (i < firstDay) {
+      dayNum = prevDays - firstDay + i + 1;
+      date = new Date(y, m-1, dayNum);
+      isOther = true;
+    } else if (i >= firstDay + daysInMonth) {
+      dayNum = i - firstDay - daysInMonth + 1;
+      date = new Date(y, m+1, dayNum);
+      isOther = true;
+    } else {
+      dayNum = i - firstDay + 1;
+      date = new Date(y, m, dayNum);
+    }
+
+    const dKey = dateKey(date);
+    const dow  = date.getDay();
+    const isToday = dKey === todayKey;
+
+    if (isOther) cell.classList.add('other-month');
+    if (isToday) cell.classList.add('today');
+    if (dow === 0) cell.classList.add('sun');
+    if (dow === 6) cell.classList.add('sat');
+
+    // deadline circles
+    const deadlineOrders = isOther ? [] : orderPhases.filter(op => op.deadline === dKey);
+    let circleStyle = '';
+    if (deadlineOrders.length > 0) {
+      const idx = orders.findIndex(o => o.id === deadlineOrders[0].id);
+      circleStyle = `border: 2.5px solid ${orderColor(idx)}; color: ${orderColor(idx)};`;
+    }
+
+    cell.innerHTML = `<div class="cal-day-num${deadlineOrders.length>0?' deadline-circle':''}" style="${circleStyle}">${dayNum}</div>`;
+
+    // phase bars
+    if (!isOther) {
+      const barsDiv = document.createElement('div');
+      barsDiv.className = 'cal-bars';
+      orders.forEach((order, idx) => {
+        const op    = orderPhases[idx];
+        const bar   = document.createElement('div');
+        bar.className = 'cal-bar-row';
+        const col   = orderColor(idx);
+
+        // find which phase this day falls in
+        let inPhase = false, isFaded = false;
+        op.schedule.forEach((ph, pi) => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          if (date >= s && date < e) {
+            inPhase = true;
+            if (pi < (order.currentPhase || 0)) isFaded = true;
+          }
+        });
+
+        if (inPhase) {
+          bar.classList.add(isFaded ? 'faded' : 'active');
+          bar.style.background = col;
+        }
+        barsDiv.appendChild(bar);
+      });
+      cell.appendChild(barsDiv);
+
+      // click handler
+      cell.onclick = () => scrollToOrdersForDate(dKey);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+/* scroll to nearest order for clicked date */
+function scrollToOrdersForDate(dKey) {
+  // find order that is active on this day
+  let targetId = null;
+  orders.forEach((order, idx) => {
+    const op = { schedule: getPhaseSchedule(order), deadline: dateKey(parseDate(order.deadline)) };
+    const clickedDate = parseDate(dKey);
+    op.schedule.forEach(ph => {
+      const s = new Date(ph.start); s.setHours(0,0,0,0);
+      const e = new Date(ph.end);   e.setHours(0,0,0,0);
+      if (clickedDate >= s && clickedDate < e) targetId = order.id;
+    });
+    if (op.deadline === dKey) targetId = order.id;
+  });
+
+  if (!targetId && orders.length > 0) return;
+  if (!targetId) return;
+
+  // on mobile, switch to orders tab first
+  if (window.innerWidth < 768) switchTab('orders');
+
+  setTimeout(() => {
+    const card = document.getElementById(`card-${targetId}`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+/* ═══════════════════════════════
+   CALENDAR NAVIGATION
+═══════════════════════════════ */
+function changeMonth(dir) {
+  currentMonth.setMonth(currentMonth.getMonth() + dir);
+  renderCalendar();
+}
+function goToday() {
+  currentMonth = new Date();
+  currentMonth.setDate(1);
+  currentMonth.setHours(0,0,0,0);
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   ADD / EDIT ORDER
+═══════════════════════════════ */
+function openAddOrder() {
+  editingId    = null;
+  selectedType = 'illustration';
+  document.getElementById('order-modal-title').textContent = '案件を追加';
+  document.getElementById('f-name').value     = '';
+  document.getElementById('f-deadline').value = '';
+  document.getElementById('f-phase').value    = '0';
+  document.getElementById('f-notes').value    = '';
+
+  // reset type selection
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === 'illustration');
+  });
+
+  // phase fields
+  renderPhaseFields('f-phases-row', settings.phases.map(p=>({...p})));
+
+  // actions
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+
+  showModal('order-modal');
+}
+
+function openEditOrder(id) {
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  editingId    = id;
+  selectedType = order.type;
+
+  document.getElementById('order-modal-title').textContent = '案件を編集';
+  document.getElementById('f-name').value     = order.name;
+  document.getElementById('f-deadline').value = order.deadline;
+  document.getElementById('f-phase').value    = String(order.currentPhase || 0);
+  document.getElementById('f-notes').value    = order.notes || '';
+
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === order.type);
+  });
+
+  const phases = order.phaseDays || settings.phases.map(p=>({...p}));
+  renderPhaseFields('f-phases-row', phases);
+
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-delete" onclick="deleteOrder('${id}')">削除</button>
+    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+
+  showModal('order-modal');
+}
+
+function renderPhaseFields(containerId, phases) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = phases.map((p, i) => `
+    <div class="phase-field">
+      <label>${p.name}</label>
+      <input type="number" min="1" max="60" value="${p.days}" id="pf-${containerId}-${i}">
+    </div>`).join('');
+}
+
+function getPhaseDaysFromFields(containerId) {
+  return settings.phases.map((p, i) => ({
+    id:   p.id,
+    name: p.name,
+    days: parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value) || p.days
+  }));
+}
+
+function selectType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType = btn.dataset.type;
+}
+
+function saveOrder() {
+  const name     = document.getElementById('f-name').value.trim();
+  const deadline = document.getElementById('f-deadline').value;
+  const phase    = parseInt(document.getElementById('f-phase').value);
+  const notes    = document.getElementById('f-notes').value.trim();
+  const phaseDays= getPhaseDaysFromFields('f-phases-row');
+
+  if (!name)     { alert('案件名を入力してください'); return; }
+  if (!deadline) { alert('納期を入力してください'); return; }
+
+  if (editingId) {
+    const idx = orders.findIndex(o => o.id === editingId);
+    if (idx > -1) orders[idx] = { ...orders[idx], name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays };
+  } else {
+    orders.push({ id: uid(), name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays });
+  }
+
+  save();
+  closeModal();
+  render();
+}
+
+function deleteOrder(id) {
+  if (!confirm('この案件を削除しますか？')) return;
+  orders = orders.filter(o => o.id !== id);
+  save();
+  closeModal();
+  render();
+}
+
+/* ═══════════════════════════════
+   SETTINGS
+═══════════════════════════════ */
+function openSettings() {
+  renderPhaseFields('s-phases-row', settings.phases);
+  showModal('settings-modal');
+}
+
+function saveSettings() {
+  settings.phases = getPhaseDaysFromFields('s-phases-row');
+  save();
+  closeModal();
+  render();
+}
+
+/* ═══════════════════════════════
+   MODAL HELPERS
+═══════════════════════════════ */
+function showModal(id) {
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+/* ═══════════════════════════════
+   MOBILE TABS
+═══════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  const sidebar  = document.getElementById('sidebar');
+  const calendar = document.getElementById('calendar-panel');
+
+  sidebar.classList.remove('mobile-active');
+  calendar.classList.remove('mobile-active');
+
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+
+  if (tab === 'calendar') {
+    calendar.classList.add('mobile-active');
+    document.getElementById('bnav-calendar').classList.add('active');
+  } else if (tab === 'orders') {
+    sidebar.classList.add('mobile-active');
+    document.getElementById('bnav-orders').classList.add('active');
+  }
+}
+
+/* ═══════════════════════════════
+   ESCAPE
+═══════════════════════════════ */
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════
+   RENDER ALL
+═══════════════════════════════ */
+function render() {
+  renderOrders();
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   BACKUP / RESTORE
+═══════════════════════════════ */
+function exportData() {
+  const data = JSON.stringify({ orders, settings, exportedAt: new Date().toISOString() }, null, 2);
+  const blob  = new Blob([data], { type: 'application/json' });
+  const url   = URL.createObjectURL(blob);
+  const a     = document.createElement('a');
+  const date  = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.href     = url;
+  a.download = `shimesuke_backup_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.orders || !data.settings) throw new Error('形式が違います');
+      if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
+      orders   = data.orders;
+      settings = data.settings;
+      save();
+      closeModal();
+      render();
+      alert('復元しました！');
+    } catch(err) {
+      alert('読み込みに失敗しました。〆スケのバックアップファイルを選択してください。');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════
+   ICS EXPORT
+═══════════════════════════════ */
+function exportICS() {
+  if (orders.length === 0) { alert('案件がありません'); return; }
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//〆スケ//shimesuke//JA',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH'
+  ];
+
+  orders.forEach(order => {
+    const dl = order.deadline.replace(/-/g, '');
+    const nextDay = new Date(parseDate(order.deadline));
+    nextDay.setDate(nextDay.getDate() + 1);
+    const dlEnd = dateKey(nextDay).replace(/-/g, '');
+    const label = { illustration:'イラスト', design:'デザイン', video:'動画', other:'その他' }[order.type] || order.type;
+    const desc = [label, order.notes].filter(Boolean).join(' / ').replace(/[\r\n]+/g, '\\n');
+
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:${order.id}@shimesuke`);
+    lines.push(`SUMMARY:【〆】${order.name}`);
+    lines.push(`DTSTART;VALUE=DATE:${dl}`);
+    lines.push(`DTEND;VALUE=DATE:${dlEnd}`);
+    if (desc) lines.push(`DESCRIPTION:${desc}`);
+    lines.push(`CATEGORIES:${label}`);
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `shimesuke_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════
+   ICS IMPORT
+═══════════════════════════════ */
+function importICS(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const events = parseICS(e.target.result);
+      if (events.length === 0) { alert('読み込める予定が見つかりませんでした'); return; }
+      if (!confirm(`${events.length}件の予定を読み込みます。既存データは保持されます。よろしいですか？`)) return;
+      let added = 0;
+      events.forEach(ev => {
+        const dup = orders.find(o => o.name === ev.name && o.deadline === ev.deadline);
+        if (!dup) { orders.push(ev); added++; }
+      });
+      save(); render(); closeModal();
+      alert(`${added}件追加しました（重複スキップ：${events.length - added}件）`);
+    } catch(err) {
+      alert('.icsファイルの読み込みに失敗しました');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function parseICS(text) {
+  const events = [];
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  let inEvent = false, cur = {};
+  lines.forEach(line => {
+    if (line === 'BEGIN:VEVENT') { inEvent = true; cur = {}; return; }
+    if (line === 'END:VEVENT') {
+      inEvent = false;
+      if (cur.name && cur.deadline) {
+        // 【〆】プレフィックスがあれば除去
+        const name = cur.name.replace(/^【〆】/, '');
+        events.push({
+          id: uid(), name, type: 'other',
+          deadline: cur.deadline, currentPhase: 0,
+          notes: cur.notes || '',
+          phaseDays: settings.phases.map(p => ({ ...p }))
+        });
+      }
+      return;
+    }
+    if (!inEvent) return;
+    const colonIdx = line.indexOf(':');
+    if (colonIdx < 0) return;
+    const key = line.slice(0, colonIdx).split(';')[0];
+    const val = line.slice(colonIdx + 1).trim();
+    if (key === 'SUMMARY')     cur.name  = val;
+    if (key === 'DESCRIPTION') cur.notes = val.replace(/\\n/g, '\n');
+    if (key === 'DTSTART') {
+      const d = val.replace(/T.*$/, '');
+      if (d.length === 8) cur.deadline = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+    }
+  });
+  return events;
+}
+
+/* ═══════════════════════════════
+   SERVICE WORKER
+═══════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+/* ═══════════════════════════════
+   KEYBOARD
+═══════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+// default mobile tab
+if (window.innerWidth < 768) {
+  switchTab('calendar');
+}
+
+render();
+</script>
+</body>
+</html>
