@@ -2,7 +2,7 @@
   "name": "SchedulEX — 〆スケ",
   "short_name": "〆スケ",
   "description": "クリエイター向け締め切り管理アプリ",
-  "start_url": "./app.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F5F1EB",
   "theme_color": "#2E3460",

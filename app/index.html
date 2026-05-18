@@ -78,6 +78,34 @@ input, select, textarea { font-family: inherit; }
   gap: 8px;
 }
 .logo-sub { font-family: 'BIZ UDGothic', sans-serif; font-size: 10px; color: rgba(255,255,255,0.4); }
+.logo-tagline {
+  font-family: 'BIZ UDGothic', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255,255,255,0.18);
+  margin-left: 4px;
+  align-self: center;
+}
+.btn-top {
+  font-family: 'BIZ UDGothic', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  text-decoration: none;
+  white-space: nowrap;
+  align-self: center;
+  margin-left: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-top:hover { background: rgba(255,255,255,0.18); color: #fff; }
+@media (max-width: 767px) { .logo-tagline { display: none; } .btn-top { display: none; } }
 .header-actions { display: flex; gap: 8px; }
 .btn-icon {
   width: 32px; height: 32px;
@@ -554,6 +582,52 @@ input, select, textarea { font-family: inherit; }
   #sidebar { display: flex; }
   #calendar-panel { display: flex; }
 }
+
+/* ── SUB NAV ── */
+#sub-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 12px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#sub-nav::-webkit-scrollbar { display: none; }
+.snav-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s;
+  text-decoration: none;
+}
+.snav-btn:hover { background: var(--border); }
+.snav-btn.locked {
+  color: var(--muted);
+  border-color: var(--border);
+  cursor: default;
+}
+.snav-btn.locked:hover { background: var(--bg); }
+.snav-lock { font-size: 10px; opacity: 0.7; }
+.snav-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
 </style>
 </head>
 <body>
@@ -564,6 +638,8 @@ input, select, textarea { font-family: inherit; }
     <div class="logo">
       SchedulEX
       <span class="logo-sub">〆スケ</span>
+      <span class="logo-tagline">締め切りが、見える。〆スケで、守ろう。</span>
+      <a class="btn-top" href="../index.html">🏠 TOP</a>
     </div>
     <div class="header-actions">
       <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
@@ -571,6 +647,14 @@ input, select, textarea { font-family: inherit; }
     </div>
   </header>
   <div class="gold-line"></div>
+
+  <!-- SUB NAV -->
+  <div id="sub-nav">
+    <button class="snav-btn locked">EasyReply連携 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked">Googleカレンダー同期 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked">収支確認 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked">スタンプ <span class="snav-lock">🔒</span></button>
+  </div>
 
   <!-- MAIN -->
   <div id="main">
