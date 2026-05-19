@@ -565,6 +565,30 @@ input, select, textarea { font-family: inherit; }
 .settings-section { display: flex; flex-direction: column; gap: 10px; }
 .settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
 
+/* template management */
+.tpl-row { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border:1.5px solid var(--border); border-radius:8px; margin-bottom:6px; background:var(--bg); }
+.tpl-info { flex:1; min-width:0; }
+.tpl-name { font-size:12px; font-weight:700; color:var(--text); }
+.tpl-days { font-size:10px; color:var(--muted); margin-top:2px; }
+.tpl-btns { display:flex; gap:4px; flex-shrink:0; margin-left:8px; }
+.tpl-btn { width:26px; height:26px; border-radius:6px; border:1px solid var(--border); background:var(--surface); font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.12s; }
+.tpl-btn:hover { background:var(--border); }
+.btn-add-tpl { font-size:11px; font-weight:700; padding:4px 10px; border-radius:8px; background:var(--main); color:#fff; transition:background 0.15s; }
+.btn-add-tpl:hover:not(:disabled) { background:var(--mid); }
+.btn-add-tpl:disabled { background:var(--bg); color:var(--muted); border:1px solid var(--border); cursor:default; font-size:14px; }
+.tpl-form { border:1.5px solid var(--light); border-radius:8px; padding:10px; background:#ECEEF8; margin-bottom:6px; }
+.tpl-form-name { width:100%; padding:7px 10px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; background:var(--surface); margin-bottom:8px; outline:none; font-family:inherit; }
+.tpl-form-name:focus { border-color:var(--light); }
+.tpl-form-phases { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px; }
+.tpl-form-day { display:flex; flex-direction:column; gap:3px; }
+.tpl-form-day label { font-size:10px; font-weight:700; color:var(--muted); }
+.tpl-form-day input { padding:6px 8px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; text-align:center; background:var(--surface); outline:none; font-family:inherit; }
+.tpl-form-day input:focus { border-color:var(--light); }
+.tpl-form-actions { display:flex; gap:6px; justify-content:flex-end; }
+.tpl-form-cancel { padding:6px 12px; border:1.5px solid var(--border); border-radius:6px; font-size:11px; color:var(--muted); background:var(--bg); cursor:pointer; font-family:inherit; }
+.tpl-form-save { padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700; background:var(--main); color:#fff; cursor:pointer; font-family:inherit; }
+.tpl-form-save:hover { background:var(--mid); }
+
 /* ── MOBILE ── */
 @media (max-width: 767px) {
   body { overflow: hidden; }
@@ -736,6 +760,13 @@ input, select, textarea { font-family: inherit; }
         <input type="text" id="f-name" placeholder="例：天音みら / キャラデザ">
       </div>
 
+      <div class="field" id="f-template-field">
+        <label>テンプレート</label>
+        <select id="f-template" onchange="onTemplateSelect()">
+          <option value="">テンプレートなし（手動入力）</option>
+        </select>
+      </div>
+
       <div class="field">
         <label>依頼の種類</label>
         <div class="type-grid" id="type-grid">
@@ -817,9 +848,12 @@ input, select, textarea { font-family: inherit; }
     </div>
     <div class="modal-body">
       <div class="settings-section">
-        <p class="settings-label">デフォルトのフェーズ日数</p>
-        <div class="phases-row" id="s-phases-row"></div>
-        <p class="phase-hint">案件追加時のデフォルト値になります</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <p class="settings-label" style="margin-bottom:0;">テンプレート管理</p>
+          <button id="s-add-tpl-btn" class="btn-add-tpl" onclick="startAddTemplate()">＋ 追加</button>
+        </div>
+        <div id="s-templates"></div>
+        <div id="s-add-tpl-form"></div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
@@ -843,8 +877,7 @@ input, select, textarea { font-family: inherit; }
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-      <button class="btn-primary" onclick="saveSettings()">保存</button>
+      <button class="btn-primary" onclick="closeModal()" style="flex:none;padding:12px 24px;">閉じる</button>
     </div>
   </div>
 
@@ -852,16 +885,25 @@ input, select, textarea { font-family: inherit; }
 
 <script>
 /* ═══════════════════════════════
+   DEFAULTS
+═══════════════════════════════ */
+const DEFAULT_TEMPLATES = [
+  { id:'tpl_tateie', name:'立ち絵',        phases:[{id:'rough',name:'ラフ',days:5}, {id:'fix',name:'修正',days:3}, {id:'final',name:'清書',days:2}] },
+  { id:'tpl_mini',   name:'ミニキャラ',    phases:[{id:'rough',name:'ラフ',days:3}, {id:'fix',name:'修正',days:2}, {id:'final',name:'清書',days:1}] },
+  { id:'tpl_kv',     name:'キービジュアル', phases:[{id:'rough',name:'ラフ',days:14},{id:'fix',name:'修正',days:7}, {id:'final',name:'清書',days:5}] },
+];
+
+/* ═══════════════════════════════
    STATE
 ═══════════════════════════════ */
 let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
-let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
-  phases: [
-    { id: 'rough', name: 'ラフ',   days: 7 },
-    { id: 'fix',   name: '修正',   days: 3 },
-    { id: 'final', name: '清書',   days: 3 }
-  ]
-};
+let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null');
+if (!settings) {
+  settings = { templates: DEFAULT_TEMPLATES.map(t=>({...t,phases:t.phases.map(p=>({...p}))})) };
+} else if (!settings.templates) {
+  // マイグレーション：旧フォーマット（phases）→ templates
+  settings.templates = DEFAULT_TEMPLATES.map(t=>({...t,phases:t.phases.map(p=>({...p}))}));
+}
 
 let currentMonth = new Date();
 currentMonth.setDate(1);
@@ -923,7 +965,7 @@ function urgencyText(u) {
 
 function getPhaseSchedule(order) {
   const dl     = parseDate(order.deadline);
-  const phases = order.phaseDays || settings.phases.map(p => ({ ...p }));
+  const phases = order.phaseDays || getDefaultPhases();
   const result = [];
   let end = new Date(dl);
   for (let i = phases.length - 1; i >= 0; i--) {
@@ -971,7 +1013,14 @@ function typeLabel(t) {
 }
 
 function phaseName(idx) {
-  return settings.phases[idx]?.name || ['ラフ','修正','清書'][idx] || '';
+  return ['ラフ','修正','清書'][idx] || '';
+}
+
+function getDefaultPhases() {
+  if (settings.templates && settings.templates.length > 0) {
+    return settings.templates[0].phases.map(p=>({...p}));
+  }
+  return [{id:'rough',name:'ラフ',days:5},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}];
 }
 
 /* ═══════════════════════════════
@@ -1226,8 +1275,12 @@ function openAddOrder() {
     b.classList.toggle('selected', b.dataset.type === 'illustration');
   });
 
-  // phase fields
-  renderPhaseFields('f-phases-row', settings.phases.map(p=>({...p})));
+  // template dropdown
+  populateTemplateDropdown();
+  document.getElementById('f-template').value = '';
+
+  // phase fields (default to first template's values)
+  renderPhaseFields('f-phases-row', getDefaultPhases());
 
   // actions
   document.getElementById('order-modal-actions').innerHTML = `
@@ -1253,7 +1306,11 @@ function openEditOrder(id) {
     b.classList.toggle('selected', b.dataset.type === order.type);
   });
 
-  const phases = order.phaseDays || settings.phases.map(p=>({...p}));
+  // template dropdown (no pre-selection when editing)
+  populateTemplateDropdown();
+  document.getElementById('f-template').value = '';
+
+  const phases = order.phaseDays || getDefaultPhases();
   renderPhaseFields('f-phases-row', phases);
 
   document.getElementById('order-modal-actions').innerHTML = `
@@ -1321,15 +1378,146 @@ function deleteOrder(id) {
    SETTINGS
 ═══════════════════════════════ */
 function openSettings() {
-  renderPhaseFields('s-phases-row', settings.phases);
+  renderTemplateList();
   showModal('settings-modal');
 }
 
-function saveSettings() {
-  settings.phases = getPhaseDaysFromFields('s-phases-row');
+function populateTemplateDropdown() {
+  const sel = document.getElementById('f-template');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">テンプレートなし（手動入力）</option>';
+  settings.templates.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+}
+
+function onTemplateSelect() {
+  const tplId = document.getElementById('f-template').value;
+  if (!tplId) return;
+  const tpl = settings.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  renderPhaseFields('f-phases-row', tpl.phases.map(p=>({...p})));
+}
+
+function renderTemplateList() {
+  const container = document.getElementById('s-templates');
+  const addBtn    = document.getElementById('s-add-tpl-btn');
+  const addForm   = document.getElementById('s-add-tpl-form');
+  const atMax     = settings.templates.length >= 3;
+
+  container.innerHTML = '';
+  settings.templates.forEach(tpl => {
+    const row = document.createElement('div');
+    row.className = 'tpl-row';
+    row.id = `tpl-row-${tpl.id}`;
+    const ph = tpl.phases;
+    row.innerHTML = `
+      <div class="tpl-info">
+        <div class="tpl-name">${esc(tpl.name)}</div>
+        <div class="tpl-days">ラフ${ph[0].days}日・修正${ph[1].days}日・清書${ph[2].days}日</div>
+      </div>
+      <div class="tpl-btns">
+        <button class="tpl-btn" onclick="editTemplate('${tpl.id}')" title="編集">✏️</button>
+        <button class="tpl-btn" onclick="deleteTemplate('${tpl.id}')" title="削除">🗑️</button>
+      </div>`;
+    container.appendChild(row);
+  });
+
+  if (addBtn) {
+    addBtn.disabled    = atMax;
+    addBtn.textContent = atMax ? '🔒' : '＋ 追加';
+    addBtn.title       = atMax ? 'テンプレートは3件までです' : '';
+  }
+  if (addForm) addForm.innerHTML = '';
+}
+
+function editTemplate(id) {
+  const tpl = settings.templates.find(t => t.id === id);
+  if (!tpl) return;
+  const row = document.getElementById(`tpl-row-${id}`);
+  if (!row) return;
+  row.innerHTML = `
+    <div style="width:100%;">
+      <input class="tpl-form-name" type="text" id="tpl-edit-name-${id}" value="${esc(tpl.name)}" placeholder="テンプレート名" maxlength="20">
+      <div class="tpl-form-phases">
+        <div class="tpl-form-day"><label>ラフ</label><input type="number" min="1" max="60" id="tpl-edit-0-${id}" value="${tpl.phases[0].days}"></div>
+        <div class="tpl-form-day"><label>修正</label><input type="number" min="1" max="60" id="tpl-edit-1-${id}" value="${tpl.phases[1].days}"></div>
+        <div class="tpl-form-day"><label>清書</label><input type="number" min="1" max="60" id="tpl-edit-2-${id}" value="${tpl.phases[2].days}"></div>
+      </div>
+      <div class="tpl-form-actions">
+        <button class="tpl-form-cancel" onclick="renderTemplateList()">キャンセル</button>
+        <button class="tpl-form-save" onclick="saveEditTemplate('${id}')">保存</button>
+      </div>
+    </div>`;
+  document.getElementById(`tpl-edit-name-${id}`).focus();
+}
+
+function saveEditTemplate(id) {
+  const idx = settings.templates.findIndex(t => t.id === id);
+  if (idx < 0) return;
+  const name = document.getElementById(`tpl-edit-name-${id}`)?.value.trim();
+  if (!name) { alert('テンプレート名を入力してください'); return; }
+  const days = [0,1,2].map(i => parseInt(document.getElementById(`tpl-edit-${i}-${id}`)?.value) || 1);
+  settings.templates[idx] = {
+    ...settings.templates[idx],
+    name,
+    phases: [
+      {id:'rough', name:'ラフ',  days:days[0]},
+      {id:'fix',   name:'修正',  days:days[1]},
+      {id:'final', name:'清書',  days:days[2]},
+    ]
+  };
   save();
-  closeModal();
-  render();
+  renderTemplateList();
+}
+
+function deleteTemplate(id) {
+  if (!confirm('このテンプレートを削除しますか？')) return;
+  settings.templates = settings.templates.filter(t => t.id !== id);
+  save();
+  renderTemplateList();
+}
+
+function startAddTemplate() {
+  if (settings.templates.length >= 3) return;
+  const addBtn = document.getElementById('s-add-tpl-btn');
+  if (addBtn) { addBtn.disabled = true; addBtn.textContent = '＋ 追加'; }
+  const addForm = document.getElementById('s-add-tpl-form');
+  addForm.innerHTML = `
+    <div class="tpl-form">
+      <input class="tpl-form-name" type="text" id="tpl-new-name" placeholder="テンプレート名（例：立ち絵）" maxlength="20">
+      <div class="tpl-form-phases">
+        <div class="tpl-form-day"><label>ラフ</label><input type="number" min="1" max="60" id="tpl-new-0" value="5"></div>
+        <div class="tpl-form-day"><label>修正</label><input type="number" min="1" max="60" id="tpl-new-1" value="3"></div>
+        <div class="tpl-form-day"><label>清書</label><input type="number" min="1" max="60" id="tpl-new-2" value="2"></div>
+      </div>
+      <div class="tpl-form-actions">
+        <button class="tpl-form-cancel" onclick="renderTemplateList()">キャンセル</button>
+        <button class="tpl-form-save" onclick="saveNewTemplate()">追加</button>
+      </div>
+    </div>`;
+  document.getElementById('tpl-new-name').focus();
+}
+
+function saveNewTemplate() {
+  const name = document.getElementById('tpl-new-name')?.value.trim();
+  if (!name) { alert('テンプレート名を入力してください'); return; }
+  if (settings.templates.length >= 3) { alert('テンプレートは3件までです'); return; }
+  const days = [0,1,2].map(i => parseInt(document.getElementById(`tpl-new-${i}`)?.value) || 1);
+  settings.templates.push({
+    id: 'tpl_' + uid(),
+    name,
+    phases: [
+      {id:'rough', name:'ラフ',  days:days[0]},
+      {id:'fix',   name:'修正',  days:days[1]},
+      {id:'final', name:'清書',  days:days[2]},
+    ]
+  });
+  save();
+  renderTemplateList();
 }
 
 /* ═══════════════════════════════
