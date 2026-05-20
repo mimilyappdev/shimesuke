@@ -330,68 +330,69 @@ input, select, textarea { font-family: inherit; }
 .cal-dow.sun { color: #C05050; }
 .cal-dow.sat { color: #5070C0; }
 
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+/* Weekly Gantt */
+.cal-grid { display: flex; flex-direction: column; }
+.cal-week-block { padding: 2px 0; }
+.cal-week-sep { border: none; border-top: 0.5px solid var(--border); margin: 6px 0 8px; }
+.cal-week-head { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+.cal-week-day-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 1px 0; cursor: pointer;
 }
-.cal-cell {
-  background: var(--surface);
-  border-radius: 8px;
-  min-height: 68px;
-  padding: 4px 3px 3px;
-  cursor: pointer;
-  transition: background 0.12s;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  position: relative;
-  border: 1px solid transparent;
+.cal-week-day-col.sun .cal-gantt-dow { color: #C05050; }
+.cal-week-day-col.sat .cal-gantt-dow { color: #5070C0; }
+.cal-gantt-dow-row {
+  position: relative; display: flex;
+  align-items: center; justify-content: center;
+  width: 100%; height: 13px;
 }
-.cal-cell:hover { background: #EEF0FA; border-color: var(--light2); }
-.cal-cell.other-month { background: transparent; border-color: transparent; cursor: default; }
-.cal-cell.other-month:hover { background: transparent; border-color: transparent; }
-.cal-cell.today { background: #EEF0FA; border-color: var(--light); }
-
-.cal-day-num {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text);
-  width: 22px; height: 22px;
+.cal-gantt-dow { font-size: 9px; font-weight: 700; color: var(--muted); line-height: 1; }
+.cal-gantt-num {
+  width: 20px; height: 20px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
-  align-self: center;
+  font-size: 10px; font-weight: 700; color: var(--text);
 }
-.cal-cell.today .cal-day-num {
-  background: var(--main);
-  color: #fff;
+.cal-gantt-num.today { background: var(--main); color: #fff; }
+.shimekiri-stamp {
+  position: absolute; left: calc(50% + 5px); top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+  border: 1.8px solid #E03030; border-radius: 2px;
+  padding: 0 3px; font-size: 7.5px; font-weight: 900;
+  color: #E03030; opacity: 0.85; white-space: nowrap;
+  line-height: 1.5; pointer-events: none; z-index: 1;
 }
-.cal-cell.sun .cal-day-num { color: #C05050; }
-.cal-cell.sat .cal-day-num { color: #5070C0; }
-.cal-cell.other-month .cal-day-num { color: #CCC; }
-
-/* deadline circle */
-.cal-day-num.deadline-circle {
-  border: 2.5px solid currentColor;
-  font-weight: 700;
+.cal-gantt-bars {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  row-gap: 3px; margin-top: 3px;
 }
-
-/* phase bars in cell */
-.cal-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 0 2px;
-  flex: 1;
+.cal-gantt-bar {
+  height: 17px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
 }
-.cal-bar-row {
-  height: 4px;
-  border-radius: 2px;
-  opacity: 0;
+.cal-gantt-bar span {
+  font-size: 9px; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  color: #fff; padding: 0 5px; opacity: 0.93;
 }
-.cal-bar-row.active { opacity: 1; }
-.cal-bar-row.faded  { opacity: 0.35; }
+.cal-gantt-bar.faded { opacity: 0.28; }
+.setting-row {
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 6px 0;
+}
+.setting-row-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.toggle-switch {
+  width: 36px; height: 20px; border-radius: 10px;
+  background: var(--border); border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--main); }
+.toggle-switch::after {
+  content: ''; position: absolute;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; top: 2px; left: 2px; transition: left 0.2s;
+}
+.toggle-switch.on::after { left: 18px; }
 
 /* ── BOTTOM NAV (mobile) ── */
 #bottom-nav {
@@ -564,6 +565,21 @@ input, select, textarea { font-family: inherit; }
 /* settings modal */
 .settings-section { display: flex; flex-direction: column; gap: 10px; }
 .settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
+
+/* カラーテーマ選択 */
+.theme-options { display: flex; flex-direction: column; gap: 8px; }
+.theme-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  border: 2px solid var(--border); background: var(--bg);
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.theme-option:hover { background: #ECEEF8; border-color: var(--light2); }
+.theme-option.active { border-color: var(--main); background: #ECEEF8; }
+.theme-option-name { font-size: 12px; font-weight: 700; color: var(--text); flex: 1; }
+.theme-option-default { font-size: 9px; color: var(--muted); margin-left: 4px; font-weight: 400; }
+.theme-swatches { display: flex; gap: 4px; }
+.theme-swatch { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 
 /* template list */
 .template-item {
@@ -857,15 +873,6 @@ input, select, textarea { font-family: inherit; }
       </div>
       <div class="cal-legend" id="cal-legend"></div>
       <div class="cal-grid-wrap">
-        <div class="cal-dow-row">
-          <div class="cal-dow sun">日</div>
-          <div class="cal-dow">月</div>
-          <div class="cal-dow">火</div>
-          <div class="cal-dow">水</div>
-          <div class="cal-dow">木</div>
-          <div class="cal-dow">金</div>
-          <div class="cal-dow sat">土</div>
-        </div>
         <div class="cal-grid" id="cal-grid"></div>
       </div>
     </div>
@@ -992,6 +999,19 @@ input, select, textarea { font-family: inherit; }
     </div>
     <div class="modal-body">
       <div class="settings-section">
+        <p class="settings-label">カレンダー表示</p>
+        <div class="setting-row">
+          <span class="setting-row-label">〆切！スタンプを表示する</span>
+          <button class="toggle-switch" id="stamp-toggle" onclick="toggleShimekiriStamp()"></button>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label">カラーテーマ</p>
+        <div class="theme-options" id="theme-options"></div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
         <p class="settings-label">デフォルトのフェーズ日数</p>
         <div class="phases-row" id="s-phases-row"></div>
         <p class="phase-hint">案件追加時の手動入力デフォルト値になります</p>
@@ -1078,6 +1098,10 @@ if (!settings.templates) {
   settings.templates = DEFAULT_TEMPLATES.map(t => ({ ...t, phases: t.phases.map(p => ({ ...p })) }));
   save();
 }
+if (settings.showShimekiriStamp === undefined) {
+  settings.showShimekiriStamp = true;
+  save();
+}
 
 let currentMonth = new Date();
 currentMonth.setDate(1);
@@ -1087,10 +1111,14 @@ let editingId = null;
 let selectedType = 'illustration';
 let activeTab = 'calendar'; // mobile tab
 
-// Order color palette
-const ORDER_COLORS = [
-  '#3E4880','#3A9A88','#B86A3A','#7A4A80','#5A7A3A','#80503A'
+// カラーテーマ
+const COLOR_THEMES = [
+  { id: 'midnight', name: 'ミッドナイト',       isDefault: true,  colors: ['#161e92','#3841b7','#5c91d6','#7f63bf','#e1b75b'] },
+  { id: 'macaron',  name: 'ふんわりマカロン',   isDefault: false, colors: ['#ff5274','#febb5d','#7cdab7','#8b8ef9','#ae6dd9'] },
+  { id: 'pop',      name: 'イラストポップ',     isDefault: false, colors: ['#bb0c0c','#e3aa0d','#46c3aa','#3c92c8','#445dc1'] },
 ];
+let currentThemeId = localStorage.getItem('shimesuke_theme') || 'midnight';
+let ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
 
 /* ═══════════════════════════════
    UTILS
@@ -1296,95 +1324,155 @@ function renderCalendar() {
     legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">案件を追加するとカレンダーに表示されます</span>`;
   }
 
-  // build order → phase map for quick lookup
+  const todayKey  = dateKey(today());
+  const showStamp = settings.showShimekiriStamp !== false;
+  const DOW_LABELS = ['日','月','火','水','木','金','土'];
+
   const orderPhases = orders.map(order => ({
-    id: order.id,
+    id:       order.id,
     schedule: getPhaseSchedule(order),
-    deadline: dateKey(parseDate(order.deadline))
+    deadline: dateKey(parseDate(order.deadline)),
+    currentPhase: order.currentPhase || 0,
   }));
 
-  // calendar grid
-  const firstDay = new Date(y, m, 1).getDay();
+  // Build weeks array: each entry = [Date|null] × 7
+  const firstDay    = new Date(y, m, 1).getDay();
   const daysInMonth = new Date(y, m+1, 0).getDate();
-  const prevDays = new Date(y, m, 0).getDate();
-  const todayKey = dateKey(today());
+  const weeks = [];
+  let wd = [];
+  for (let i = 0; i < firstDay; i++) wd.push(null);
+  for (let d = 1; d <= daysInMonth; d++) {
+    wd.push(new Date(y, m, d));
+    if (wd.length === 7) { weeks.push(wd); wd = []; }
+  }
+  if (wd.length) { while (wd.length < 7) wd.push(null); weeks.push(wd); }
 
   grid.innerHTML = '';
 
-  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  weeks.forEach((weekDays, wi) => {
+    const validDates = weekDays.filter(Boolean);
+    if (!validDates.length) return;
 
-  for (let i = 0; i < totalCells; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell';
+    const block = document.createElement('div');
+    block.className = 'cal-week-block';
 
-    let date, dayNum, isOther = false;
-    if (i < firstDay) {
-      dayNum = prevDays - firstDay + i + 1;
-      date = new Date(y, m-1, dayNum);
-      isOther = true;
-    } else if (i >= firstDay + daysInMonth) {
-      dayNum = i - firstDay - daysInMonth + 1;
-      date = new Date(y, m+1, dayNum);
-      isOther = true;
-    } else {
-      dayNum = i - firstDay + 1;
-      date = new Date(y, m, dayNum);
-    }
+    // ── Day header row ──
+    const headRow = document.createElement('div');
+    headRow.className = 'cal-week-head';
 
-    const dKey = dateKey(date);
-    const dow  = date.getDay();
-    const isToday = dKey === todayKey;
+    weekDays.forEach((date, di) => {
+      const col = document.createElement('div');
+      col.className = 'cal-week-day-col' + (di===0?' sun':di===6?' sat':'');
 
-    if (isOther) cell.classList.add('other-month');
-    if (isToday) cell.classList.add('today');
-    if (dow === 0) cell.classList.add('sun');
-    if (dow === 6) cell.classList.add('sat');
+      if (date) {
+        const dKey    = dateKey(date);
+        const isToday = dKey === todayKey;
+        const dls     = orderPhases.filter(op => op.deadline === dKey);
 
-    // deadline circles
-    const deadlineOrders = isOther ? [] : orderPhases.filter(op => op.deadline === dKey);
-    let circleStyle = '';
-    if (deadlineOrders.length > 0) {
-      const idx = orders.findIndex(o => o.id === deadlineOrders[0].id);
-      circleStyle = `border: 2.5px solid ${orderColor(idx)}; color: ${orderColor(idx)};`;
-    }
+        // dow + stamp
+        const dowRow = document.createElement('div');
+        dowRow.className = 'cal-gantt-dow-row';
+        const dowSpan = document.createElement('span');
+        dowSpan.className = 'cal-gantt-dow';
+        dowSpan.textContent = DOW_LABELS[di];
+        dowRow.appendChild(dowSpan);
+        if (showStamp && dls.length > 0) {
+          const stamp = document.createElement('span');
+          stamp.className = 'shimekiri-stamp';
+          stamp.textContent = '〆切！';
+          dowRow.appendChild(stamp);
+        }
+        col.appendChild(dowRow);
 
-    cell.innerHTML = `<div class="cal-day-num${deadlineOrders.length>0?' deadline-circle':''}" style="${circleStyle}">${dayNum}</div>`;
+        // date number
+        const numEl = document.createElement('div');
+        numEl.className = 'cal-gantt-num' + (isToday ? ' today' : '');
+        if (dls.length > 0 && !isToday) {
+          const idx = orders.findIndex(o => o.id === dls[0].id);
+          numEl.style.border  = `2px solid ${orderColor(idx)}`;
+          numEl.style.color   = orderColor(idx);
+        }
+        numEl.textContent = date.getDate();
+        col.appendChild(numEl);
 
-    // phase bars
-    if (!isOther) {
-      const barsDiv = document.createElement('div');
-      barsDiv.className = 'cal-bars';
-      orders.forEach((order, idx) => {
-        const op    = orderPhases[idx];
-        const bar   = document.createElement('div');
-        bar.className = 'cal-bar-row';
-        const col   = orderColor(idx);
+        col.addEventListener('click', () => scrollToOrdersForDate(dKey));
+      }
+      headRow.appendChild(col);
+    });
+    block.appendChild(headRow);
 
-        // find which phase this day falls in
-        let inPhase = false, isFaded = false;
-        op.schedule.forEach((ph, pi) => {
+    // ── Gantt bars ──
+    const wStart = validDates[0];
+    const wEnd   = validDates[validDates.length - 1];
+    const wEndInclusive = new Date(wEnd); wEndInclusive.setHours(23,59,59,999);
+
+    const activeOrders = orders
+      .map((order, idx) => ({ order, idx, op: orderPhases[idx] }))
+      .filter(({ op }) =>
+        op.schedule.some(ph => {
           const s = new Date(ph.start); s.setHours(0,0,0,0);
           const e = new Date(ph.end);   e.setHours(0,0,0,0);
-          if (date >= s && date < e) {
-            inPhase = true;
-            if (pi < (order.currentPhase || 0)) isFaded = true;
+          return s <= wEndInclusive && e > wStart;
+        })
+      )
+      .sort((a, b) => a.op.deadline.localeCompare(b.op.deadline));
+
+    if (activeOrders.length) {
+      const barsGrid = document.createElement('div');
+      barsGrid.className = 'cal-gantt-bars';
+
+      activeOrders.forEach(({ order, idx, op }) => {
+        // Determine bar span within this week
+        let barStart = null, barEnd = null;
+        op.schedule.forEach(ph => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          if (s <= wEndInclusive && e > wStart) {
+            const cs = s < wStart ? wStart : s;
+            const ce = e > wEndInclusive ? new Date(wEnd.getTime() + 86400000) : e;
+            if (!barStart || cs < barStart) barStart = cs;
+            if (!barEnd   || ce > barEnd)   barEnd   = ce;
           }
         });
+        if (!barStart) return;
 
-        if (inPhase) {
-          bar.classList.add(isFaded ? 'faded' : 'active');
-          bar.style.background = col;
-        }
-        barsDiv.appendChild(bar);
+        // Map to grid columns (1–7)
+        let colS = -1, colE = -1;
+        weekDays.forEach((d, di) => {
+          if (!d) return;
+          if (d >= barStart && colS === -1) colS = di;
+          if (barEnd && d < barEnd) colE = di;
+        });
+        if (colS === -1) return;
+        if (colE === -1) colE = colS;
+
+        // Faded = this week only overlaps completed phases
+        const activePhases = op.schedule.slice(op.currentPhase);
+        const inActive = activePhases.some(ph => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          return s <= wEndInclusive && e > wStart;
+        });
+
+        const bar = document.createElement('div');
+        bar.className = 'cal-gantt-bar' + (inActive ? '' : ' faded');
+        bar.style.background  = orderColor(idx);
+        bar.style.gridColumn  = `${colS+1} / ${colE+2}`;
+        bar.innerHTML = `<span>${esc(order.name.split('/')[0].trim())}</span>`;
+        barsGrid.appendChild(bar);
       });
-      cell.appendChild(barsDiv);
 
-      // click handler
-      cell.onclick = () => scrollToOrdersForDate(dKey);
+      block.appendChild(barsGrid);
     }
 
-    grid.appendChild(cell);
-  }
+    if (wi < weeks.length - 1) {
+      const sep = document.createElement('hr');
+      sep.className = 'cal-week-sep';
+      block.appendChild(sep);
+    }
+
+    grid.appendChild(block);
+  });
 }
 
 /* scroll to nearest order for clicked date */
@@ -1417,6 +1505,19 @@ function scrollToOrdersForDate(dKey) {
 /* ═══════════════════════════════
    CALENDAR NAVIGATION
 ═══════════════════════════════ */
+function toggleShimekiriStamp() {
+  settings.showShimekiriStamp = !settings.showShimekiriStamp;
+  save();
+  const btn = document.getElementById('stamp-toggle');
+  if (btn) btn.classList.toggle('on', settings.showShimekiriStamp);
+  renderCalendar();
+}
+
+function initStampToggle() {
+  const btn = document.getElementById('stamp-toggle');
+  if (btn) btn.classList.toggle('on', settings.showShimekiriStamp !== false);
+}
+
 function changeMonth(dir) {
   currentMonth.setMonth(currentMonth.getMonth() + dir);
   renderCalendar();
@@ -1643,7 +1744,37 @@ function backToSettings() {
 ═══════════════════════════════ */
 function openSettings() {
   renderPhaseFields('s-phases-row', settings.phases);
+  renderThemeOptions();
   showModal('settings-modal');
+  initStampToggle();
+}
+
+function renderThemeOptions() {
+  const wrap = document.getElementById('theme-options');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  COLOR_THEMES.forEach(theme => {
+    const isActive = theme.id === currentThemeId;
+    const div = document.createElement('div');
+    div.className = 'theme-option' + (isActive ? ' active' : '');
+    div.onclick = () => selectTheme(theme.id);
+    div.innerHTML = `
+      <div class="theme-swatches">
+        ${theme.colors.map(c => `<div class="theme-swatch" style="background:${c};"></div>`).join('')}
+      </div>
+      <span class="theme-option-name">${theme.name}${theme.isDefault ? '<span class="theme-option-default">デフォルト</span>' : ''}</span>
+      ${isActive ? '<span style="font-size:14px;">✓</span>' : ''}`;
+    wrap.appendChild(div);
+  });
+}
+
+function selectTheme(id) {
+  currentThemeId = id;
+  const theme = COLOR_THEMES.find(t => t.id === id) || COLOR_THEMES[0];
+  ORDER_COLORS = theme.colors.slice();
+  localStorage.setItem('shimesuke_theme', id);
+  renderThemeOptions();
+  render();
 }
 
 function saveSettings() {
