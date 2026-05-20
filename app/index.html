@@ -763,7 +763,7 @@ input, select, textarea { font-family: inherit; }
   display: none;
   flex-direction: column;
   gap: 10px;
-  z-index: 50;
+  z-index: 70;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
   min-width: 280px;
 }
@@ -1098,6 +1098,7 @@ input, select, textarea { font-family: inherit; }
           <option value="0">ラフ中</option>
           <option value="1">修正中</option>
           <option value="2">清書中</option>
+          <option value="3">完了</option>
         </select>
       </div>
 
@@ -1237,6 +1238,8 @@ let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') 
 };
 
 const MAX_FREE_TEMPLATES = 3;
+const MAX_FREE_ORDERS = 3;
+function isPremium() { return false; }
 const DEFAULT_TEMPLATES = [
   { id: 'tpl_illust', name: 'イラスト',   phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
   { id: 'tpl_mini',   name: 'ミニキャラ', phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
@@ -1406,18 +1409,16 @@ function renderOrders() {
     const utxt    = urgencyText(urgency);
     const isDark  = urgency === 'caution';
 
-    const schedule  = getPhaseSchedule(order);
-    const curPhase  = order.currentPhase || 0;
-    const phasesBadge = ['ラフ中','修正中','清書中'][curPhase] || '';
+    const schedule    = getPhaseSchedule(order);
+    const curPhase    = order.currentPhase || 0;
+    const isCompleted = curPhase >= 3;
+    const phasesBadge = isCompleted ? '完了' : (['ラフ中','修正中','清書中'][curPhase] || '');
 
     // phase bar
     let barHTML = '';
     for (let i = 0; i < 3; i++) {
-      let bg = 'var(--border)';
-      if (i < curPhase)  bg = uc;
-      if (i === curPhase) bg = uc;
-      if (i > curPhase)  bg = 'var(--border)';
-      const opacity = i < curPhase ? '1' : i === curPhase ? '1' : '0.25';
+      const bg      = isCompleted ? 'var(--muted)' : (i <= curPhase ? uc : 'var(--border)');
+      const opacity = isCompleted ? '0.4'          : (i <= curPhase ? '1' : '0.25');
       barHTML += `<div class="phase-seg" style="background:${bg};opacity:${opacity};"></div>`;
     }
 
@@ -1442,7 +1443,7 @@ function renderOrders() {
       </div>
       <div class="card-row1">
         <div class="card-name">${esc(order.name)}</div>
-        <div class="card-phase-badge" style="background:${uc}22;color:${utxt};">${phasesBadge}</div>
+        <div class="card-phase-badge" style="background:${isCompleted?'var(--border)':''+uc+'22'};color:${isCompleted?'var(--muted)':utxt};">${phasesBadge}</div>
       </div>
       <div class="card-type-row">
         ${pict(order.type, utxt, 18)}
@@ -1452,8 +1453,39 @@ function renderOrders() {
       <div class="card-deadline-row" style="color:${utxt};">
         🗓 〆 ${fmtDate(dl)} — ${dlLabel}
       </div>`;
+    if (isCompleted) card.style.opacity = '0.55';
     list.appendChild(card);
   });
+
+  // アクティブ案件数チェック → ＋追加ボタン制御
+  const activeCount = orders.filter(o => (o.currentPhase || 0) < 3).length;
+  const addBtn = document.querySelector('.sidebar-header .btn-add');
+  if (addBtn) {
+    if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+      addBtn.disabled = true;
+      addBtn.style.opacity = '0.35';
+      addBtn.style.cursor = 'default';
+      addBtn.onclick = null;
+    } else {
+      addBtn.disabled = false;
+      addBtn.style.opacity = '';
+      addBtn.style.cursor = '';
+      addBtn.onclick = openAddOrder;
+    }
+  }
+
+  // アクティブ3件上限時 UNLOCK カード表示
+  if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div style="border:1.5px dashed #E1B75B;border-radius:10px;padding:12px 10px;margin:8px 4px 4px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:4px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">アクティブ案件は${MAX_FREE_ORDERS}件まで</div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">案件を「完了」にすると枠が空きます<br>PROで無制限に追加できます</div>
+        <button style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">👑 アップグレード</button>
+      </div>`;
+    list.appendChild(wrap);
+  }
 }
 
 /* ═══════════════════════════════
