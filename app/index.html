@@ -612,13 +612,14 @@ input, select, textarea { font-family: inherit; }
 
 /* 月ラベル横 チャートカラーボタン */
 .chart-color-btn {
-  display: flex; align-items: center; gap: 2px;
-  padding: 3px 7px; border-radius: 12px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 12px;
   background: var(--bg); border: 1px solid var(--border);
   margin-left: 6px; transition: background 0.12s;
 }
 .chart-color-btn:hover { background: var(--border); }
 .chart-color-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.chart-color-label { font-size: 9px; font-weight: 700; color: var(--muted); white-space: nowrap; margin-left: 2px; }
 
 /* チャートカラーポップアップ */
 .chart-theme-list { display: flex; flex-direction: column; gap: 6px; }
@@ -687,7 +688,7 @@ input, select, textarea { font-family: inherit; }
 #sticker-layer {
   position: fixed;
   inset: 0;
-  z-index: 500;
+  z-index: 40;
   pointer-events: none;
   overflow: hidden;
 }
@@ -752,7 +753,7 @@ input, select, textarea { font-family: inherit; }
 /* スタンプパネル */
 #stamp-panel {
   position: fixed;
-  bottom: 60px;
+  top: 94px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--surface);
@@ -762,13 +763,14 @@ input, select, textarea { font-family: inherit; }
   display: none;
   flex-direction: column;
   gap: 10px;
-  z-index: 600;
+  z-index: 50;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
   min-width: 280px;
 }
 #stamp-panel.open { display: flex; }
 .stamp-panel-title { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; }
-.stamp-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.stamp-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-height: 108px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.stamp-options::-webkit-scrollbar { display: none; }
 .stamp-option {
   width: 56px;
   height: 56px;
@@ -812,6 +814,8 @@ input, select, textarea { font-family: inherit; }
 
 /* ── SUB NAV ── */
 #sub-nav {
+  position: relative;
+  z-index: 60;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 0 12px;
@@ -892,14 +896,24 @@ input, select, textarea { font-family: inherit; }
     <p class="popup-label">🎨 テーマカラー</p>
     <div class="skin-list" id="skin-list"></div>
     <div style="height:1px;background:var(--border);margin:10px 0;"></div>
-    <div style="border:1.5px dashed var(--border);border-radius:8px;padding:10px;opacity:.8;">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-        <span style="font-size:12px;">🔒</span>
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">カスタムテーマ①〜②</span>
-        <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+    <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
+        <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー — カスタムテーマ</span>
       </div>
-      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:6px;">好きな色でオリジナルテーマを作成できます</p>
-      <button onclick="closeSkinPopup()" style="font-size:9px;font-weight:700;padding:5px 14px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;pointer-events:none;opacity:0.6;">
+        <div class="skin-opt">
+          <div class="skin-preview" style="background:linear-gradient(90deg,#7B3FA0 45%,#F5EEFF 45%);border:1px solid var(--border);"></div>
+          <span class="skin-name">マイカラー①</span>
+          <span style="font-size:13px;">🔒</span>
+        </div>
+        <div class="skin-opt">
+          <div class="skin-preview" style="background:linear-gradient(90deg,#0A6E7A 45%,#E8FAFA 45%);border:1px solid var(--border);"></div>
+          <span class="skin-name">マイカラー②</span>
+          <span style="font-size:13px;">🔒</span>
+        </div>
+      </div>
+      <button onclick="closeSkinPopup()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
     </div>
     <div class="popup-close-row"><span class="popup-close-btn" onclick="closeSkinPopup()">閉じる</span></div>
   </div>
@@ -909,14 +923,36 @@ input, select, textarea { font-family: inherit; }
     <p class="popup-label">📊 チャートカラー</p>
     <div class="chart-theme-list" id="chart-theme-list"></div>
     <div style="height:1px;background:var(--border);margin:10px 0;"></div>
-    <div style="border:1.5px dashed var(--border);border-radius:8px;padding:10px;opacity:.8;">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-        <span style="font-size:12px;">🔒</span>
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー①〜②</span>
-        <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+    <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;">
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
+        <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー — カスタムチャート</span>
       </div>
-      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:6px;">好きな5色をカスタマイズしてオリジナルカラーが使えます</p>
-      <button onclick="closeChartColorPopup()" style="font-size:9px;font-weight:700;padding:5px 14px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;pointer-events:none;opacity:0.6;">
+        <div class="chart-theme-opt">
+          <div class="chart-theme-dots">
+            <div class="chart-theme-dot" style="background:#E8604C;"></div>
+            <div class="chart-theme-dot" style="background:#F0A03C;"></div>
+            <div class="chart-theme-dot" style="background:#7BC67E;"></div>
+            <div class="chart-theme-dot" style="background:#5EA8E8;"></div>
+            <div class="chart-theme-dot" style="background:#B785DE;"></div>
+          </div>
+          <span class="chart-theme-name">マイカラー①</span>
+          <span style="font-size:13px;">🔒</span>
+        </div>
+        <div class="chart-theme-opt">
+          <div class="chart-theme-dots">
+            <div class="chart-theme-dot" style="background:#FF9FB2;"></div>
+            <div class="chart-theme-dot" style="background:#FFCB6B;"></div>
+            <div class="chart-theme-dot" style="background:#A8D8A8;"></div>
+            <div class="chart-theme-dot" style="background:#8EC8E8;"></div>
+            <div class="chart-theme-dot" style="background:#D4A5E8;"></div>
+          </div>
+          <span class="chart-theme-name">マイカラー②</span>
+          <span style="font-size:13px;">🔒</span>
+        </div>
+      </div>
+      <button onclick="closeChartColorPopup()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
     </div>
     <div class="popup-close-row"><span class="popup-close-btn" onclick="closeChartColorPopup()">閉じる</span></div>
   </div>
@@ -961,6 +997,7 @@ input, select, textarea { font-family: inherit; }
           <span class="cal-month-label" id="cal-month-label">2026年5月</span>
           <button class="chart-color-btn" id="chart-color-btn" onclick="toggleChartColorPopup(event)" title="チャートカラー">
             <div id="chart-color-dots" style="display:flex;gap:2px;"></div>
+            <span class="chart-color-label">カラー変更</span>
           </button>
         </div>
         <button class="cal-today-btn" onclick="goToday()">今日</button>
@@ -1006,7 +1043,7 @@ input, select, textarea { font-family: inherit; }
 
       <div class="field">
         <label>案件名 / クライアント名</label>
-        <input type="text" id="f-name" placeholder="例：天音みら / キャラデザ">
+        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ">
       </div>
 
       <div class="field">
@@ -1110,16 +1147,45 @@ input, select, textarea { font-family: inherit; }
         <p class="settings-label">フェーズテンプレート（無料：最大3件）</p>
         <div id="template-list"></div>
         <button class="btn-add-tpl" id="btn-add-tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
+        <div style="border:1.5px solid #E1B75B;border-radius:10px;padding:12px;margin-top:12px;background:#FFFBF0;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+            <span style="font-size:9px;padding:1px 7px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+            <span style="font-size:12px;font-weight:700;color:#8A6000;">プレミアムテンプレート</span>
+          </div>
+          <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-bottom:10px;">テンプレートを無制限に作成＋プロ向けテンプレが使えます</p>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;opacity:0.55;pointer-events:none;">
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
+              <span style="font-size:13px;">🔒</span>
+              <span style="font-size:11px;font-weight:700;flex:1;">背景イラスト</span>
+              <span style="font-size:9px;color:var(--muted);">ラフ14日・修正7日・清書5日</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
+              <span style="font-size:13px;">🔒</span>
+              <span style="font-size:11px;font-weight:700;flex:1;">漫画・コミック</span>
+              <span style="font-size:9px;color:var(--muted);">ネーム7日・ペン入れ14日・仕上げ5日</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
+              <span style="font-size:13px;">🔒</span>
+              <span style="font-size:11px;font-weight:700;flex:1;">グッズデザイン</span>
+              <span style="font-size:9px;color:var(--muted);">デザイン5日・確認3日・入稿2日</span>
+            </div>
+          </div>
+          <button onclick="closeModal()" style="width:100%;font-size:11px;font-weight:700;padding:9px;border-radius:10px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+        </div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
         <p class="settings-label">バックアップ / 復元</p>
         <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
-        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
-          📂 JSONから復元
-          <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
-        </label>
-        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">⚠️ 復元すると現在のデータは上書きされます</p>
+        <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;margin-top:4px;">
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
+            <span style="font-size:13px;">🔒</span>
+            <span style="font-size:11px;font-weight:700;color:var(--muted);">JSONから復元</span>
+            <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+          </div>
+          <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">バックアップファイルからデータを復元できます</p>
+          <button onclick="closeModal()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+        </div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
@@ -1172,9 +1238,9 @@ let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') 
 
 const MAX_FREE_TEMPLATES = 3;
 const DEFAULT_TEMPLATES = [
-  { id: 'tpl_tachie', name: '立ち絵',         phases: [{id:'rough',name:'ラフ',days:5},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
-  { id: 'tpl_mini',   name: 'ミニキャラ',     phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
-  { id: 'tpl_kv',     name: 'キービジュアル', phases: [{id:'rough',name:'ラフ',days:14},{id:'fix',name:'修正',days:7},{id:'final',name:'清書',days:5}] },
+  { id: 'tpl_illust', name: 'イラスト',   phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
+  { id: 'tpl_mini',   name: 'ミニキャラ', phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
+  { id: 'tpl_ichi',   name: '一枚絵',     phases: [{id:'rough',name:'ラフ',days:10},{id:'fix',name:'修正',days:5},{id:'final',name:'清書',days:3}] },
 ];
 
 // 既存ユーザー向けマイグレーション
@@ -1208,7 +1274,6 @@ let ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THE
 const UI_SKINS = [
   { id: 'default', name: 'デフォルト', main: '#2E3460', mid: '#3E4880', bg: '#F5F1EB', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A8090', border: '#DDD8D0' },
   { id: 'dark',    name: 'ダーク',     main: '#1E2340', mid: '#2A3060', bg: '#12152A', surface: '#1E2340', text: '#E8ECF4', muted: '#9AA0B8', border: '#3A3F60' },
-  { id: 'sakura',  name: 'さくら',     main: '#8B3A6B', mid: '#A04A7A', bg: '#FFF5F7', surface: '#FFFFFF', text: '#2A2A2A', muted: '#8A7080', border: '#EDD8E0' },
   { id: 'forest',  name: 'フォレスト', main: '#2D5A27', mid: '#3D6A37', bg: '#F0F5EC', surface: '#FFFFFF', text: '#2A2A2A', muted: '#6A7A68', border: '#C8D8C4' },
 ];
 let currentSkinId = localStorage.getItem('shimesuke_skin') || 'default';
@@ -1836,6 +1901,7 @@ function backToSettings() {
    SETTINGS
 ═══════════════════════════════ */
 function openSettings() {
+  closeStampPanel();
   renderPhaseFields('s-phases-row', settings.phases);
   showModal('settings-modal');
   initStampToggle();
@@ -1991,6 +2057,13 @@ function handleOverlayClick(e) {
 ═══════════════════════════════ */
 function switchTab(tab) {
   activeTab = tab;
+  const stickerLayer = document.getElementById('sticker-layer');
+  if (tab === 'calendar') {
+    if (stickerLayer) stickerLayer.style.display = '';
+  } else {
+    closeStampPanel();
+    if (stickerLayer) stickerLayer.style.display = 'none';
+  }
   const sidebar  = document.getElementById('sidebar');
   const calendar = document.getElementById('calendar-panel');
 
@@ -2027,11 +2100,19 @@ function render() {
    BACKUP / RESTORE
 ═══════════════════════════════ */
 function exportData() {
-  const data = JSON.stringify({ orders, settings, exportedAt: new Date().toISOString() }, null, 2);
-  const blob  = new Blob([data], { type: 'application/json' });
-  const url   = URL.createObjectURL(blob);
-  const a     = document.createElement('a');
-  const date  = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const data = JSON.stringify({
+    orders,
+    settings,
+    theme:         currentThemeId,
+    skin:          currentSkinId,
+    stickers:      placedStickers,
+    customStamps,
+    exportedAt:    new Date().toISOString()
+  }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
   a.href     = url;
   a.download = `shimesuke_backup_${date}.json`;
   a.click();
@@ -2049,6 +2130,10 @@ function importData(input) {
       if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
       orders   = data.orders;
       settings = data.settings;
+      if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.skin)         { currentSkinId  = data.skin;   localStorage.setItem('shimesuke_skin',  currentSkinId);  applyUISkin(currentSkinId); }
+      if (data.stickers)     { placedStickers = data.stickers;   saveStickers(); }
+      if (data.customStamps) { customStamps   = data.customStamps; saveCustomStamps(); }
       save();
       closeModal();
       render();
@@ -2283,7 +2368,8 @@ function renderStampOptions() {
       <div class="so-del" onclick="event.stopPropagation();deleteCustomStamp('${s.id}')">✕</div>
     </div>`).join('');
 
-  const uploadBtn = `<div class="stamp-option stamp-option-add" onclick="document.getElementById('stamp-upload').click()">＋</div>`;
+  const uploadBtn = `<div class="stamp-option stamp-option-add" onclick="document.getElementById('stamp-upload').click()">＋</div>
+    <p style="width:100%;font-size:9px;color:var(--muted);text-align:center;margin-top:2px;">正方形120pxにトリミングされます</p>`;
 
   wrap.innerHTML = defaultHtml + customHtml + uploadBtn;
 }
