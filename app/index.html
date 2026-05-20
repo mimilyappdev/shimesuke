@@ -566,20 +566,73 @@ input, select, textarea { font-family: inherit; }
 .settings-section { display: flex; flex-direction: column; gap: 10px; }
 .settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
 
-/* カラーテーマ選択 */
-.theme-options { display: flex; flex-direction: column; gap: 8px; }
-.theme-option {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 10px;
-  border: 2px solid var(--border); background: var(--bg);
-  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+/* ── ヘッダー テーマボタン ── */
+.header-theme-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 20px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.22);
+  transition: background 0.15s;
+  flex-shrink: 0;
 }
-.theme-option:hover { background: #ECEEF8; border-color: var(--light2); }
-.theme-option.active { border-color: var(--main); background: #ECEEF8; }
-.theme-option-name { font-size: 12px; font-weight: 700; color: var(--text); flex: 1; }
-.theme-option-default { font-size: 9px; color: var(--muted); margin-left: 4px; font-weight: 400; }
-.theme-swatches { display: flex; gap: 4px; }
-.theme-swatch { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.header-theme-btn:hover { background: rgba(255,255,255,0.22); }
+.header-theme-dots { display: flex; gap: 3px; align-items: center; }
+.header-theme-dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0; }
+.header-theme-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; }
+
+/* ── カラーポップアップ共通 ── */
+.color-popup {
+  position: fixed;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 700;
+  display: none;
+  min-width: 230px;
+}
+.color-popup.open { display: block; }
+.popup-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 10px; }
+.popup-close-row { text-align: right; margin-top: 10px; }
+.popup-close-btn { font-size: 10px; color: var(--muted); cursor: pointer; text-decoration: underline; }
+
+/* UIスキン */
+.skin-list { display: flex; flex-direction: column; gap: 6px; }
+.skin-opt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; transition: all 0.15s;
+}
+.skin-opt:hover { background: #ECEEF8; border-color: var(--light2); }
+.skin-opt.active { border-color: var(--main); background: #ECEEF8; }
+.skin-preview { width: 30px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+.skin-name { font-size: 11px; font-weight: 700; flex: 1; }
+
+/* 月ラベル横 チャートカラーボタン */
+.chart-color-btn {
+  display: flex; align-items: center; gap: 2px;
+  padding: 3px 7px; border-radius: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  margin-left: 6px; transition: background 0.12s;
+}
+.chart-color-btn:hover { background: var(--border); }
+.chart-color-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* チャートカラーポップアップ */
+.chart-theme-list { display: flex; flex-direction: column; gap: 6px; }
+.chart-theme-opt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; transition: all 0.15s;
+}
+.chart-theme-opt:hover { background: #ECEEF8; border-color: var(--light2); }
+.chart-theme-opt.active { border-color: var(--main); background: #ECEEF8; }
+.chart-theme-dots { display: flex; gap: 3px; }
+.chart-theme-dot { width: 13px; height: 13px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+.chart-theme-name { font-size: 11px; font-weight: 700; flex: 1; }
 
 /* template list */
 .template-item {
@@ -816,6 +869,10 @@ input, select, textarea { font-family: inherit; }
       <a class="btn-top" href="../index.html">🏠 TOP</a>
     </div>
     <div class="header-actions">
+      <button class="header-theme-btn" id="header-theme-btn" onclick="toggleSkinPopup(event)" title="テーマカラー">
+        <div class="header-theme-dots" id="header-theme-dots"></div>
+        <span class="header-theme-label">テーマ｜カラー変更</span>
+      </button>
       <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
@@ -828,6 +885,40 @@ input, select, textarea { font-family: inherit; }
     <button class="snav-btn locked">Googleカレンダー同期 <span class="snav-lock">🔒</span></button>
     <button class="snav-btn locked">収支確認 <span class="snav-lock">🔒</span></button>
     <button class="snav-btn" onclick="toggleStampPanel()">🎨 スタンプ</button>
+  </div>
+
+  <!-- テーマカラー（UIスキン）ポップアップ -->
+  <div class="color-popup" id="skin-popup">
+    <p class="popup-label">🎨 テーマカラー</p>
+    <div class="skin-list" id="skin-list"></div>
+    <div style="height:1px;background:var(--border);margin:10px 0;"></div>
+    <div style="border:1.5px dashed var(--border);border-radius:8px;padding:10px;opacity:.8;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+        <span style="font-size:12px;">🔒</span>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">カスタムテーマ①〜②</span>
+        <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+      </div>
+      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:6px;">好きな色でオリジナルテーマを作成できます</p>
+      <button onclick="closeSkinPopup()" style="font-size:9px;font-weight:700;padding:5px 14px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+    </div>
+    <div class="popup-close-row"><span class="popup-close-btn" onclick="closeSkinPopup()">閉じる</span></div>
+  </div>
+
+  <!-- チャートカラーポップアップ -->
+  <div class="color-popup" id="chart-color-popup">
+    <p class="popup-label">📊 チャートカラー</p>
+    <div class="chart-theme-list" id="chart-theme-list"></div>
+    <div style="height:1px;background:var(--border);margin:10px 0;"></div>
+    <div style="border:1.5px dashed var(--border);border-radius:8px;padding:10px;opacity:.8;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+        <span style="font-size:12px;">🔒</span>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー①〜②</span>
+        <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
+      </div>
+      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:6px;">好きな5色をカスタマイズしてオリジナルカラーが使えます</p>
+      <button onclick="closeChartColorPopup()" style="font-size:9px;font-weight:700;padding:5px 14px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
+    </div>
+    <div class="popup-close-row"><span class="popup-close-btn" onclick="closeChartColorPopup()">閉じる</span></div>
   </div>
 
   <!-- STICKER LAYER -->
@@ -868,6 +959,9 @@ input, select, textarea { font-family: inherit; }
           <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
           <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
           <span class="cal-month-label" id="cal-month-label">2026年5月</span>
+          <button class="chart-color-btn" id="chart-color-btn" onclick="toggleChartColorPopup(event)" title="チャートカラー">
+            <div id="chart-color-dots" style="display:flex;gap:2px;"></div>
+          </button>
         </div>
         <button class="cal-today-btn" onclick="goToday()">今日</button>
       </div>
@@ -1007,11 +1101,6 @@ input, select, textarea { font-family: inherit; }
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">カラーテーマ</p>
-        <div class="theme-options" id="theme-options"></div>
-      </div>
-      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
-      <div class="settings-section">
         <p class="settings-label">デフォルトのフェーズ日数</p>
         <div class="phases-row" id="s-phases-row"></div>
         <p class="phase-hint">案件追加時の手動入力デフォルト値になります</p>
@@ -1036,11 +1125,6 @@ input, select, textarea { font-family: inherit; }
       <div class="settings-section">
         <p class="settings-label">カレンダー連携 (.ics)</p>
         <button class="btn-primary" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
-        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
-          📅 .icsから読み込む
-          <input type="file" id="ics-import-file" accept=".ics" onchange="importICS(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
-        </label>
-        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">※ 読み込んだ予定は既存データに追加されます（名前＋日付が同じものはスキップ）</p>
       </div>
     </div>
     <div class="modal-actions">
@@ -1111,14 +1195,23 @@ let editingId = null;
 let selectedType = 'illustration';
 let activeTab = 'calendar'; // mobile tab
 
-// カラーテーマ
+// チャートカラーテーマ
 const COLOR_THEMES = [
-  { id: 'midnight', name: 'ミッドナイト',       isDefault: true,  colors: ['#161e92','#3841b7','#5c91d6','#7f63bf','#e1b75b'] },
-  { id: 'macaron',  name: 'ふんわりマカロン',   isDefault: false, colors: ['#ff5274','#febb5d','#7cdab7','#8b8ef9','#ae6dd9'] },
-  { id: 'pop',      name: 'イラストポップ',     isDefault: false, colors: ['#bb0c0c','#e3aa0d','#46c3aa','#3c92c8','#445dc1'] },
+  { id: 'midnight', name: 'ミッドナイト',     colors: ['#161e92','#3841b7','#5c91d6','#7f63bf','#e1b75b'] },
+  { id: 'macaron',  name: 'ふんわりマカロン', colors: ['#ff5274','#febb5d','#7cdab7','#8b8ef9','#ae6dd9'] },
+  { id: 'pop',      name: 'イラストポップ',   colors: ['#bb0c0c','#e3aa0d','#46c3aa','#3c92c8','#445dc1'] },
 ];
 let currentThemeId = localStorage.getItem('shimesuke_theme') || 'midnight';
 let ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
+
+// UIスキン（ヘッダー・背景カラー）
+const UI_SKINS = [
+  { id: 'default', name: 'デフォルト', main: '#2E3460', mid: '#3E4880', bg: '#F5F1EB', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A8090', border: '#DDD8D0' },
+  { id: 'dark',    name: 'ダーク',     main: '#1E2340', mid: '#2A3060', bg: '#12152A', surface: '#1E2340', text: '#E8ECF4', muted: '#9AA0B8', border: '#3A3F60' },
+  { id: 'sakura',  name: 'さくら',     main: '#8B3A6B', mid: '#A04A7A', bg: '#FFF5F7', surface: '#FFFFFF', text: '#2A2A2A', muted: '#8A7080', border: '#EDD8E0' },
+  { id: 'forest',  name: 'フォレスト', main: '#2D5A27', mid: '#3D6A37', bg: '#F0F5EC', surface: '#FFFFFF', text: '#2A2A2A', muted: '#6A7A68', border: '#C8D8C4' },
+];
+let currentSkinId = localStorage.getItem('shimesuke_skin') || 'default';
 
 /* ═══════════════════════════════
    UTILS
@@ -1744,28 +1837,8 @@ function backToSettings() {
 ═══════════════════════════════ */
 function openSettings() {
   renderPhaseFields('s-phases-row', settings.phases);
-  renderThemeOptions();
   showModal('settings-modal');
   initStampToggle();
-}
-
-function renderThemeOptions() {
-  const wrap = document.getElementById('theme-options');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  COLOR_THEMES.forEach(theme => {
-    const isActive = theme.id === currentThemeId;
-    const div = document.createElement('div');
-    div.className = 'theme-option' + (isActive ? ' active' : '');
-    div.onclick = () => selectTheme(theme.id);
-    div.innerHTML = `
-      <div class="theme-swatches">
-        ${theme.colors.map(c => `<div class="theme-swatch" style="background:${c};"></div>`).join('')}
-      </div>
-      <span class="theme-option-name">${theme.name}${theme.isDefault ? '<span class="theme-option-default">デフォルト</span>' : ''}</span>
-      ${isActive ? '<span style="font-size:14px;">✓</span>' : ''}`;
-    wrap.appendChild(div);
-  });
 }
 
 function selectTheme(id) {
@@ -1773,8 +1846,121 @@ function selectTheme(id) {
   const theme = COLOR_THEMES.find(t => t.id === id) || COLOR_THEMES[0];
   ORDER_COLORS = theme.colors.slice();
   localStorage.setItem('shimesuke_theme', id);
-  renderThemeOptions();
+  updateChartColorDots();
   render();
+}
+
+/* ═══════════════════════════════
+   UIスキン
+═══════════════════════════════ */
+function applyUISkin(id) {
+  const skin = UI_SKINS.find(s => s.id === id) || UI_SKINS[0];
+  const r = document.documentElement;
+  r.style.setProperty('--main',    skin.main);
+  r.style.setProperty('--mid',     skin.mid);
+  r.style.setProperty('--bg',      skin.bg);
+  r.style.setProperty('--surface', skin.surface);
+  r.style.setProperty('--text',    skin.text);
+  r.style.setProperty('--muted',   skin.muted);
+  r.style.setProperty('--border',  skin.border);
+  currentSkinId = id;
+  localStorage.setItem('shimesuke_skin', id);
+  updateHeaderThemeDots();
+}
+
+function updateHeaderThemeDots() {
+  const wrap = document.getElementById('header-theme-dots');
+  if (!wrap) return;
+  const skin = UI_SKINS.find(s => s.id === currentSkinId) || UI_SKINS[0];
+  wrap.innerHTML = [skin.main, skin.mid, skin.bg].map(c =>
+    `<div class="header-theme-dot" style="background:${c};"></div>`
+  ).join('');
+}
+
+function updateChartColorDots() {
+  const wrap = document.getElementById('chart-color-dots');
+  if (!wrap) return;
+  const theme = COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0];
+  wrap.innerHTML = theme.colors.map(c =>
+    `<div class="chart-color-dot" style="background:${c};"></div>`
+  ).join('');
+}
+
+/* ─ スキンポップアップ ─ */
+function toggleSkinPopup(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('skin-popup');
+  const isOpen = popup.classList.contains('open');
+  closeAllColorPopups();
+  if (!isOpen) {
+    renderSkinList();
+    popup.classList.add('open');
+    const btn = document.getElementById('header-theme-btn');
+    const rect = btn.getBoundingClientRect();
+    popup.style.top   = (rect.bottom + 6) + 'px';
+    popup.style.right = '10px';
+    popup.style.left  = 'auto';
+  }
+}
+function closeSkinPopup() {
+  document.getElementById('skin-popup')?.classList.remove('open');
+}
+function renderSkinList() {
+  const wrap = document.getElementById('skin-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  UI_SKINS.forEach(skin => {
+    const div = document.createElement('div');
+    div.className = 'skin-opt' + (skin.id === currentSkinId ? ' active' : '');
+    div.onclick = () => { applyUISkin(skin.id); renderSkinList(); };
+    div.innerHTML = `
+      <div class="skin-preview" style="background:linear-gradient(90deg,${skin.main} 45%,${skin.bg} 45%);border:1px solid var(--border);"></div>
+      <span class="skin-name">${skin.name}</span>
+      ${skin.id === currentSkinId ? '<span style="font-size:12px;">✓</span>' : ''}`;
+    wrap.appendChild(div);
+  });
+}
+
+/* ─ チャートカラーポップアップ ─ */
+function toggleChartColorPopup(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('chart-color-popup');
+  const isOpen = popup.classList.contains('open');
+  closeAllColorPopups();
+  if (!isOpen) {
+    renderChartThemeList();
+    popup.classList.add('open');
+    const btn = document.getElementById('chart-color-btn');
+    const rect = btn.getBoundingClientRect();
+    popup.style.top  = (rect.bottom + 6) + 'px';
+    popup.style.left = Math.min(rect.left, window.innerWidth - 250) + 'px';
+    popup.style.right = 'auto';
+  }
+}
+function closeChartColorPopup() {
+  document.getElementById('chart-color-popup')?.classList.remove('open');
+}
+function renderChartThemeList() {
+  const wrap = document.getElementById('chart-theme-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  COLOR_THEMES.forEach(theme => {
+    const div = document.createElement('div');
+    div.className = 'chart-theme-opt' + (theme.id === currentThemeId ? ' active' : '');
+    div.onclick = () => { selectTheme(theme.id); renderChartThemeList(); };
+    div.innerHTML = `
+      <div class="chart-theme-dots">
+        ${theme.colors.map(c => `<div class="chart-theme-dot" style="background:${c};"></div>`).join('')}
+      </div>
+      <span class="chart-theme-name">${theme.name}</span>
+      ${theme.id === currentThemeId ? '<span style="font-size:12px;">✓</span>' : ''}`;
+    wrap.appendChild(div);
+  });
+}
+
+function closeAllColorPopups() {
+  closeSkinPopup();
+  closeChartColorPopup();
 }
 
 function saveSettings() {
@@ -1918,67 +2104,6 @@ function exportICS() {
   URL.revokeObjectURL(url);
 }
 
-/* ═══════════════════════════════
-   ICS IMPORT
-═══════════════════════════════ */
-function importICS(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const events = parseICS(e.target.result);
-      if (events.length === 0) { alert('読み込める予定が見つかりませんでした'); return; }
-      if (!confirm(`${events.length}件の予定を読み込みます。既存データは保持されます。よろしいですか？`)) return;
-      let added = 0;
-      events.forEach(ev => {
-        const dup = orders.find(o => o.name === ev.name && o.deadline === ev.deadline);
-        if (!dup) { orders.push(ev); added++; }
-      });
-      save(); render(); closeModal();
-      alert(`${added}件追加しました（重複スキップ：${events.length - added}件）`);
-    } catch(err) {
-      alert('.icsファイルの読み込みに失敗しました');
-    }
-    input.value = '';
-  };
-  reader.readAsText(file);
-}
-
-function parseICS(text) {
-  const events = [];
-  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-  let inEvent = false, cur = {};
-  lines.forEach(line => {
-    if (line === 'BEGIN:VEVENT') { inEvent = true; cur = {}; return; }
-    if (line === 'END:VEVENT') {
-      inEvent = false;
-      if (cur.name && cur.deadline) {
-        // 【〆】プレフィックスがあれば除去
-        const name = cur.name.replace(/^【〆】/, '');
-        events.push({
-          id: uid(), name, type: 'other',
-          deadline: cur.deadline, currentPhase: 0,
-          notes: cur.notes || '',
-          phaseDays: settings.phases.map(p => ({ ...p }))
-        });
-      }
-      return;
-    }
-    if (!inEvent) return;
-    const colonIdx = line.indexOf(':');
-    if (colonIdx < 0) return;
-    const key = line.slice(0, colonIdx).split(';')[0];
-    const val = line.slice(colonIdx + 1).trim();
-    if (key === 'SUMMARY')     cur.name  = val;
-    if (key === 'DESCRIPTION') cur.notes = val.replace(/\\n/g, '\n');
-    if (key === 'DTSTART') {
-      const d = val.replace(/T.*$/, '');
-      if (d.length === 8) cur.deadline = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
-    }
-  });
-  return events;
-}
 
 /* ═══════════════════════════════
    SERVICE WORKER
@@ -2201,8 +2326,14 @@ function closeStampPanel() {
   if (panel) panel.classList.remove('open');
 }
 
-// 画面の他の場所タップで選択解除
+// 画面の他の場所タップで選択解除 & ポップアップ閉じる
 document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('#skin-popup') && !e.target.closest('#header-theme-btn')) {
+    closeSkinPopup();
+  }
+  if (!e.target.closest('#chart-color-popup') && !e.target.closest('#chart-color-btn')) {
+    closeChartColorPopup();
+  }
   if (!e.target.closest('.placed-sticker') && !e.target.closest('#stamp-panel') && !e.target.closest('[onclick="toggleStampPanel()"]')) {
     if (selectedStickerId) {
       document.querySelectorAll('.placed-sticker.selected').forEach(el => el.classList.remove('selected'));
@@ -2226,7 +2357,10 @@ if (window.innerWidth < 768) {
   switchTab('calendar');
 }
 
+applyUISkin(currentSkinId);
+updateHeaderThemeDots();
 render();
+updateChartColorDots();
 loadStickerData();
 loadCustomStamps();
 renderStickerLayer();
