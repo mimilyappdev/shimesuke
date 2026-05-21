@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="〆スケ（SchedulEX）— イラストレーター・デザイナー・ハンドメイド作家の納期管理ツール">
 <meta name="twitter:description" content="フリーランス・副業クリエイターのための納期管理PWA。登録不要・無料で使える。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Kaisei+Opti:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Kaisei+Opti:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:       #F5F1EB;
@@ -96,6 +96,14 @@ h1 {
 }
 .btn-primary:hover { background: var(--main-dk); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,52,96,0.28); }
 .cta-note { font-size: 12px; color: var(--border-dk); }
+
+/* ── MOCKUP TABS ── */
+.mk-tab-row { display:flex; gap:8px; margin-bottom:14px; justify-content:center; }
+.mk-tab { padding:5px 16px; border-radius:20px; border:1.5px solid var(--main-lt); background:transparent; color:var(--main); font-size:11px; font-weight:700; cursor:pointer; font-family:'Zen Kaku Gothic New',sans-serif; transition:all .15s; }
+.mk-tab.on { background:var(--main); color:var(--white); border-color:var(--main); }
+.mk-tab:not(.on):hover { background:var(--main-lt); }
+.mk-scr { display:none; }
+.mk-scr.on { display:flex; justify-content:center; }
 
 /* ── HERO MOCKUP ── */
 .mockup {
@@ -291,7 +299,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 <section class="hero">
   <div>
     <p class="eyebrow">For Creators</p>
-    <h1>締め切りが、見える。<br>〆スケで、守ろう。</h1>
+    <h1><span style="white-space:nowrap">締め切りが、見える。</span><br><span style="white-space:nowrap">〆スケで、守ろう。</span></h1>
     <p class="hero-desc">
       イラストレーター・デザイナー・ハンドメイド作家・Mix師など、<br>
       フリーランス・副業クリエイターのための納期管理ツール。<br>
@@ -303,105 +311,39 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </div>
   </div>
 
-  <!-- MINI APP MOCKUP -->
-  <div class="mockup">
-    <div class="mk-hd">
-      <span class="mk-logo">SchedulEX</span>
-      <span class="mk-kana">〆スケ</span>
+  <!-- MINI APP MOCKUP - TABBED -->
+  <div>
+    <div class="mk-tab-row">
+      <button class="mk-tab on" onclick="mkSwitch('mb',0)">📱 モバイル</button>
+      <button class="mk-tab" onclick="mkSwitch('pc',1)">🖥 PC</button>
+      <button class="mk-tab" onclick="mkSwitch('st',2)">⚙️ 設定</button>
     </div>
-    <div class="mk-gold"></div>
-    <div class="mk-body">
 
-      <!-- mini calendar -->
-      <div class="mk-cal">
-        <div class="mk-cal-hd">
-          <span style="font-size:8px;color:var(--muted);">‹</span>
-          <span class="mk-cal-month">2026年 5月</span>
-          <span style="font-size:8px;color:var(--muted);">›</span>
-        </div>
-        <div class="mk-dow-row">
-          <div class="mk-dow s">日</div><div class="mk-dow">月</div><div class="mk-dow">火</div>
-          <div class="mk-dow">水</div><div class="mk-dow">木</div><div class="mk-dow">金</div>
-          <div class="mk-dow">土</div>
-        </div>
-        <div class="mk-grid">
-          <!-- row 0 empty -->
-          <div class="mk-cell dm"><div class="mk-day"></div></div>
-          <div class="mk-cell dm"><div class="mk-day"></div></div>
-          <div class="mk-cell dm"><div class="mk-day"></div></div>
-          <div class="mk-cell dm"><div class="mk-day"></div></div>
-          <div class="mk-cell dm"><div class="mk-day"></div></div>
-          <div class="mk-cell"><div class="mk-day">1</div></div>
-          <div class="mk-cell"><div class="mk-day">2</div></div>
-          <!-- row 1 -->
-          <div class="mk-cell s"><div class="mk-day">3</div></div>
-          <div class="mk-cell"><div class="mk-day">4</div></div>
-          <div class="mk-cell"><div class="mk-day">5</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">6</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">7</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">8</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;opacity:0.35;"></div><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">9</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
-          <!-- row 2 -->
-          <div class="mk-cell s"><div class="mk-day">10</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">11</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;opacity:0.35;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">12</div><div class="mk-bars"><div class="mk-bar" style="background:#3A9A88;opacity:0.35;"></div><div class="mk-bar" style="background:#E07820;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">13</div><div class="mk-bars"><div class="mk-bar" style="background:#E07820;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">14</div><div class="mk-bars"><div class="mk-bar" style="background:#E07820;"></div></div></div>
-          <div class="mk-cell dl-b"><div class="mk-day">15</div></div>
-          <div class="mk-cell"><div class="mk-day">16</div></div>
-          <!-- row 3 -->
-          <div class="mk-cell s"><div class="mk-day">17</div></div>
-          <div class="mk-cell today"><div class="mk-day">18</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">19</div><div class="mk-bars"><div class="mk-bar" style="background:#3E4880;opacity:0.35;"></div></div></div>
-          <div class="mk-cell"><div class="mk-day">20</div></div>
-          <div class="mk-cell"><div class="mk-day">21</div></div>
-          <div class="mk-cell"><div class="mk-day">22</div></div>
-          <div class="mk-cell"><div class="mk-day">23</div></div>
-          <!-- row 4 -->
-          <div class="mk-cell s"><div class="mk-day">24</div></div>
-          <div class="mk-cell"><div class="mk-day">25</div></div>
-          <div class="mk-cell"><div class="mk-day">26</div></div>
-          <div class="mk-cell dl-a"><div class="mk-day">27</div></div>
-          <div class="mk-cell"><div class="mk-day">28</div></div>
-          <div class="mk-cell"><div class="mk-day">29</div></div>
-          <div class="mk-cell"><div class="mk-day">30</div></div>
-          <!-- row 5 -->
-          <div class="mk-cell s"><div class="mk-day">31</div></div>
-        </div>
+    <!-- MOBILE -->
+    <div id="mkscr-mb" class="mk-scr on">
+      <div class="mockup" style="width:270px;border-radius:20px;">
+        <div id="lp-mb-hdr"></div>
+        <div class="mk-gold"></div>
+        <div id="lp-mb-body" style="position:relative;height:420px;overflow:hidden;background:#F5F1EB;font-family:'BIZ UDGothic',sans-serif;"></div>
       </div>
+    </div>
 
-      <!-- mini order cards -->
-      <div class="mk-orders">
-        <!-- safe -->
-        <div class="mk-card" style="background:#E8F5F3;">
-          <div class="mk-card-tab" style="background:#3A9A88;">
-            <span class="tab-a">あと</span><span class="tab-n">9</span><span class="tab-d">日</span>
-          </div>
-          <div class="mk-card-name">イラスト依頼 / いぬさん</div>
-          <div class="mk-card-type">🎨 イラスト — ラフ中</div>
-          <div class="mk-phase-bar">
-            <div class="mk-ps" style="background:#3A9A88;"></div>
-            <div class="mk-ps" style="background:rgba(58,154,136,0.25);"></div>
-            <div class="mk-ps" style="background:#DDD5C8;"></div>
-          </div>
-          <div class="mk-card-dl" style="color:#3A9A88;">🗓 〆 5月27日</div>
-        </div>
-        <!-- danger -->
-        <div class="mk-card" style="background:#FFF2E0;">
-          <div class="mk-card-tab" style="background:#E07820;">
-            <span class="tab-a">あと</span><span class="tab-n">4</span><span class="tab-d">日</span>
-          </div>
-          <div class="mk-card-name">デザイン依頼 / ねこさん</div>
-          <div class="mk-card-type">✏️ デザイン — 清書中</div>
-          <div class="mk-phase-bar">
-            <div class="mk-ps" style="background:#E07820;"></div>
-            <div class="mk-ps" style="background:#E07820;"></div>
-            <div class="mk-ps" style="background:rgba(224,120,32,0.3);"></div>
-          </div>
-          <div class="mk-card-dl" style="color:#E07820;">🗓 〆 5月22日</div>
-        </div>
+    <!-- PC -->
+    <div id="mkscr-pc" class="mk-scr">
+      <div class="mockup" style="width:100%;max-width:480px;border-radius:14px;transform:none;">
+        <div id="lp-pc-hdr"></div>
+        <div class="mk-gold"></div>
+        <div id="lp-pc-body" style="display:flex;height:340px;overflow:hidden;background:#F5F1EB;font-family:'BIZ UDGothic',sans-serif;"></div>
       </div>
+    </div>
 
+    <!-- SETTINGS -->
+    <div id="mkscr-st" class="mk-scr">
+      <div class="mockup" style="width:270px;border-radius:20px;">
+        <div id="lp-st-hdr"></div>
+        <div class="mk-gold"></div>
+        <div id="lp-st-body" style="height:420px;overflow-y:auto;background:rgba(18,22,48,.5);padding:12px 14px;font-family:'BIZ UDGothic',sans-serif;"></div>
+      </div>
     </div>
   </div>
 
@@ -448,82 +390,59 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           月表示のカレンダーに各案件のフェーズバーが色別で表示されます。締め切り日は日付を○で囲んでひと目でわかるように。「今月どこが忙しいか」が俯瞰できます。
         </p>
       </div>
-      <div class="feat-vis">
-        <!-- calendar feature visual -->
-        <div style="background:white;border-radius:10px;padding:12px;border:1px solid var(--border);">
-          <div style="font-family:'Tilt Warp',cursive;font-size:11px;color:var(--main);margin-bottom:8px;">2026年 5月</div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;">
-            <div style="font-size:8px;text-align:center;color:#C05050;font-weight:700;">日</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">月</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">火</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">水</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">木</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">金</div>
-            <div style="font-size:8px;text-align:center;color:var(--muted);font-weight:700;">土</div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;">
-            <!-- 5 weeks of days, simplified -->
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#bbb;"></span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:var(--ink);">1</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:var(--ink);">2</span></div>
-
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">3</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">4</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">5</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">6</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">7</span><div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">8</span><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">9</span><div style="width:100%;height:3px;background:#3A9A88;border-radius:1px;"></div></div>
-
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">10</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">11</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">12</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">13</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">14</span><div style="width:100%;height:3px;background:#E07820;border-radius:1px;"></div></div>
-            <!-- deadline circle -->
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
-              <span style="font-size:9px;color:#3A9A88;border:1.5px solid #3A9A88;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700;">15</span>
-            </div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">16</span></div>
-
-            <!-- today row -->
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">17</span></div>
-            <div style="height:28px;border-radius:5px;background:#EEF0FA;border:1px solid var(--light);display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
-              <span style="font-size:9px;color:white;background:var(--main);border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;">18</span>
-              <div style="width:100%;height:3px;background:#3E4880;border-radius:1px;"></div>
-            </div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">19</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">20</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">21</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">22</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">23</span></div>
-
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">24</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">25</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">26</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;">
-              <span style="font-size:9px;color:#3E4880;border:1.5px solid #3E4880;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;font-weight:700;">27</span>
-            </div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">28</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">29</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;">30</span></div>
-            <div style="height:28px;border-radius:5px;display:flex;flex-direction:column;align-items:center;padding-top:2px;gap:1px;"><span style="font-size:9px;color:#C05050;">31</span></div>
+      <div class="feat-vis" style="padding:0;overflow:hidden;border-radius:12px;border:1px solid var(--border);font-family:'BIZ UDGothic',sans-serif;">
+        <!-- legend -->
+        <div style="background:#fff;border-bottom:1px solid #DDD8D0;padding:5px 10px;display:flex;align-items:center;gap:8px;">
+          <div style="display:flex;align-items:center;gap:3px;"><div style="width:8px;height:8px;border-radius:50%;background:#D4537E;"></div><span style="font-size:9px;color:#7A8090;">ねこさん</span></div>
+          <div style="display:flex;align-items:center;gap:3px;"><div style="width:8px;height:8px;border-radius:50%;background:#E07820;"></div><span style="font-size:9px;color:#7A8090;">いぬさん</span></div>
+          <div style="display:flex;align-items:center;gap:3px;"><div style="width:8px;height:8px;border-radius:50%;background:#1D9E75;"></div><span style="font-size:9px;color:#7A8090;">うさぎさん</span></div>
+          <div style="margin-left:auto;font-size:7.5px;padding:2px 6px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;display:flex;align-items:center;gap:3px;">
+            <span style="display:flex;gap:2px;"><span style="width:5px;height:5px;border-radius:50%;background:#161e92;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:#3841b7;display:inline-block;"></span><span style="width:5px;height:5px;border-radius:50%;background:#5c91d6;display:inline-block;"></span></span>カラー変更
           </div>
         </div>
-        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
-            <div style="width:10px;height:10px;border-radius:50%;background:#3E4880;"></div>いぬさん
+        <!-- cal header -->
+        <div style="background:#fff;border-bottom:1px solid #DDD8D0;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:12px;color:#7A8090;cursor:pointer;">‹</span>
+            <span style="font-size:12px;color:#7A8090;cursor:pointer;">›</span>
+            <span style="font-family:'Tilt Warp',cursive;font-size:11px;color:var(--main);">2026年5月</span>
           </div>
-          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
-            <div style="width:10px;height:10px;border-radius:50%;background:#3A9A88;"></div>ねこさん
+          <span style="font-size:8px;padding:2px 8px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;">今日</span>
+        </div>
+        <!-- day headers -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);padding:5px 8px 2px;background:#F5F1EB;">
+          <div style="text-align:center;font-size:8px;font-weight:700;color:#C05050;">日</div><div style="text-align:center;font-size:8px;font-weight:700;color:#6A7090;">月</div><div style="text-align:center;font-size:8px;font-weight:700;color:#6A7090;">火</div><div style="text-align:center;font-size:8px;font-weight:700;color:#6A7090;">水</div><div style="text-align:center;font-size:8px;font-weight:700;color:#6A7090;">木</div><div style="text-align:center;font-size:8px;font-weight:700;color:#6A7090;">金</div><div style="text-align:center;font-size:8px;font-weight:700;color:#5070C0;">土</div>
+        </div>
+        <!-- week 5/17-23 -->
+        <div style="padding:2px 8px 4px;">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:3px;">
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#C05050;">17</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;background:#2E3460;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;">18</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">19</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">20</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">21</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">22</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;border:1.5px solid #C83030;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#C83030;">23</div></div>
           </div>
-          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);">
-            <div style="width:10px;height:10px;border-radius:50%;background:#E07820;"></div>うさぎさん
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px;"><div style="grid-column:1/span 7;height:13px;border-radius:3px;background:#D4537E;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:#fff;font-weight:700;">ねこさん ⚠️</span></div></div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px;"><div style="grid-column:2/span 6;height:13px;border-radius:3px;background:#E07820;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:#fff;font-weight:700;">いぬさん</span></div></div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;"><div style="grid-column:1/span 5;height:13px;border-radius:3px;background:#1D9E75;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:#fff;font-weight:700;">うさぎさん</span></div></div>
+        </div>
+        <div style="border-top:.5px solid #DDD8D0;margin:2px 8px;"></div>
+        <!-- week 5/24-30 -->
+        <div style="padding:2px 8px 4px;">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:3px;">
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#C05050;">24</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">25</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">26</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;border:1.5px solid #E07820;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#E07820;">27</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">28</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#2A2A2A;">29</div></div>
+            <div style="display:flex;justify-content:center;"><div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;color:#5070C0;">30</div></div>
           </div>
+          <div style="height:13px;margin-bottom:2px;"></div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px;"><div style="grid-column:1/span 4;height:13px;border-radius:3px;background:#E07820;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:#fff;font-weight:700;">いぬさん ⚠️</span></div></div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;"><div style="grid-column:1/span 7;height:13px;border-radius:3px;background:#1D9E75;display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;color:#fff;font-weight:700;">うさぎさん</span></div></div>
         </div>
       </div>
     </div>
@@ -537,43 +456,66 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           残り日数が多いほど落ち着いたティールに、近づくにつれてイエロー・オレンジ・レッドへ。カードを見ただけで「今日何を優先すべきか」がわかります。
         </p>
       </div>
-      <div class="feat-vis" style="display:flex;flex-direction:column;gap:10px;">
-        <!-- urgency cards -->
-        <div style="background:#E8F5F3;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#3A9A88;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
-            <span style="font-size:16px;color:white;font-weight:700;">14</span>
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+      <div class="feat-vis" style="display:flex;flex-direction:column;gap:10px;font-family:'BIZ UDGothic',sans-serif;">
+        <!-- crisis -->
+        <div style="background:#FFECEC;border-radius:10px;padding:9px 50px 9px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);outline:1.5px solid #C83030;">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:52px;border-radius:8px;background:#C83030;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">あと</span>
+            <span style="font-size:17px;color:white;font-weight:700;line-height:1">1</span>
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">日</span>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--ink);">イラスト依頼 / いぬさん</div>
-          <div style="font-size:10px;color:#3A9A88;margin-top:2px;">🗓 〆 6月1日 — 余裕あり</div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;">表紙デザイン / ぱんださん</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:9px;color:#7A8090;">🎨 デザイン</span>
+            <span style="font-size:7px;padding:1px 6px;border-radius:6px;background:#C83030;color:#fff;font-weight:700;">清書中</span>
+          </div>
+          <div style="display:flex;gap:2px;height:3px;margin-bottom:3px;"><div style="flex:7;border-radius:2px;background:#C83030;"></div><div style="flex:3;border-radius:2px;background:#C83030;"></div><div style="flex:3;border-radius:2px;background:#C83030;"></div></div>
+          <div style="font-size:9px;font-weight:700;color:#C83030;">🗓 〆 明日 — 超ヤバい！</div>
         </div>
-        <div style="background:#FDFBE8;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#E3CF57;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
-            <span style="font-size:8px;color:rgba(60,50,0,0.65);font-weight:700;">あと</span>
-            <span style="font-size:16px;color:#3A3000;font-weight:700;">9</span>
-            <span style="font-size:8px;color:rgba(60,50,0,0.65);font-weight:700;">日</span>
+        <!-- danger -->
+        <div style="background:#FFF2E0;border-radius:10px;padding:9px 50px 9px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:52px;border-radius:8px;background:#E07820;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">あと</span>
+            <span style="font-size:17px;color:white;font-weight:700;line-height:1">4</span>
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">日</span>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--ink);">デザイン依頼 / ねこさん</div>
-          <div style="font-size:10px;color:#8A7A10;margin-top:2px;">🗓 〆 5月27日 — 注意</div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;">漫画ネーム / うさぎさん</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:9px;color:#7A8090;">✏️ イラスト</span>
+            <span style="font-size:7px;padding:1px 6px;border-radius:6px;background:#E07820;color:#fff;font-weight:700;">清書中</span>
+          </div>
+          <div style="display:flex;gap:2px;height:3px;margin-bottom:3px;"><div style="flex:7;border-radius:2px;background:#E07820;"></div><div style="flex:3;border-radius:2px;background:#E07820;"></div><div style="flex:3;border-radius:2px;background:#E07820;opacity:0.3;"></div></div>
+          <div style="font-size:9px;font-weight:700;color:#E07820;">🗓 〆 5月22日 — ヤバい</div>
         </div>
-        <div style="background:#FFF2E0;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#E07820;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
-            <span style="font-size:16px;color:white;font-weight:700;">4</span>
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+        <!-- caution -->
+        <div style="background:#FDFBE8;border-radius:10px;padding:9px 50px 9px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:52px;border-radius:8px;background:#E3CF57;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:7px;color:rgba(60,50,0,0.65);font-weight:700;line-height:1.3">あと</span>
+            <span style="font-size:17px;color:#3A3000;font-weight:700;line-height:1">9</span>
+            <span style="font-size:7px;color:rgba(60,50,0,0.65);font-weight:700;line-height:1.3">日</span>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--ink);">動画制作 / うさぎさん</div>
-          <div style="font-size:10px;color:#E07820;margin-top:2px;">🗓 〆 5月22日 — ヤバい</div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;">背景イラスト / ねこさん</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:9px;color:#7A8090;">🖼 イラスト</span>
+            <span style="font-size:7px;padding:1px 6px;border-radius:6px;background:#E3CF57;color:#3A3000;font-weight:700;">修正中</span>
+          </div>
+          <div style="display:flex;gap:2px;height:3px;margin-bottom:3px;"><div style="flex:7;border-radius:2px;background:#E3CF57;"></div><div style="flex:3;border-radius:2px;background:#E3CF57;"></div><div style="flex:3;border-radius:2px;background:#E3CF57;opacity:0.3;"></div></div>
+          <div style="font-size:9px;font-weight:700;color:#8A7A10;">🗓 〆 5月27日 — 注意</div>
         </div>
-        <div style="background:#FFECEC;border-radius:10px;padding:11px 46px 11px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);outline:1.5px solid #C83030;">
-          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:48px;border-radius:8px;background:#C83030;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">あと</span>
-            <span style="font-size:16px;color:white;font-weight:700;">1</span>
-            <span style="font-size:8px;color:rgba(255,255,255,0.8);font-weight:700;">日</span>
+        <!-- safe -->
+        <div style="background:#E8F5F3;border-radius:10px;padding:9px 50px 9px 12px;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+          <div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:38px;height:52px;border-radius:8px;background:#3A9A88;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:2px 2px 6px rgba(0,0,0,0.15);">
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">あと</span>
+            <span style="font-size:17px;color:white;font-weight:700;line-height:1">14</span>
+            <span style="font-size:7px;color:rgba(255,255,255,0.8);font-weight:700;line-height:1.3">日</span>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--ink);">表紙デザイン / ぱんださん</div>
-          <div style="font-size:10px;color:#C83030;margin-top:2px;">🗓 〆 明日 — 超ヤバい！</div>
+          <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;">キャラデザ / いぬさん</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:9px;color:#7A8090;">🎨 イラスト</span>
+            <span style="font-size:7px;padding:1px 6px;border-radius:6px;background:#3A9A88;color:#fff;font-weight:700;">ラフ中</span>
+          </div>
+          <div style="display:flex;gap:2px;height:3px;margin-bottom:3px;"><div style="flex:7;border-radius:2px;background:#3A9A88;opacity:1;"></div><div style="flex:3;border-radius:2px;background:#3A9A88;opacity:0.3;"></div><div style="flex:3;border-radius:2px;background:#DDD5C8;"></div></div>
+          <div style="font-size:9px;font-weight:700;color:#3A9A88;">🗓 〆 6月1日 — 余裕あり</div>
         </div>
       </div>
     </div>
@@ -587,50 +529,66 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           ラフ・修正・清書それぞれに何日かけるかを設定しておくだけ。納期を入力すれば「今日ラフを始めないと間に合わない」が自動でわかります。設定は次回から自動で引き継がれます。
         </p>
       </div>
-      <div class="feat-vis" style="display:flex;flex-direction:column;gap:12px;">
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;">案件名 / 納期</div>
-          <div style="background:white;border:1.5px solid var(--light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--ink);">イラスト依頼 / いぬさん</div>
-          <div style="background:white;border:1.5px solid var(--light);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--ink);margin-top:6px;">2026年6月10日</div>
+      <div class="feat-vis" style="display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden;border-radius:12px;font-family:'BIZ UDGothic',sans-serif;">
+        <!-- modal header -->
+        <div style="background:#2E3460;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:13px;font-weight:700;color:#fff;">案件を追加</span>
+          <span style="font-size:18px;color:rgba(255,255,255,0.5);cursor:pointer;">×</span>
         </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:700;">フェーズ日数</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
-            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">ラフ</div>
-              <div style="font-size:18px;font-weight:700;color:var(--main);">7</div>
-              <div style="font-size:9px;color:var(--muted);">日</div>
-            </div>
-            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">修正</div>
-              <div style="font-size:18px;font-weight:700;color:var(--main);">3</div>
-              <div style="font-size:9px;color:var(--muted);">日</div>
-            </div>
-            <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
-              <div style="font-size:10px;color:var(--muted);margin-bottom:3px;">清書</div>
-              <div style="font-size:18px;font-weight:700;color:var(--main);">3</div>
-              <div style="font-size:9px;color:var(--muted);">日</div>
-            </div>
+        <div style="height:2px;background:linear-gradient(90deg,#6870B8,#B0B6E8,#8A90CC);"></div>
+        <div style="background:#fff;padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+          <!-- name -->
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#7A8090;margin-bottom:4px;">案件名</div>
+            <div style="border:1.5px solid #8A90CC;border-radius:8px;padding:9px 12px;font-size:12px;color:#2A2A2A;background:#fff;">キャラデザ / いぬさん</div>
           </div>
-        </div>
-        <div style="background:white;border-radius:10px;padding:12px;border:1.5px dashed var(--border);">
-          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:0.08em;">逆算スケジュール</div>
-          <div style="display:flex;flex-direction:column;gap:5px;">
-            <div style="display:flex;justify-content:space-between;font-size:11px;">
-              <span style="color:var(--main);font-weight:700;">📐 ラフ開始</span>
-              <span style="color:var(--ink);">5月 28日まで</span>
+          <!-- deadline -->
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#7A8090;margin-bottom:4px;">納期（締め切り）</div>
+            <div style="border:1.5px solid #DDD8D0;border-radius:8px;padding:9px 12px;font-size:12px;color:#2A2A2A;background:#fff;">2026年6月10日</div>
+          </div>
+          <!-- phase days -->
+          <div>
+            <div style="font-size:10px;font-weight:700;color:#7A8090;margin-bottom:6px;">スケジュール設定（日数）</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:5px;">
+              <div style="background:#F5F1EB;border:1px solid #DDD8D0;border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-size:9px;color:#7A8090;margin-bottom:2px;">ラフ</div>
+                <div style="font-size:18px;font-weight:700;color:#2E3460;">7</div>
+                <div style="font-size:8px;color:#7A8090;">日</div>
+              </div>
+              <div style="background:#F5F1EB;border:1px solid #DDD8D0;border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-size:9px;color:#7A8090;margin-bottom:2px;">修正</div>
+                <div style="font-size:18px;font-weight:700;color:#2E3460;">3</div>
+                <div style="font-size:8px;color:#7A8090;">日</div>
+              </div>
+              <div style="background:#F5F1EB;border:1px solid #DDD8D0;border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-size:9px;color:#7A8090;margin-bottom:2px;">清書</div>
+                <div style="font-size:18px;font-weight:700;color:#2E3460;">3</div>
+                <div style="font-size:8px;color:#7A8090;">日</div>
+              </div>
             </div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;">
-              <span style="color:#3A9A88;font-weight:700;">✏️ 修正期間</span>
-              <span style="color:var(--ink);">6月 4日まで</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:11px;">
-              <span style="color:#E07820;font-weight:700;">🎨 清書・納品</span>
-              <span style="color:var(--ink);">6月 7日まで</span>
-            </div>
-            <div style="border-top:1px solid var(--border);padding-top:5px;display:flex;justify-content:space-between;font-size:11px;">
-              <span style="color:#C83030;font-weight:700;">🗓 納期</span>
-              <span style="color:#C83030;font-weight:700;">6月 10日</span>
+            <div style="font-size:8px;color:#7A8090;text-align:center;">納期から自動で逆算されます</div>
+          </div>
+          <!-- result -->
+          <div style="background:#F5F1EB;border-radius:10px;padding:10px 12px;border:1.5px dashed #DDD8D0;">
+            <div style="font-size:9px;font-weight:700;color:#7A8090;margin-bottom:7px;letter-spacing:0.08em;">▶ 逆算スケジュール</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:10px;color:#2E3460;font-weight:700;">📐 ラフ</span>
+                <span style="font-size:10px;color:#2A2A2A;">5/28 〜 6/3</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:10px;color:#3A9A88;font-weight:700;">✏️ 修正</span>
+                <span style="font-size:10px;color:#2A2A2A;">6/4 〜 6/6</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:10px;color:#E07820;font-weight:700;">🎨 清書</span>
+                <span style="font-size:10px;color:#2A2A2A;">6/7 〜 6/9</span>
+              </div>
+              <div style="border-top:1px solid #DDD8D0;padding-top:5px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:10px;color:#C83030;font-weight:700;">🗓 納期</span>
+                <span style="font-size:10px;color:#C83030;font-weight:700;">6月10日</span>
+              </div>
             </div>
           </div>
         </div>
@@ -669,14 +627,21 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       <div class="plan pro">
         <div class="plan-badge">🎉 早割価格</div>
         <p class="plan-name">PRO</p>
-        <p class="plan-price">¥580</p>
-        <p class="plan-note">期間限定価格（通常 ¥1,480）· 買い切り</p>
-        <ul class="plan-items">
-          <li class="pi"><span class="ck">✓</span><span>案件管理 <strong>無制限</strong></span></li>
-          <li class="pi"><span class="ck">✓</span><span>フェーズテンプレート <strong>無制限</strong></span></li>
-          <li class="pi"><span class="ck">✓</span><span>データ復元・引き継ぎ<small>バックアップファイルから読み込み</small></span></li>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px;">
+          <p class="plan-price">¥580</p>
+          <span style="font-size:13px;color:var(--muted);text-decoration:line-through;">¥1,480</span>
+        </div>
+        <p class="plan-note" style="color:var(--gold);font-weight:700;">🔥 期間限定価格 · 買い切り</p>
+        <ul class="plan-items" style="margin-top:20px;">
+          <li class="pi"><span class="ck">✓</span><span>案件管理 <strong>無制限</strong><small>FREEは3件まで</small></span></li>
+          <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
+          <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
+          <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
+          <li class="pi"><span class="ck">✓</span><span>フェーズテンプレート <strong>無制限</strong><small>FREEは3件まで</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>データ書き出し（バックアップ）</span></li>
           <li class="pi"><span class="ck">✓</span><span>自分の絵をスタンプに<small>カスタムスタンプ追加（最大5枚）</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span>UIテーマ マイカラー2枠<small>ヘッダー・背景・カード色を自由に設定</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>データ復元・引き継ぎ<small>バックアップから読み込み</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>UIテーマ マイカラー2枠<small>ヘッダー・背景・カード色を自由に</small></span></li>
           <li class="pi"><span class="ck">✓</span><span>チャートカラー マイカラー2枠<small>カレンダーの配色をオリジナルに</small></span></li>
         </ul>
         <div class="btn-soon">近日公開</div>
@@ -703,11 +668,174 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   </div>
   <div class="ft-links">
     <a href="#" class="ft-link">利用規約</a>
-    <a href="#" class="ft-link">プライバシーポリシー</a>
+    <a href="https://mimilyappdev.github.io/legal/privacy.html" class="ft-link">プライバシーポリシー</a>
     <a href="https://mimilyappdev.github.io/" class="ft-link">Mimilyアプリ一覧</a>
   </div>
   <p class="ft-copy">© 2025 Mimily</p>
 </footer>
 
+<script>
+(function(){
+var C=[
+  {n:'ねこさん',ic:'🖼',tp:'背景イラスト',ph:'修正',dl:'5/23',dy:2,cl:'#D4537E',tl:'#C83030',bg:'#FFECEC',bd:'#C83030',tx:'#C83030',br:[.2,1,.4],cr:true},
+  {n:'いぬさん',ic:'🎨',tp:'キャラクターイラスト',ph:'ラフ',dl:'5/27',dy:6,cl:'#E07820',tl:'#E07820',bg:'#FFF2E0',bd:'#E07820',tx:'#B85808',br:[1,.35,0],cr:false},
+  {n:'うさぎさん',ic:'✏️',tp:'漫画ネーム',ph:'清書',dl:'5/31',dy:10,cl:'#1D9E75',tl:'#B89000',bg:'#FDFBE8',bd:'#C8C070',tx:'#A07800',br:[.3,.3,1],cr:false}
+];
+function cardH(c,cx){
+  var p=cx?'7px 42px 7px 8px':'8px 46px 8px 10px';
+  var ns=cx?10:11,ds=cx?8:9,tw=cx?28:33,th=cx?40:48,tn=cx?13:16,tr=cx?3:5;
+  return '<div style="position:relative;border-radius:10px;padding:'+p+';background:'+c.bg+';margin-bottom:6px;border:'+(c.cr?'1.5px':'1px')+' solid '+c.bd+'">' +
+    '<div style="font-size:'+ns+'px;font-weight:700;color:#2A2A2A;margin-bottom:2px">'+c.n+'</div>' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">' +
+      '<span style="font-size:'+(cx?7:8)+'px;color:#7A8090">'+c.ic+' '+c.tp+'</span>' +
+      '<span style="font-size:7px;padding:1px 5px;border-radius:7px;background:'+c.tl+';color:#fff;font-weight:700">'+c.ph+'</span>' +
+    '</div>' +
+    '<div style="font-size:'+ds+'px;font-weight:700;color:'+c.tx+';margin-bottom:'+(cx?3:4)+'px">〆 '+c.dl+(c.cr?' ⚠️':'')+'</div>' +
+    '<div style="display:flex;gap:2px;height:3px">' +
+      '<div style="flex:7;border-radius:2px;background:'+c.tl+';opacity:'+c.br[0]+'"></div>' +
+      '<div style="flex:3;border-radius:2px;background:'+c.tl+';opacity:'+c.br[1]+'"></div>' +
+      '<div style="flex:3;border-radius:2px;background:'+c.tl+';opacity:'+c.br[2]+'"></div>' +
+    '</div>' +
+    '<div style="position:absolute;right:'+tr+'px;top:50%;transform:translateY(-50%);width:'+tw+'px;height:'+th+'px;border-radius:7px;background:'+c.tl+';display:flex;flex-direction:column;align-items:center;justify-content:center">' +
+      '<span style="font-size:6px;color:rgba(255,255,255,.8);font-weight:700;line-height:1.3">あと</span>' +
+      '<span style="font-size:'+tn+'px;color:#fff;font-weight:700;line-height:1">'+c.dy+'</span>' +
+      '<span style="font-size:6px;color:rgba(255,255,255,.8);font-weight:700;line-height:1.3">日</span>' +
+    '</div></div>';
+}
+function hdrH(){
+  return '<div style="background:#2E3460;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 12px">' +
+    '<div style="display:flex;align-items:center;gap:6px">' +
+      '<span style="font-family:\'Tilt Warp\',cursive;font-size:15px;color:#fff">SchedulEX</span>' +
+      '<span style="font-size:7.5px;color:rgba(255,255,255,.3);border-left:1px solid rgba(255,255,255,.15);padding-left:7px">〆スケ</span>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:5px">' +
+      '<button style="width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.88);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center">💾</button>' +
+      '<button style="width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.88);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center">⚙️</button>' +
+    '</div></div>';
+}
+function subnavH(){
+  return '<div style="background:#fff;border-bottom:1px solid #DDD8D0;height:30px;display:flex;align-items:center;padding:0 6px;gap:3px;flex-shrink:0;overflow:hidden">' +
+    ['EasyReply連携 🔒','Googleカレンダー 🔒','収支確認 🔒','🎨 スタンプ'].map(function(t){
+      return '<button style="font-size:7.5px;padding:2px 6px;border-radius:5px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;cursor:pointer;white-space:nowrap;font-family:\'BIZ UDGothic\',sans-serif">'+t+'</button>';
+    }).join('')+'</div>';
+}
+function legendH(){
+  return '<div style="background:#fff;border-bottom:1px solid #DDD8D0;height:24px;display:flex;align-items:center;padding:0 8px;gap:8px;flex-shrink:0">' +
+    C.map(function(c){return '<div style="display:flex;align-items:center;gap:3px"><div style="width:7px;height:7px;border-radius:50%;background:'+c.cl+'"></div><span style="font-size:7.5px;color:#7A8090">'+c.n+'</span></div>';}).join('') +
+    '<button style="margin-left:auto;font-size:7px;padding:2px 5px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;cursor:pointer;white-space:nowrap;font-family:\'BIZ UDGothic\',sans-serif;display:flex;align-items:center;gap:2px">' +
+      '<span style="display:flex;gap:1px"><span style="width:5px;height:5px;border-radius:50%;background:#161e92;display:inline-block"></span><span style="width:5px;height:5px;border-radius:50%;background:#3841b7;display:inline-block"></span><span style="width:5px;height:5px;border-radius:50%;background:#5c91d6;display:inline-block"></span></span>カラー変更' +
+    '</button></div>';
+}
+function calHdrH(){
+  return '<div style="background:#fff;border-bottom:1px solid #DDD8D0;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;flex-shrink:0">' +
+    '<div style="display:flex;align-items:center;gap:4px">' +
+      '<button style="width:20px;height:20px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">‹</button>' +
+      '<button style="width:20px;height:20px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center">›</button>' +
+      '<span style="font-size:11px;color:#2E3460;font-weight:700">2026年5月</span>' +
+    '</div>' +
+    '<button style="font-size:7.5px;padding:2px 8px;border-radius:4px;border:1px solid #DDD8D0;background:#F5F1EB;color:#7A8090;cursor:pointer;font-family:\'BIZ UDGothic\',sans-serif">今日</button>' +
+  '</div>';
+}
+function dowH(){
+  return '<div style="display:grid;grid-template-columns:repeat(7,1fr);padding:4px 5px 2px;background:#F5F1EB">' +
+    ['日','月','火','水','木','金','土'].map(function(d,i){
+      return '<div style="text-align:center;font-size:7px;font-weight:700;color:'+(i===0?'#C05050':i===6?'#5070C0':'#6A7090')+'">'+d+'</div>';
+    }).join('')+'</div>';
+}
+function dc(n,isToday,isSun,isSat){
+  var co=isToday?'#fff':isSun?'#C05050':isSat?'#5070C0':'#2A2A2A';
+  var bg=isToday?'background:#2E3460;':'';
+  return '<div style="display:flex;justify-content:center"><div style="width:17px;height:17px;border-radius:50%;'+bg+'display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:'+co+'">'+n+'</div></div>';
+}
+function drow(cells){return '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:3px">'+cells.join('')+'</div>';}
+function bar(col,span,color,label){
+  return '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:2px">' +
+    '<div style="grid-column:'+col+'/span '+span+';height:12px;border-radius:3px;background:'+color+';display:flex;align-items:center;justify-content:center;overflow:hidden">' +
+      '<span style="font-size:6.5px;color:#fff;font-weight:700;white-space:nowrap">'+label+'</span>' +
+    '</div></div>';
+}
+var sep='<div style="border-top:.5px solid #DDD8D0;margin:2px 5px"></div>';
+function ganttH(){
+  var nk=C[0].cl,in_=C[1].cl,us=C[2].cl;
+  return dowH()+
+    '<div style="padding:2px 5px 4px">'+drow([dc(17,0,1),dc(18),dc(19),dc(20),dc(21,1),dc(22),dc(23,0,0,1)])+bar(1,7,nk,'ねこさん ⚠️')+bar(2,6,in_,'いぬさん')+bar(1,5,us,'うさぎさん')+'</div>'+sep+
+    '<div style="padding:2px 5px 4px">'+drow([dc(24,0,1),dc(25),dc(26),dc(27),dc(28),dc(29),dc(30,0,0,1)])+'<div style="height:12px;margin-bottom:2px"></div>'+bar(1,4,in_,'いぬさん ⚠️')+bar(1,7,us,'うさぎさん')+'</div>'+sep+
+    '<div style="padding:2px 5px 4px">'+drow([dc(31,0,1)])+bar(1,1,us,'うさぎ')+'</div>';
+}
+function settH(){
+  return '<div style="background:#fff;border-radius:12px">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #EEE9E0">' +
+      '<span style="font-size:13px;font-weight:700;color:#2A2A2A">設定</span>' +
+      '<button style="width:24px;height:24px;border-radius:50%;border:none;background:#F5F1EB;color:#7A8090;font-size:15px;cursor:pointer">×</button>' +
+    '</div>' +
+    '<div style="padding:12px 14px">' +
+      '<div style="font-size:8.5px;font-weight:700;color:#8A90CC;letter-spacing:.07em;margin-bottom:7px">カレンダー表示</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F0EBE0;margin-bottom:12px">' +
+        '<span style="font-size:11px;color:#2A2A2A">〆切！スタンプを表示する</span>' +
+        '<div style="width:34px;height:19px;border-radius:10px;background:#2E3460;position:relative;flex-shrink:0"><div style="position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;top:2px;right:2px"></div></div>' +
+      '</div>' +
+      '<div style="font-size:8.5px;font-weight:700;color:#8A90CC;letter-spacing:.07em;margin-bottom:7px">デフォルトのフェーズ日数</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">' +
+        [['ラフ','7'],['修正','3'],['清書','3']].map(function(x){
+          return '<div><div style="font-size:8px;color:#7A8090;margin-bottom:3px">'+x[0]+'</div><div style="border:1px solid #DDD8D0;border-radius:7px;padding:6px;text-align:center;font-size:14px;font-weight:700;color:#2A2A2A;background:#FAFAF7">'+x[1]+'</div></div>';
+        }).join('')+
+      '</div>' +
+      '<div style="border-top:1px solid #F0EBE0;margin-bottom:10px"></div>' +
+      '<div style="font-size:8.5px;font-weight:700;color:#8A90CC;letter-spacing:.07em;margin-bottom:6px">フェーズテンプレート<span style="font-weight:400;color:#7A8090">（無料：最大3件）</span></div>' +
+      '<button style="width:100%;padding:9px;border-radius:7px;border:1.5px dashed #DDD8D0;background:#fff;color:#7A8090;font-size:10px;cursor:pointer;margin-bottom:10px;font-family:\'BIZ UDGothic\',sans-serif">＋ テンプレートを追加</button>' +
+      '<div style="border:1.5px solid #E3CF57;border-radius:10px;overflow:hidden">' +
+        '<div style="background:#FFFBE6;padding:9px 11px">' +
+          '<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">' +
+            '<span style="background:#B08A00;color:#fff;font-size:7px;font-weight:700;padding:2px 7px;border-radius:4px">PRO</span>' +
+            '<span style="font-size:11px;font-weight:700;color:#7A6010">プレミアムテンプレート</span>' +
+          '</div>' +
+          '<div style="font-size:7.5px;color:#9A7A20;margin-bottom:7px">テンプレートを無制限に追加できます</div>' +
+          '<div style="display:flex;flex-direction:column;gap:3px">' +
+            [['背景イラスト','ラフ14日・修正7日・清書5日'],['漫画・コミック','ネーム7日・ペン14日・仕上5日']].map(function(x){
+              return '<div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.65);border-radius:5px;padding:5px 7px">' +
+                '<div style="display:flex;align-items:center;gap:3px"><span>🔒</span><span style="font-size:9px;color:#7A6010">'+x[0]+'</span></div>' +
+                '<span style="font-size:6.5px;color:#9A7A20">'+x[1]+'</span></div>';
+            }).join('')+
+          '</div>' +
+        '</div>' +
+        '<button style="width:100%;padding:9px;background:linear-gradient(90deg,#D4B800,#E3CF57,#D4B800);border:none;color:#3A2800;font-size:10px;font-weight:700;cursor:pointer;font-family:\'BIZ UDGothic\',sans-serif">👑 アップグレードして解除</button>' +
+      '</div>' +
+    '</div></div>';
+}
+
+function init(){
+  var hdr=hdrH();
+  ['mb','pc','st'].forEach(function(id){document.getElementById('lp-'+id+'-hdr').innerHTML=hdr;});
+  var mbCards=C.map(function(c){return cardH(c,false);}).join('');
+  document.getElementById('lp-mb-body').innerHTML=subnavH()+legendH()+calHdrH()+
+    '<div style="height:calc(100% - 88px);overflow-y:auto;overflow-x:hidden">'+ganttH()+
+      '<div style="padding:5px 7px 12px;border-top:1px solid #DDD8D0;margin-top:2px">' +
+        '<div style="font-size:7.5px;font-weight:700;color:#C83030;letter-spacing:.06em;margin-bottom:6px">◆ 案件リスト（緊急順）</div>'+mbCards+
+      '</div></div>';
+  var pcCards=C.map(function(c){return cardH(c,true);}).join('');
+  document.getElementById('lp-pc-body').innerHTML=
+    '<div style="width:155px;background:#fff;border-right:1px solid #DDD8D0;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0">' +
+      '<div style="padding:8px;border-bottom:1px solid #DDD8D0;display:flex;align-items:center;justify-content:space-between">' +
+        '<span style="font-size:8px;font-weight:700;color:#7A8090">案件一覧</span>' +
+        '<button style="background:#2E3460;color:#fff;font-size:8px;font-weight:700;padding:3px 7px;border-radius:5px;border:none;cursor:pointer;font-family:\'BIZ UDGothic\',sans-serif">＋ 追加</button>' +
+      '</div>' +
+      '<div style="flex:1;overflow-y:auto;padding:7px">'+pcCards+'</div>' +
+    '</div>' +
+    '<div style="flex:1;display:flex;flex-direction:column;background:#F5F1EB;overflow:hidden;min-width:0">' +
+      subnavH()+legendH()+calHdrH()+'<div style="flex:1;overflow-y:auto;overflow-x:hidden">'+ganttH()+'</div>' +
+    '</div>';
+  document.getElementById('lp-st-body').innerHTML=settH();
+}
+
+window.mkSwitch=function(v,i){
+  ['mb','pc','st'].forEach(function(id){
+    document.getElementById('mkscr-'+id).classList.toggle('on',id===v);
+  });
+  document.querySelectorAll('.mk-tab').forEach(function(b,j){b.classList.toggle('on',j===i);});
+};
+
+init();
+})();
+</script>
 </body>
 </html>
