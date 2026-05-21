@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>〆スケ — 利用規約・説明書</title>
+<meta name="description" content="SchedulEX（〆スケ）の利用規約・使い方説明書・免責事項">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F1EB; --surface: #FFFFFF; --ink: #2A2620; --muted: #7A7468;
+  --main: #2E3460; --light: #8A90CC; --gold: #C8943A; --gold-lt: #F5E8CF;
+  --border: #DDD5C8; --safe: #3A9A88; --danger: #C83030;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Zen Kaku Gothic New', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; -webkit-font-smoothing: antialiased; }
+
+header { background: var(--main); padding: 14px 32px; display: flex; align-items: center; gap: 10px; }
+.logo { font-family: 'Tilt Warp', cursive; font-size: 20px; color: #fff; text-decoration: none; }
+.logo-kana { font-size: 10px; color: rgba(255,255,255,0.4); }
+.gold-line { height: 2px; background: linear-gradient(90deg, #8A90CC, #B0B6E8, #8A90CC); }
+
+.hero { background: var(--main); padding: 40px 32px 48px; text-align: center; }
+.hero h1 { font-family: 'Tilt Warp', cursive; font-size: 28px; color: #fff; margin-bottom: 8px; }
+.hero p { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+.anchor-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; gap: 0; overflow-x: auto; position: sticky; top: 0; z-index: 10; }
+.anchor-nav a { font-size: 12px; font-weight: 700; color: var(--muted); padding: 14px 16px; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color .15s, border-color .15s; }
+.anchor-nav a:hover { color: var(--main); border-bottom-color: var(--light); }
+
+main { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+
+.sec { margin-bottom: 56px; }
+.sec-eye { font-size: 11px; font-weight: 700; color: var(--light); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.sec-title { font-size: 22px; font-weight: 700; color: var(--main); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+.sec-sub { font-size: 15px; font-weight: 700; color: var(--main); margin: 24px 0 12px; }
+
+.steps { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+.step { display: flex; gap: 14px; align-items: flex-start; }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--main); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.step-body h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.step-body p { font-size: 13px; color: var(--muted); }
+
+.callout { background: var(--gold-lt); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 20px 0; font-size: 13px; color: #6A4A10; }
+.callout strong { color: var(--gold); }
+.note { background: #ECEEF8; border-left: 3px solid var(--light); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 20px 0; font-size: 13px; color: var(--main); }
+.warn { background: #FFF5F5; border-left: 3px solid var(--danger); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 20px 0; font-size: 13px; color: #7A3030; }
+
+.pro-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+.pro-box h4 { font-size: 14px; font-weight: 700; color: var(--main); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.pro-box ol { padding-left: 20px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+.pro-box ol li strong { color: var(--ink); }
+
+.future-box { background: var(--gold-lt); border: 1px solid rgba(200,148,58,0.4); border-radius: 12px; padding: 16px 20px; margin: 20px 0; }
+.future-box h4 { font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+.future-box p { font-size: 13px; color: #6A4A10; }
+
+.terms-block { display: flex; flex-direction: column; gap: 28px; }
+.term h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.term p, .term ul { font-size: 13px; color: var(--muted); }
+.term ul { padding-left: 20px; display: flex; flex-direction: column; gap: 4px; list-style: disc; }
+
+.disclaimer { background: #FFF5F5; border: 1px solid #F0C0C0; border-radius: 12px; padding: 20px 24px; margin-top: 8px; }
+.disclaimer h4 { font-size: 14px; font-weight: 700; color: var(--danger); margin-bottom: 10px; }
+.disclaimer p { font-size: 13px; color: #7A3030; line-height: 1.8; margin-bottom: 10px; }
+.disclaimer p:last-child { margin-bottom: 0; }
+
+footer { border-top: 1px solid var(--border); padding: 28px 32px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: var(--bg); text-align: center; }
+.ft-logo { font-family: 'Tilt Warp', cursive; font-size: 18px; color: var(--main); }
+.ft-links { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.ft-link { font-size: 12px; color: var(--muted); text-decoration: none; transition: color .15s; }
+.ft-link:hover { color: var(--main); }
+.ft-copy { font-size: 11px; color: var(--border); }
+
+@media (max-width: 600px) {
+  header { padding: 12px 16px; }
+  .hero { padding: 28px 16px 36px; }
+  .hero h1 { font-size: 22px; }
+  .anchor-nav { padding: 0 8px; }
+  main { padding: 32px 16px 60px; }
+  footer { padding: 20px 16px; }
+  .ft-links { gap: 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="https://mimilyappdev.github.io/shimesuke/">SchedulEX</a>
+  <span class="logo-kana">〆スケ</span>
+</header>
+<div class="gold-line"></div>
+
+<div class="hero">
+  <h1>利用規約・説明書</h1>
+  <p>SchedulEX（〆スケ）をご利用いただきありがとうございます</p>
+</div>
+
+<nav class="anchor-nav">
+  <a href="#manual">📖 使い方</a>
+  <a href="#pro">⭐ PRO版</a>
+  <a href="#terms">📄 利用規約</a>
+  <a href="#disclaimer">⚠️ 免責事項</a>
+</nav>
+
+<main>
+
+  <!-- 使い方 -->
+  <section class="sec" id="manual">
+    <p class="sec-eye">Manual</p>
+    <h2 class="sec-title">使い方</h2>
+
+    <div class="note">
+      〆スケはブラウザで動くPWAアプリです。インストール不要で、ホーム画面に追加するとアプリのように使えます。<br>
+      データはすべてお使いのデバイス内に保存されます。<strong>データは端末ごとに保存され、自動同期されません。</strong>
+    </div>
+
+    <p class="sec-sub">基本の使い方</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>案件を追加する</h4>
+          <p>右上の「＋」ボタンから案件名・クライアント名・納期・フェーズ日数を入力します。納期を入れると、ラフ・修正・清書の開始日が自動で逆算されます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>フェーズを進める</h4>
+          <p>カードのフェーズバーをタップするか、案件詳細からフェーズを「ラフ中 → 修正中 → 清書中 → 完了」と更新します。完了にするとアクティブ枠が空きます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>カレンダーで確認する</h4>
+          <p>月表示のカレンダーに全案件のフェーズバーが色別で並びます。締め切り日は○で囲まれるので、今月の忙しさが一目でわかります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>データをバックアップする</h4>
+          <p>設定画面の「データ書き出し」からJSONファイルとして保存できます。機種変更のときは書き出したファイルを「データ読み込み」でインポートしてください。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>💡 ホーム画面への追加</strong><br>
+      iPhone：Safariで開いて「共有 → ホーム画面に追加」<br>
+      Android：ブラウザメニューから「アプリをインストール」または「ホーム画面に追加」<br>
+      追加するとアプリのように起動できます。
+    </div>
+
+    <p class="sec-sub">対応環境</p>
+    <p style="font-size:13px;color:var(--muted);">主要なモダンブラウザ（Chrome / Safari / Edge 等）の最新版での利用を推奨します。古いブラウザや一部の環境では正常に動作しない場合があります。</p>
+  </section>
+
+  <!-- PRO版 -->
+  <section class="sec" id="pro">
+    <p class="sec-eye">PRO</p>
+    <h2 class="sec-title">PRO版について</h2>
+
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">PRO版はBoothにてHTMLファイルを販売しています。購入後、以下の手順でFREE版と差し替えてご利用ください。</p>
+
+    <div class="pro-box">
+      <h4>⭐ PRO版への差し替え手順</h4>
+      <ol>
+        <li>Boothにて購入し、<strong>HTMLファイルをダウンロード</strong>します</li>
+        <li>FREE版で使っていた場合、先に<strong>設定 → データ書き出し</strong>でバックアップを取ります</li>
+        <li>ダウンロードしたPRO版HTMLファイルをブラウザで開きます</li>
+        <li>ホーム画面に追加していた場合は<strong>いったん削除</strong>し、PRO版を改めて追加します</li>
+        <li>PRO版で<strong>設定 → データ読み込み</strong>からバックアップを復元します</li>
+      </ol>
+    </div>
+
+    <div class="note">PRO版のHTMLファイルはご自身のデバイスに保存してご利用ください。ファイルをサーバーに公開したり、第三者に配布することはご遠慮ください。</div>
+
+    <div class="future-box">
+      <h4>🔮 将来のサブスクプランについて</h4>
+      <p>将来的にサブスクリプションプランの提供を予定しています。サブスクプランご利用の際は、この買い切り版のデータをそのまま読み込むことができます。</p>
+    </div>
+  </section>
+
+  <!-- 利用規約 -->
+  <section class="sec" id="terms">
+    <p class="sec-eye">Terms</p>
+    <h2 class="sec-title">利用規約</h2>
+
+    <div class="terms-block">
+      <div class="term">
+        <h4>第1条（適用）</h4>
+        <p>本規約は、Mimily（以下「制作者」）が提供するWebアプリケーション「SchedulEX（〆スケ）」（以下「本アプリ」）の利用に関する条件を定めるものです。本アプリをご利用になる方（以下「ユーザー」）は、本規約に同意したものとみなします。</p>
+      </div>
+      <div class="term">
+        <h4>第2条（利用条件）</h4>
+        <ul>
+          <li>本アプリはフリーランス・副業クリエイター個人の業務管理を目的としています</li>
+          <li>FREE版は無償でご利用いただけます</li>
+          <li>PRO版は所定の料金をお支払いいただいた方のみご利用いただけます</li>
+          <li>PRO版のご利用はライセンスを購入された本人1名に限ります</li>
+        </ul>
+      </div>
+      <div class="term">
+        <h4>第3条（禁止事項）</h4>
+        <p style="margin-bottom:8px;">ユーザーは以下の行為を行ってはなりません。</p>
+        <ul>
+          <li>本アプリ（HTMLファイル・CSS・JavaScriptを含む）の無断複製・再配布</li>
+          <li>PRO版ファイルの第三者への譲渡・貸与・転売</li>
+          <li>本アプリを改変して販売・配布すること</li>
+          <li>本アプリのHTML・CSS・JavaScriptを書き換えて利用すること</li>
+          <li>本アプリの著作権表示を削除・改ざんすること</li>
+          <li>法令または公序良俗に反する目的での利用</li>
+        </ul>
+      </div>
+      <div class="term">
+        <h4>第4条（知的財産権）</h4>
+        <p>本アプリに関する著作権その他の知的財産権は制作者に帰属します。本規約に基づく利用許諾は、これらの権利の譲渡を意味するものではありません。</p>
+      </div>
+      <div class="term">
+        <h4>第5条（規約の変更）</h4>
+        <p>制作者は必要に応じて本規約を変更することがあります。変更後の規約は、Boothショップページまたは本ページに掲載した時点で効力を生じます。</p>
+      </div>
+      <div class="term">
+        <h4>第6条（準拠法・裁判管轄）</h4>
+        <p>本規約の解釈は日本法に準拠し、本アプリに関する紛争については制作者の住所地を管轄する裁判所を専属的合意管轄とします。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 免責事項 -->
+  <section class="sec" id="disclaimer">
+    <p class="sec-eye">Disclaimer</p>
+    <h2 class="sec-title">免責事項</h2>
+
+    <div class="disclaimer">
+      <h4>⚠️ 重要：ご利用前にお読みください</h4>
+      <p>本アプリはブラウザのローカルストレージにデータを保存します。ブラウザのキャッシュ削除、ホーム画面からの削除、機種変更などの操作によりデータが消失する場合があります。定期的に「データ書き出し」機能でバックアップを取ることを強く推奨します。</p>
+      <p>制作者は、本アプリの利用・利用不能によって生じた損害（データ消失・業務上の損失を含む）について、いかなる責任も負いません。本アプリは現状有姿（as-is）で提供され、特定目的への適合性・動作の継続性・不具合の不存在を保証するものではありません。</p>
+      <p>OSのアップデートやブラウザのバージョン変更により、一部機能が正常に動作しなくなる場合があります。制作者はこれらの原因による不具合について対応を保証しません。</p>
+      <p>ユーザーによる改変後の不具合について、制作者はサポート・保証を行いません。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="ft-logo">SchedulEX</span>
+  <p style="font-size:12px;color:var(--muted);">by Mimily</p>
+  <div class="ft-links">
+    <a href="https://mimilyappdev.github.io/legal/privacy.html" class="ft-link">プライバシーポリシー</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfRH7H6j4ILYkjOFriAHmpOzxJwag1VeHU6KYD1pq2kfwvjEA/viewform" class="ft-link" target="_blank" rel="noopener">お問い合わせ</a>
+    <a href="https://mimilyappdev.github.io/" class="ft-link" target="_blank" rel="noopener">Mimilyアプリ一覧</a>
+    <a href="https://mimilyappdev.github.io/shimesuke/" class="ft-link">アプリを開く</a>
+  </div>
+  <p class="ft-copy">© 2025 Mimily</p>
+</footer>
+
+</body>
+</html>
