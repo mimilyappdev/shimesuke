@@ -898,26 +898,6 @@ input, select, textarea { font-family: inherit; }
   <div class="color-popup" id="skin-popup">
     <p class="popup-label">🎨 テーマカラー</p>
     <div class="skin-list" id="skin-list"></div>
-    <div style="height:1px;background:var(--border);margin:10px 0;"></div>
-    <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;">
-      <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
-        <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー — カスタムテーマ</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;pointer-events:none;opacity:0.6;">
-        <div class="skin-opt">
-          <div class="skin-preview" style="background:linear-gradient(90deg,#7B3FA0 45%,#F5EEFF 45%);border:1px solid var(--border);"></div>
-          <span class="skin-name">マイカラー①</span>
-          <span style="font-size:13px;">🔒</span>
-        </div>
-        <div class="skin-opt">
-          <div class="skin-preview" style="background:linear-gradient(90deg,#0A6E7A 45%,#E8FAFA 45%);border:1px solid var(--border);"></div>
-          <span class="skin-name">マイカラー②</span>
-          <span style="font-size:13px;">🔒</span>
-        </div>
-      </div>
-      <button onclick="closeSkinPopup()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
-    </div>
     <div class="popup-close-row"><span class="popup-close-btn" onclick="closeSkinPopup()">閉じる</span></div>
   </div>
 
@@ -925,38 +905,6 @@ input, select, textarea { font-family: inherit; }
   <div class="color-popup" id="chart-color-popup">
     <p class="popup-label">📊 チャートカラー</p>
     <div class="chart-theme-list" id="chart-theme-list"></div>
-    <div style="height:1px;background:var(--border);margin:10px 0;"></div>
-    <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;">
-      <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;">
-        <span style="font-size:9px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
-        <span style="font-size:11px;font-weight:700;color:var(--muted);">マイカラー — カスタムチャート</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;pointer-events:none;opacity:0.6;">
-        <div class="chart-theme-opt">
-          <div class="chart-theme-dots">
-            <div class="chart-theme-dot" style="background:#E8604C;"></div>
-            <div class="chart-theme-dot" style="background:#F0A03C;"></div>
-            <div class="chart-theme-dot" style="background:#7BC67E;"></div>
-            <div class="chart-theme-dot" style="background:#5EA8E8;"></div>
-            <div class="chart-theme-dot" style="background:#B785DE;"></div>
-          </div>
-          <span class="chart-theme-name">マイカラー①</span>
-          <span style="font-size:13px;">🔒</span>
-        </div>
-        <div class="chart-theme-opt">
-          <div class="chart-theme-dots">
-            <div class="chart-theme-dot" style="background:#FF9FB2;"></div>
-            <div class="chart-theme-dot" style="background:#FFCB6B;"></div>
-            <div class="chart-theme-dot" style="background:#A8D8A8;"></div>
-            <div class="chart-theme-dot" style="background:#8EC8E8;"></div>
-            <div class="chart-theme-dot" style="background:#D4A5E8;"></div>
-          </div>
-          <span class="chart-theme-name">マイカラー②</span>
-          <span style="font-size:13px;">🔒</span>
-        </div>
-      </div>
-      <button onclick="closeChartColorPopup()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
-    </div>
     <div class="popup-close-row"><span class="popup-close-btn" onclick="closeChartColorPopup()">閉じる</span></div>
   </div>
 
@@ -1149,48 +1097,15 @@ input, select, textarea { font-family: inherit; }
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">フェーズテンプレート（無料：最大3件）</p>
+        <p class="settings-label">フェーズテンプレート</p>
         <div id="template-list"></div>
         <button class="btn-add-tpl" id="btn-add-tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
-        <div style="border:1.5px solid #E1B75B;border-radius:10px;padding:12px;margin-top:12px;background:#FFFBF0;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
-            <span style="font-size:9px;padding:1px 7px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
-            <span style="font-size:12px;font-weight:700;color:#8A6000;">プレミアムテンプレート</span>
-          </div>
-          <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-bottom:10px;">テンプレートを無制限に作成＋プロ向けテンプレが使えます</p>
-          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;opacity:0.55;pointer-events:none;">
-            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
-              <span style="font-size:13px;">🔒</span>
-              <span style="font-size:11px;font-weight:700;flex:1;">背景イラスト</span>
-              <span style="font-size:9px;color:var(--muted);">ラフ14日・修正7日・清書5日</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
-              <span style="font-size:13px;">🔒</span>
-              <span style="font-size:11px;font-weight:700;flex:1;">漫画・コミック</span>
-              <span style="font-size:9px;color:var(--muted);">ネーム7日・ペン入れ14日・仕上げ5日</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);">
-              <span style="font-size:13px;">🔒</span>
-              <span style="font-size:11px;font-weight:700;flex:1;">グッズデザイン</span>
-              <span style="font-size:9px;color:var(--muted);">デザイン5日・確認3日・入稿2日</span>
-            </div>
-          </div>
-          <button onclick="closeModal()" style="width:100%;font-size:11px;font-weight:700;padding:9px;border-radius:10px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
-        </div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
         <p class="settings-label">バックアップ / 復元</p>
         <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
-        <div style="border:1.5px dashed #E1B75B;border-radius:8px;padding:10px;margin-top:4px;">
-          <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;">
-            <span style="font-size:13px;">🔒</span>
-            <span style="font-size:11px;font-weight:700;color:var(--muted);">JSONから復元</span>
-            <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:#E1B75B;color:#5A3A00;font-weight:700;">PRO</span>
-          </div>
-          <p style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">バックアップファイルからデータを復元できます</p>
-          <button onclick="closeModal()" style="width:100%;font-size:10px;font-weight:700;padding:7px;border-radius:16px;background:#E1B75B;color:#5A3A00;border:none;cursor:pointer;font-family:inherit;">👑 アップグレードして解除</button>
-        </div>
+        <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
@@ -1243,15 +1158,18 @@ let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') 
 
 const MAX_FREE_TEMPLATES = 3;
 const MAX_FREE_ORDERS = 3;
-function isPremium() { return false; }
+function isPremium() { return true; }
 const DEFAULT_TEMPLATES = [
-  { id: 'tpl_illust', name: 'イラスト',   phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
-  { id: 'tpl_mini',   name: 'ミニキャラ', phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
-  { id: 'tpl_ichi',   name: '一枚絵',     phases: [{id:'rough',name:'ラフ',days:10},{id:'fix',name:'修正',days:5},{id:'final',name:'清書',days:3}] },
+  { id: 'tpl_illust', name: 'イラスト',     phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
+  { id: 'tpl_mini',   name: 'ミニキャラ',   phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
+  { id: 'tpl_ichi',   name: '一枚絵',       phases: [{id:'rough',name:'ラフ',days:10},{id:'fix',name:'修正',days:5},{id:'final',name:'清書',days:3}] },
+  { id: 'tpl_bg',     name: '背景イラスト', phases: [{id:'rough',name:'ラフ',days:14},{id:'fix',name:'修正',days:7},{id:'final',name:'清書',days:5}] },
+  { id: 'tpl_manga',  name: '漫画・コミック',phases: [{id:'rough',name:'ネーム',days:7},{id:'fix',name:'ペン入れ',days:14},{id:'final',name:'仕上げ',days:5}] },
+  { id: 'tpl_goods',  name: 'グッズデザイン',phases: [{id:'rough',name:'デザイン',days:5},{id:'fix',name:'確認',days:3},{id:'final',name:'入稿',days:2}] },
 ];
 
 // 既存ユーザー向けマイグレーション
-if (!settings.templates) {
+if (!settings.templates || settings.templates.length === 0) {
   settings.templates = DEFAULT_TEMPLATES.map(t => ({ ...t, phases: t.phases.map(p => ({ ...p })) }));
   save();
 }
@@ -1273,17 +1191,38 @@ const COLOR_THEMES = [
   { id: 'midnight', name: 'ミッドナイト',     colors: ['#161e92','#3841b7','#5c91d6','#7f63bf','#e1b75b'] },
   { id: 'macaron',  name: 'ふんわりマカロン', colors: ['#ff5274','#febb5d','#7cdab7','#8b8ef9','#ae6dd9'] },
   { id: 'pop',      name: 'イラストポップ',   colors: ['#bb0c0c','#e3aa0d','#46c3aa','#3c92c8','#445dc1'] },
+  { id: 'mycolor1', name: 'マイカラー①',     colors: ['#E8604C','#F0A03C','#7BC67E','#5EA8E8','#B785DE'] },
+  { id: 'mycolor2', name: 'マイカラー②',     colors: ['#FF9FB2','#FFCB6B','#A8D8A8','#8EC8E8','#D4A5E8'] },
 ];
 let currentThemeId = localStorage.getItem('shimesuke_theme') || 'midnight';
 let ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
 
 // UIスキン（ヘッダー・背景カラー）
 const UI_SKINS = [
-  { id: 'default', name: 'デフォルト', main: '#2E3460', mid: '#3E4880', bg: '#F5F1EB', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A8090', border: '#DDD8D0' },
-  { id: 'dark',    name: 'ダーク',     main: '#1E2340', mid: '#2A3060', bg: '#12152A', surface: '#1E2340', text: '#E8ECF4', muted: '#9AA0B8', border: '#3A3F60' },
-  { id: 'forest',  name: 'フォレスト', main: '#2D5A27', mid: '#3D6A37', bg: '#F0F5EC', surface: '#FFFFFF', text: '#2A2A2A', muted: '#6A7A68', border: '#C8D8C4' },
+  { id: 'default',  name: 'デフォルト',  main: '#2E3460', mid: '#3E4880', bg: '#F5F1EB', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A8090', border: '#DDD8D0' },
+  { id: 'dark',     name: 'ダーク',      main: '#1E2340', mid: '#2A3060', bg: '#12152A', surface: '#1E2340', text: '#E8ECF4', muted: '#9AA0B8', border: '#3A3F60' },
+  { id: 'forest',   name: 'フォレスト',  main: '#2D5A27', mid: '#3D6A37', bg: '#F0F5EC', surface: '#FFFFFF', text: '#2A2A2A', muted: '#6A7A68', border: '#C8D8C4' },
+  { id: 'mycolor1', name: 'マイカラー①', main: '#7B3FA0', mid: '#9B5FBF', bg: '#F5EEFF', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A7468', border: '#DDD5C8' },
+  { id: 'mycolor2', name: 'マイカラー②', main: '#0A6E7A', mid: '#1A8E9A', bg: '#E8FAFA', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A7468', border: '#C8E0E0' },
 ];
 let currentSkinId = localStorage.getItem('shimesuke_skin') || 'default';
+
+// PRO: マイカラー保存値（UI_SKINS / COLOR_THEMES の後に配置）
+const myChartColors = {
+  mycolor1: JSON.parse(localStorage.getItem('shimesuke_mychart1') || 'null') || ['#E8604C','#F0A03C','#7BC67E','#5EA8E8','#B785DE'],
+  mycolor2: JSON.parse(localStorage.getItem('shimesuke_mychart2') || 'null') || ['#FF9FB2','#FFCB6B','#A8D8A8','#8EC8E8','#D4A5E8'],
+};
+const mySkinColors = {
+  mycolor1: JSON.parse(localStorage.getItem('shimesuke_myskin1') || 'null') || { main:'#7B3FA0', mid:'#9B5FBF', bg:'#F5EEFF', surface:'#FFFFFF', text:'#2A2A2A', muted:'#7A7468', border:'#DDD5C8' },
+  mycolor2: JSON.parse(localStorage.getItem('shimesuke_myskin2') || 'null') || { main:'#0A6E7A', mid:'#1A8E9A', bg:'#E8FAFA', surface:'#FFFFFF', text:'#2A2A2A', muted:'#7A7468', border:'#C8E0E0' },
+};
+// 保存済みカスタム値をCOLOR_THEMES/UI_SKINSに反映
+['mycolor1','mycolor2'].forEach(id => {
+  const ct = COLOR_THEMES.find(t => t.id === id);
+  if (ct) ct.colors = myChartColors[id].slice();
+  const sk = UI_SKINS.find(s => s.id === id);
+  if (sk) Object.assign(sk, mySkinColors[id]);
+});
 
 /* ═══════════════════════════════
    UTILS
@@ -1742,6 +1681,7 @@ function openAddOrder() {
 
   // phase fields
   renderPhaseFields('f-phases-row', settings.phases.map(p=>({...p})));
+  renderTemplateSelect();
 
   // actions
   document.getElementById('order-modal-actions').innerHTML = `
@@ -1878,7 +1818,7 @@ function renderTemplateList() {
       </div>`).join('');
 
   if (btn) {
-    const locked = tmpls.length >= MAX_FREE_TEMPLATES;
+    const locked = tmpls.length >= MAX_FREE_TEMPLATES && !isPremium();
     btn.className = locked ? 'btn-add-tpl locked' : 'btn-add-tpl';
     btn.textContent = locked
       ? `🔒 テンプレート追加（無料枠：${MAX_FREE_TEMPLATES}件まで）`
@@ -1939,6 +1879,7 @@ function backToSettings() {
 function openSettings() {
   closeStampPanel();
   renderPhaseFields('s-phases-row', settings.phases);
+  renderTemplateList();
   showModal('settings-modal');
   initStampToggle();
 }
@@ -2012,14 +1953,53 @@ function renderSkinList() {
   if (!wrap) return;
   wrap.innerHTML = '';
   UI_SKINS.forEach(skin => {
-    const div = document.createElement('div');
-    div.className = 'skin-opt' + (skin.id === currentSkinId ? ' active' : '');
-    div.onclick = () => { applyUISkin(skin.id); renderSkinList(); };
-    div.innerHTML = `
+    const isActive = skin.id === currentSkinId;
+    const isCustom = skin.id === 'mycolor1' || skin.id === 'mycolor2';
+    const row = document.createElement('div');
+    row.className = 'skin-opt' + (isActive ? ' active' : '');
+    row.onclick = () => { applyUISkin(skin.id); renderSkinList(); };
+    row.innerHTML = `
       <div class="skin-preview" style="background:linear-gradient(90deg,${skin.main} 45%,${skin.bg} 45%);border:1px solid var(--border);"></div>
       <span class="skin-name">${skin.name}</span>
-      ${skin.id === currentSkinId ? '<span style="font-size:12px;">✓</span>' : ''}`;
-    wrap.appendChild(div);
+      ${isActive ? '<span style="font-size:12px;">✓</span>' : ''}`;
+    wrap.appendChild(row);
+    // アクティブなマイカラーはカラーピッカーを展開
+    if (isActive && isCustom) {
+      const pickerWrap = document.createElement('div');
+      pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const fields = [
+        { key:'main',    label:'ヘッダー色' },
+        { key:'bg',      label:'背景色' },
+        { key:'surface', label:'カード色' },
+        { key:'text',    label:'テキスト色' },
+      ];
+      fields.forEach(f => {
+        const line = document.createElement('div');
+        line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+        line.innerHTML = `<span style="font-size:11px;color:var(--muted);">${f.label}</span>`;
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = mySkinColors[skin.id][f.key] || '#000000';
+        inp.style.cssText = 'width:36px;height:24px;border:none;cursor:pointer;border-radius:4px;';
+        inp.oninput = () => {
+          mySkinColors[skin.id][f.key] = inp.value;
+          // midはmainから自動生成
+          if (f.key === 'main') mySkinColors[skin.id].mid = inp.value;
+          // muted/borderはtext/bgから自動生成
+          if (f.key === 'text') mySkinColors[skin.id].muted = inp.value + '99';
+          if (f.key === 'bg')   mySkinColors[skin.id].border = inp.value;
+          Object.assign(UI_SKINS.find(s => s.id === skin.id), mySkinColors[skin.id]);
+          localStorage.setItem('shimesuke_myskin' + skin.id.slice(-1), JSON.stringify(mySkinColors[skin.id]));
+          applyUISkin(skin.id);
+          // プレビュー更新
+          row.querySelector('.skin-preview').style.background =
+            `linear-gradient(90deg,${mySkinColors[skin.id].main} 45%,${mySkinColors[skin.id].bg} 45%)`;
+        };
+        line.appendChild(inp);
+        pickerWrap.appendChild(line);
+      });
+      wrap.appendChild(pickerWrap);
+    }
   });
 }
 
@@ -2047,16 +2027,47 @@ function renderChartThemeList() {
   if (!wrap) return;
   wrap.innerHTML = '';
   COLOR_THEMES.forEach(theme => {
+    const isActive = theme.id === currentThemeId;
+    const isCustom = theme.id === 'mycolor1' || theme.id === 'mycolor2';
     const div = document.createElement('div');
-    div.className = 'chart-theme-opt' + (theme.id === currentThemeId ? ' active' : '');
+    div.className = 'chart-theme-opt' + (isActive ? ' active' : '');
     div.onclick = () => { selectTheme(theme.id); renderChartThemeList(); };
     div.innerHTML = `
       <div class="chart-theme-dots">
         ${theme.colors.map(c => `<div class="chart-theme-dot" style="background:${c};"></div>`).join('')}
       </div>
       <span class="chart-theme-name">${theme.name}</span>
-      ${theme.id === currentThemeId ? '<span style="font-size:12px;">✓</span>' : ''}`;
+      ${isActive ? '<span style="font-size:12px;">✓</span>' : ''}`;
     wrap.appendChild(div);
+    if (isActive && isCustom) {
+      const pickerWrap = document.createElement('div');
+      pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const labels = ['色①','色②','色③','色④','色⑤'];
+      myChartColors[theme.id].forEach((col, idx) => {
+        const line = document.createElement('div');
+        line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+        line.innerHTML = `<span style="font-size:11px;color:var(--muted);">${labels[idx]}</span>`;
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = col;
+        inp.style.cssText = 'width:36px;height:24px;border:none;cursor:pointer;border-radius:4px;';
+        inp.oninput = () => {
+          myChartColors[theme.id][idx] = inp.value;
+          const ct = COLOR_THEMES.find(t => t.id === theme.id);
+          if (ct) ct.colors[idx] = inp.value;
+          localStorage.setItem('shimesuke_mychart' + theme.id.slice(-1), JSON.stringify(myChartColors[theme.id]));
+          if (currentThemeId === theme.id) {
+            ORDER_COLORS = myChartColors[theme.id].slice();
+            renderCalendar();
+          }
+          div.querySelector('.chart-theme-dots').innerHTML =
+            myChartColors[theme.id].map(c => `<div class="chart-theme-dot" style="background:${c};"></div>`).join('');
+        };
+        line.appendChild(inp);
+        pickerWrap.appendChild(line);
+      });
+      wrap.appendChild(pickerWrap);
+    }
   });
 }
 
@@ -2155,6 +2166,14 @@ function exportData() {
   URL.revokeObjectURL(url);
 }
 
+function triggerImport() {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = '.json';
+  inp.onchange = () => importData(inp);
+  inp.click();
+}
+
 function importData(input) {
   const file = input.files[0];
   if (!file) return;
@@ -2162,20 +2181,21 @@ function importData(input) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.orders || !data.settings) throw new Error('形式が違います');
+      if (!data.orders) throw new Error('形式が違います');
+      if (!data.settings) data.settings = settings;
       if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
       orders   = data.orders;
       settings = data.settings;
       if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
       if (data.skin)         { currentSkinId  = data.skin;   localStorage.setItem('shimesuke_skin',  currentSkinId);  applyUISkin(currentSkinId); }
-      if (data.stickers)     { placedStickers = data.stickers;   saveStickers(); }
+      if (data.stickers)     { placedStickers = data.stickers;   saveStickerData(); }
       if (data.customStamps) { customStamps   = data.customStamps; saveCustomStamps(); }
       save();
       closeModal();
       render();
       alert('復元しました！');
     } catch(err) {
-      alert('読み込みに失敗しました。〆スケのバックアップファイルを選択してください。');
+      alert('読み込みに失敗しました。\n' + err.message);
     }
     input.value = '';
   };
@@ -2404,8 +2424,8 @@ function renderStampOptions() {
       <div class="so-del" onclick="event.stopPropagation();deleteCustomStamp('${s.id}')">✕</div>
     </div>`).join('');
 
-  const uploadBtn = `<div class="stamp-option stamp-option-add" style="cursor:default;opacity:0.6;" title="PROで利用可能">🔒</div>
-    <p style="width:100%;font-size:9px;color:var(--muted);text-align:center;margin-top:2px;">カスタム追加はPROで利用可能</p>`;
+  const uploadBtn = `<div class="stamp-option stamp-option-add" onclick="document.getElementById('stamp-upload').click()">＋</div>
+    <p style="width:100%;font-size:9px;color:var(--muted);text-align:center;margin-top:2px;">正方形120pxにトリミングされます</p>`;
 
   wrap.innerHTML = defaultHtml + customHtml + uploadBtn;
 }

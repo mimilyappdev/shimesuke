@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>SchedulEX — 〆スケ</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2E3460">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="〆スケ">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=BIZ+UDGothic:wght@400;700&family=Kaisei+Opti:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── VARIABLES ── */
+:root {
+  --main:    #2E3460;
+  --mid:     #3E4880;
+  --light:   #8A90CC;
+  --light2:  #B0B6E8;
+  --bg:      #F5F1EB;
+  --surface: #FFFFFF;
+  --border:  #DDD8D0;
+  --text:    #2A2A2A;
+  --muted:   #7A8090;
+  --gold-line: linear-gradient(90deg, #8A90CC, #B0B6E8, #8A90CC);
+
+  --safe:       #3A9A88;
+  --safe-bg:    #E8F5F3;
+  --caution:    #E3CF57;
+  --caution-bg: #FDFBE8;
+  --danger:     #E07820;
+  --danger-bg:  #FFF2E0;
+  --crisis:     #C83030;
+  --crisis-bg:  #FFECEC;
+  --overdue:    #7A1010;
+  --overdue-bg: #F5E0E0;
+
+  --sidebar-w: 280px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'BIZ UDGothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100dvh; }
+
+/* ── HEADER ── */
+#header {
+  background: var(--main);
+  height: calc(50px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+  z-index: 10;
+}
+.logo {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo-sub { font-family: 'BIZ UDGothic', sans-serif; font-size: 10px; color: rgba(255,255,255,0.4); }
+.logo-tagline {
+  font-family: 'BIZ UDGothic', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255,255,255,0.18);
+  margin-left: 4px;
+  align-self: center;
+}
+.btn-top {
+  font-family: 'BIZ UDGothic', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  text-decoration: none;
+  white-space: nowrap;
+  align-self: center;
+  margin-left: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-top:hover { background: rgba(255,255,255,0.18); color: #fff; }
+@media (max-width: 767px) { .logo-tagline { display: none; } .btn-top { display: none; } }
+.header-actions { display: flex; gap: 8px; }
+.btn-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.22); }
+
+/* gold line */
+.gold-line { height: 3px; background: var(--gold-line); flex-shrink: 0; }
+
+/* ── MAIN LAYOUT ── */
+#main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
+.btn-add {
+  background: var(--main);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-add:hover { background: var(--mid); }
+
+#order-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#order-list::-webkit-scrollbar { width: 4px; }
+#order-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+.empty-state-icon { font-size: 36px; opacity: 0.4; }
+.empty-state-text { font-size: 12px; line-height: 1.8; }
+
+/* ── ORDER CARD ── */
+.order-card {
+  position: relative;
+  border-radius: 10px;
+  padding: 11px 48px 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.order-card:hover { box-shadow: 0 3px 12px rgba(46,52,96,0.12); transform: translateX(-1px); }
+.order-card.selected { box-shadow: 0 0 0 2px var(--main); }
+
+/* post-it tab */
+.card-tab {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 52px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 1;
+}
+.tab-ato   { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num   { font-size: 18px; color: #fff; font-weight: 700; line-height: 1.1; }
+.tab-nichi { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num.dark   { color: #3A3000; }
+.tab-ato.dark   { color: rgba(60,50,0,0.65); }
+.tab-nichi.dark { color: rgba(60,50,0,0.65); }
+
+.card-row1 { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.card-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; flex: 1; }
+.card-phase-badge {
+  font-size: 8px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.card-type-row { display: flex; align-items: center; gap: 5px; }
+.card-type-label { font-size: 10px; }
+.card-deadline-row { font-size: 10px; font-weight: 700; }
+.phase-bar-row { display: flex; gap: 2px; height: 4px; }
+.phase-seg { flex: 1; border-radius: 2px; }
+
+/* urgency themes */
+.card-safe    { background: var(--safe-bg); }
+.card-caution { background: var(--caution-bg); }
+.card-danger  { background: var(--danger-bg); }
+.card-crisis  { background: var(--crisis-bg); outline: 1.5px solid var(--crisis); }
+.card-overdue { background: var(--overdue-bg); outline: 1.5px solid var(--overdue); }
+
+/* ── CALENDAR PANEL ── */
+#calendar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  min-width: 0;
+}
+.cal-header {
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.cal-month-label {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: var(--main);
+}
+.cal-nav-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.cal-nav-btn:hover { background: var(--border); }
+.cal-nav-group { display: flex; gap: 6px; align-items: center; }
+.cal-today-btn {
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.cal-today-btn:hover { background: var(--border); }
+
+/* legend */
+.cal-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* grid */
+.cal-grid-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.cal-grid-wrap::-webkit-scrollbar { width: 4px; }
+.cal-grid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 3px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 4px 0;
+}
+.cal-dow.sun { color: #C05050; }
+.cal-dow.sat { color: #5070C0; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-cell {
+  background: var(--surface);
+  border-radius: 8px;
+  min-height: 68px;
+  padding: 4px 3px 3px;
+  cursor: pointer;
+  transition: background 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: relative;
+  border: 1px solid transparent;
+}
+.cal-cell:hover { background: #EEF0FA; border-color: var(--light2); }
+.cal-cell.other-month { background: transparent; border-color: transparent; cursor: default; }
+.cal-cell.other-month:hover { background: transparent; border-color: transparent; }
+.cal-cell.today { background: #EEF0FA; border-color: var(--light); }
+
+.cal-day-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  align-self: center;
+}
+.cal-cell.today .cal-day-num {
+  background: var(--main);
+  color: #fff;
+}
+.cal-cell.sun .cal-day-num { color: #C05050; }
+.cal-cell.sat .cal-day-num { color: #5070C0; }
+.cal-cell.other-month .cal-day-num { color: #CCC; }
+
+/* deadline circle */
+.cal-day-num.deadline-circle {
+  border: 2.5px solid currentColor;
+  font-weight: 700;
+}
+
+/* phase bars in cell */
+.cal-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 2px;
+  flex: 1;
+}
+.cal-bar-row {
+  height: 4px;
+  border-radius: 2px;
+  opacity: 0;
+}
+.cal-bar-row.active { opacity: 1; }
+.cal-bar-row.faded  { opacity: 0.35; }
+
+/* ── BOTTOM NAV (mobile) ── */
+#bottom-nav {
+  display: none;
+  background: var(--main);
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  flex-shrink: 0;
+}
+.bnav-inner {
+  display: flex;
+  height: 100%;
+}
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.15s;
+}
+.bnav-item.active { color: #fff; }
+.bnav-icon { font-size: 20px; line-height: 1; }
+.bnav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
+
+/* ── MODAL ── */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.modal-header {
+  background: var(--main);
+  padding: 16px 20px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: #fff;
+}
+.modal-close {
+  color: rgba(255,255,255,0.6);
+  font-size: 20px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* form fields */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; }
+.field input,
+.field select,
+.field textarea {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.15s;
+  outline: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--light); }
+.field textarea { resize: vertical; min-height: 72px; }
+
+/* type selector */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+}
+.type-btn {
+  padding: 10px 8px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--bg);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.type-btn.selected {
+  border-color: var(--main);
+  color: var(--main);
+  background: #ECEEF8;
+}
+
+/* phase fields */
+.phases-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.phase-field { display: flex; flex-direction: column; gap: 4px; }
+.phase-field label { font-size: 10px; font-weight: 700; color: var(--muted); }
+.phase-field input {
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  background: var(--bg);
+  outline: none;
+}
+.phase-field input:focus { border-color: var(--light); }
+.phase-hint { font-size: 10px; color: var(--muted); text-align: center; margin-top: 2px; }
+
+/* modal actions */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 20px;
+}
+.btn-primary {
+  flex: 1;
+  background: var(--main);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--mid); }
+.btn-secondary {
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--bg);
+}
+.btn-secondary:hover { background: var(--border); }
+.btn-delete {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--crisis);
+  background: var(--crisis-bg);
+  border: 1.5px solid var(--crisis);
+}
+
+/* settings modal */
+.settings-section { display: flex; flex-direction: column; gap: 10px; }
+.settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
+
+/* template management */
+.tpl-row { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border:1.5px solid var(--border); border-radius:8px; margin-bottom:6px; background:var(--bg); }
+.tpl-info { flex:1; min-width:0; }
+.tpl-name { font-size:12px; font-weight:700; color:var(--text); }
+.tpl-days { font-size:10px; color:var(--muted); margin-top:2px; }
+.tpl-btns { display:flex; gap:4px; flex-shrink:0; margin-left:8px; }
+.tpl-btn { width:26px; height:26px; border-radius:6px; border:1px solid var(--border); background:var(--surface); font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background 0.12s; }
+.tpl-btn:hover { background:var(--border); }
+.btn-add-tpl { font-size:11px; font-weight:700; padding:4px 10px; border-radius:8px; background:var(--main); color:#fff; transition:background 0.15s; }
+.btn-add-tpl:hover:not(:disabled) { background:var(--mid); }
+.btn-add-tpl:disabled { background:var(--bg); color:var(--muted); border:1px solid var(--border); cursor:default; font-size:14px; }
+.tpl-form { border:1.5px solid var(--light); border-radius:8px; padding:10px; background:#ECEEF8; margin-bottom:6px; }
+.tpl-form-name { width:100%; padding:7px 10px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; background:var(--surface); margin-bottom:8px; outline:none; font-family:inherit; }
+.tpl-form-name:focus { border-color:var(--light); }
+.tpl-form-phases { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px; }
+.tpl-form-day { display:flex; flex-direction:column; gap:3px; }
+.tpl-form-day label { font-size:10px; font-weight:700; color:var(--muted); }
+.tpl-form-day input { padding:6px 8px; border:1.5px solid var(--border); border-radius:6px; font-size:12px; text-align:center; background:var(--surface); outline:none; font-family:inherit; }
+.tpl-form-day input:focus { border-color:var(--light); }
+.tpl-form-actions { display:flex; gap:6px; justify-content:flex-end; }
+.tpl-form-cancel { padding:6px 12px; border:1.5px solid var(--border); border-radius:6px; font-size:11px; color:var(--muted); background:var(--bg); cursor:pointer; font-family:inherit; }
+.tpl-form-save { padding:6px 12px; border-radius:6px; font-size:11px; font-weight:700; background:var(--main); color:#fff; cursor:pointer; font-family:inherit; }
+.tpl-form-save:hover { background:var(--mid); }
+
+/* ── MOBILE ── */
+@media (max-width: 767px) {
+  body { overflow: hidden; }
+  #sub-nav { display: none; }
+  #sidebar { width: 100%; border-right: none; display: none; }
+  #sidebar.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; overflow-y: auto; }
+  #calendar-panel { display: none; }
+  #calendar-panel.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; }
+  #bottom-nav { display: block; }
+  .cal-cell { min-height: 54px; }
+  .logo { font-size: 16px; }
+}
+
+/* ── TABLET+ ── */
+@media (min-width: 768px) {
+  #sidebar { display: flex; }
+  #calendar-panel { display: flex; }
+}
+
+/* ── SUB NAV ── */
+#sub-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 12px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#sub-nav::-webkit-scrollbar { display: none; }
+.snav-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s;
+  text-decoration: none;
+}
+.snav-btn:hover { background: var(--border); }
+.snav-btn.locked {
+  color: var(--muted);
+  border-color: var(--border);
+  cursor: default;
+}
+.snav-btn.locked:hover { background: var(--bg); }
+.snav-lock { font-size: 10px; opacity: 0.7; }
+.snav-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo">
+      SchedulEX
+      <span class="logo-sub">〆スケ</span>
+      <span class="logo-tagline">締め切りが、見える。〆スケで、守ろう。</span>
+      <a class="btn-top" href="../index.html">🏠 TOP</a>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
+      <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
+    </div>
+  </header>
+  <div class="gold-line"></div>
+
+  <!-- SUB NAV -->
+  <div id="sub-nav">
+    <button class="snav-btn locked">EasyReply連携 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked">Googleカレンダー同期 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked">収支確認 <span class="snav-lock">🔒</span></button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title" id="order-count-label">案件一覧</span>
+        <button class="btn-add" onclick="openAddOrder()">＋ 追加</button>
+      </div>
+      <div id="order-list"></div>
+      <!-- AD SLOT START
+      <div id="ad-slot" style="padding:10px;text-align:center;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+        広告エリア
+      </div>
+      AD SLOT END -->
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="calendar-panel">
+      <div class="cal-header">
+        <div class="cal-nav-group">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          <span class="cal-month-label" id="cal-month-label">2026年5月</span>
+        </div>
+        <button class="cal-today-btn" style="cursor:default;opacity:0.55;" disabled>🎨 スタンプ 🔒</button>
+        <button class="cal-today-btn" onclick="goToday()">今日</button>
+      </div>
+      <div class="cal-legend" id="cal-legend"></div>
+      <div class="cal-grid-wrap">
+        <div class="cal-dow-row">
+          <div class="cal-dow sun">日</div>
+          <div class="cal-dow">月</div>
+          <div class="cal-dow">火</div>
+          <div class="cal-dow">水</div>
+          <div class="cal-dow">木</div>
+          <div class="cal-dow">金</div>
+          <div class="cal-dow sat">土</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav">
+    <div class="bnav-inner">
+      <button class="bnav-item active" id="bnav-calendar" onclick="switchTab('calendar')">
+        <span class="bnav-icon">🗓</span>
+        <span class="bnav-label">カレンダー</span>
+      </button>
+      <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders')">
+        <span class="bnav-icon">📋</span>
+        <span class="bnav-label">案件</span>
+      </button>
+      <button class="bnav-item" id="bnav-settings" onclick="openSettings()">
+        <span class="bnav-icon">⚙️</span>
+        <span class="bnav-label">設定</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay" onclick="handleOverlayClick(event)">
+
+  <!-- ADD / EDIT ORDER MODAL -->
+  <div class="modal" id="order-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="order-modal-title">案件を追加</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label>案件名 / クライアント名</label>
+        <input type="text" id="f-name" placeholder="例：天音みら / キャラデザ">
+      </div>
+
+      <div class="field" id="f-template-field">
+        <label>テンプレート</label>
+        <select id="f-template" onchange="onTemplateSelect()">
+          <option value="">テンプレートなし（手動入力）</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>依頼の種類</label>
+        <div class="type-grid" id="type-grid">
+          <button class="type-btn selected" data-type="illustration" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="8" width="26" height="32" rx="4"/>
+              <circle cx="21" cy="19" r="5"/>
+              <path d="M13 36 Q21 27 29 36"/>
+              <path d="M31 28 L41 18"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="currentColor"/>
+            </svg>
+            イラスト
+          </button>
+          <button class="type-btn" data-type="design" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="6" width="26" height="34" rx="4"/>
+              <line x1="12" y1="17" x2="28" y2="17"/>
+              <line x1="12" y1="23" x2="23" y2="23"/>
+              <path d="M27 30 L39 18 L43 22 L31 34 Z" fill="currentColor" stroke="currentColor"/>
+              <circle cx="27" cy="38" r="3" fill="currentColor"/>
+            </svg>
+            デザイン
+          </button>
+          <button class="type-btn" data-type="video" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="38" height="26" rx="5"/>
+              <line x1="22" y1="34" x2="22" y2="42"/>
+              <line x1="14" y1="42" x2="30" y2="42"/>
+              <path d="M17 16 L17 28 L30 22 Z" fill="currentColor" stroke="currentColor"/>
+            </svg>
+            動画
+          </button>
+          <button class="type-btn" data-type="other" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/>
+              <line x1="5" y1="26" x2="43" y2="26"/>
+            </svg>
+            その他
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>納期（締め切り）</label>
+        <input type="date" id="f-deadline">
+      </div>
+
+      <div class="field">
+        <label>現在のフェーズ</label>
+        <select id="f-phase">
+          <option value="0">ラフ中</option>
+          <option value="1">修正中</option>
+          <option value="2">清書中</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>スケジュール設定（日数）</label>
+        <div class="phases-row" id="f-phases-row"></div>
+        <p class="phase-hint">※ デフォルトは設定から変更できます</p>
+      </div>
+
+      <div class="field">
+        <label>メモ</label>
+        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-actions" id="order-modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveOrder()">保存</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title">設定</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <p class="settings-label" style="margin-bottom:0;">テンプレート管理</p>
+          <button id="s-add-tpl-btn" class="btn-add-tpl" onclick="startAddTemplate()">＋ 追加</button>
+        </div>
+        <div id="s-templates"></div>
+        <div id="s-add-tpl-form"></div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label">バックアップ / 復元</p>
+        <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
+          📂 JSONから復元
+          <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
+        </label>
+        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">⚠️ 復元すると現在のデータは上書きされます</p>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label">カレンダー連携 (.ics)</p>
+        <button class="btn-primary" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.06em;">
+          📅 .icsから読み込む
+          <input type="file" id="ics-import-file" accept=".ics" onchange="importICS(this)" style="font-size:12px;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);">
+        </label>
+        <p style="font-size:10px;color:var(--muted);line-height:1.7;margin-top:6px;">※ 読み込んだ予定は既存データに追加されます（名前＋日付が同じものはスキップ）</p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="closeModal()" style="flex:none;padding:12px 24px;">閉じる</button>
+    </div>
+  </div>
+
+</div><!-- /modal-overlay -->
+
+<script>
+/* ═══════════════════════════════
+   DEFAULTS
+═══════════════════════════════ */
+const DEFAULT_TEMPLATES = [
+  { id:'tpl_tateie', name:'立ち絵',        phases:[{id:'rough',name:'ラフ',days:5}, {id:'fix',name:'修正',days:3}, {id:'final',name:'清書',days:2}] },
+  { id:'tpl_mini',   name:'ミニキャラ',    phases:[{id:'rough',name:'ラフ',days:3}, {id:'fix',name:'修正',days:2}, {id:'final',name:'清書',days:1}] },
+  { id:'tpl_kv',     name:'キービジュアル', phases:[{id:'rough',name:'ラフ',days:14},{id:'fix',name:'修正',days:7}, {id:'final',name:'清書',days:5}] },
+];
+
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
+let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null');
+if (!settings) {
+  settings = { templates: DEFAULT_TEMPLATES.map(t=>({...t,phases:t.phases.map(p=>({...p}))})) };
+} else if (!settings.templates) {
+  // マイグレーション：旧フォーマット（phases）→ templates
+  settings.templates = DEFAULT_TEMPLATES.map(t=>({...t,phases:t.phases.map(p=>({...p}))}));
+}
+
+let currentMonth = new Date();
+currentMonth.setDate(1);
+currentMonth.setHours(0,0,0,0);
+
+let editingId = null;
+let selectedType = 'illustration';
+let activeTab = 'calendar'; // mobile tab
+
+// Order color palette
+const ORDER_COLORS = [
+  '#3E4880','#3A9A88','#B86A3A','#7A4A80','#5A7A3A','#80503A'
+];
+
+/* ═══════════════════════════════
+   UTILS
+═══════════════════════════════ */
+function today() {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  const d = new Date(s + 'T00:00:00');
+  return d;
+}
+
+function dateKey(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function getDaysUntil(deadlineStr) {
+  const dl = parseDate(deadlineStr);
+  const t  = today();
+  return Math.ceil((dl - t) / 86400000);
+}
+
+function getUrgency(days) {
+  if (days < 0)  return 'overdue';
+  if (days <= 2) return 'crisis';
+  if (days <= 6) return 'danger';
+  if (days <= 13)return 'caution';
+  return 'safe';
+}
+
+function urgencyColor(u) {
+  return { safe:'#3A9A88', caution:'#E3CF57', danger:'#E07820', crisis:'#C83030', overdue:'#7A1010' }[u];
+}
+function urgencyBg(u) {
+  return { safe:'var(--safe-bg)', caution:'var(--caution-bg)', danger:'var(--danger-bg)', crisis:'var(--crisis-bg)', overdue:'var(--overdue-bg)' }[u];
+}
+function urgencyText(u) {
+  return { safe:'var(--safe)', caution:'#8A7A10', danger:'var(--danger)', crisis:'var(--crisis)', overdue:'var(--overdue)' }[u];
+}
+
+function getPhaseSchedule(order) {
+  const dl     = parseDate(order.deadline);
+  const phases = order.phaseDays || getDefaultPhases();
+  const result = [];
+  let end = new Date(dl);
+  for (let i = phases.length - 1; i >= 0; i--) {
+    const start = new Date(end);
+    start.setDate(start.getDate() - phases[i].days);
+    result.unshift({ id: phases[i].id, name: phases[i].name, start, end: new Date(end) });
+    end = new Date(start);
+  }
+  return result;
+}
+
+function orderColor(idx) {
+  return ORDER_COLORS[idx % ORDER_COLORS.length];
+}
+
+function fmtDate(d) {
+  return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function save() {
+  localStorage.setItem('shimesuke_orders',   JSON.stringify(orders));
+  localStorage.setItem('shimesuke_settings', JSON.stringify(settings));
+}
+
+/* ═══════════════════════════════
+   PICTOGRAMS
+═══════════════════════════════ */
+function pict(type, color, size=20) {
+  const s = `stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"`;
+  const svgs = {
+    illustration: `<rect x="8" y="8" width="26" height="32" rx="4"/><circle cx="21" cy="19" r="5"/><path d="M13 36 Q21 27 29 36"/><path d="M31 28 L41 18" stroke-width="2.5"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="${color}" stroke="${color}"/>`,
+    design:       `<rect x="7" y="6" width="26" height="34" rx="4"/><line x1="12" y1="17" x2="28" y2="17"/><line x1="12" y1="23" x2="23" y2="23"/><path d="M27 30 L39 18 L43 22 L31 34 Z" fill="${color}" stroke="${color}"/><circle cx="27" cy="38" r="3" fill="${color}"/>`,
+    video:        `<rect x="3" y="8" width="38" height="26" rx="5"/><line x1="22" y1="34" x2="22" y2="42"/><line x1="14" y1="42" x2="30" y2="42"/><path d="M17 16 L17 28 L30 22 Z" fill="${color}" stroke="${color}"/>`,
+    other:        `<path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/><line x1="5" y1="26" x2="43" y2="26"/>`,
+  };
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" ${s}>${svgs[type]||svgs.other}</svg>`;
+}
+
+function typeLabel(t) {
+  return {illustration:'イラスト', design:'デザイン', video:'動画', other:'その他'}[t] || t;
+}
+
+function phaseName(idx) {
+  return ['ラフ','修正','清書'][idx] || '';
+}
+
+function getDefaultPhases() {
+  if (settings.templates && settings.templates.length > 0) {
+    return settings.templates[0].phases.map(p=>({...p}));
+  }
+  return [{id:'rough',name:'ラフ',days:5},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}];
+}
+
+/* ═══════════════════════════════
+   RENDER ORDERS
+═══════════════════════════════ */
+function renderOrders() {
+  const list = document.getElementById('order-list');
+  const label = document.getElementById('order-count-label');
+  label.textContent = `案件一覧 ${orders.length}件`;
+
+  if (orders.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  orders.forEach((order, idx) => {
+    const days    = getDaysUntil(order.deadline);
+    const urgency = getUrgency(days);
+    const color   = orderColor(idx);
+    const uc      = urgencyColor(urgency);
+    const ubg     = urgencyBg(urgency);
+    const utxt    = urgencyText(urgency);
+    const isDark  = urgency === 'caution';
+
+    const schedule  = getPhaseSchedule(order);
+    const curPhase  = order.currentPhase || 0;
+    const phasesBadge = ['ラフ中','修正中','清書中'][curPhase] || '';
+
+    // phase bar
+    let barHTML = '';
+    for (let i = 0; i < 3; i++) {
+      let bg = 'var(--border)';
+      if (i < curPhase)  bg = uc;
+      if (i === curPhase) bg = uc;
+      if (i > curPhase)  bg = 'var(--border)';
+      const opacity = i < curPhase ? '1' : i === curPhase ? '1' : '0.25';
+      barHTML += `<div class="phase-seg" style="background:${bg};opacity:${opacity};"></div>`;
+    }
+
+    // deadline label
+    const dl      = parseDate(order.deadline);
+    const dlLabel = days < 0
+      ? `超過 ${Math.abs(days)}日`
+      : days === 0 ? '今日が締め切り！'
+      : `あと${days}日`;
+
+    const card = document.createElement('div');
+    card.className = `order-card card-${urgency}`;
+    card.id = `card-${order.id}`;
+    card.onclick = () => openEditOrder(order.id);
+    card.innerHTML = `
+      <div class="card-tab" style="background:${uc};">
+        <span class="tab-ato${isDark?' dark':''}">あと</span>
+        <span class="tab-num${isDark?' dark':''}">
+          ${days < 0 ? '!' : days > 99 ? '∞' : days}
+        </span>
+        <span class="tab-nichi${isDark?' dark':''}">日</span>
+      </div>
+      <div class="card-row1">
+        <div class="card-name">${esc(order.name)}</div>
+        <div class="card-phase-badge" style="background:${uc}22;color:${utxt};">${phasesBadge}</div>
+      </div>
+      <div class="card-type-row">
+        ${pict(order.type, utxt, 18)}
+        <span class="card-type-label" style="color:${utxt};">${typeLabel(order.type)}</span>
+      </div>
+      <div class="phase-bar-row">${barHTML}</div>
+      <div class="card-deadline-row" style="color:${utxt};">
+        🗓 〆 ${fmtDate(dl)} — ${dlLabel}
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════
+   RENDER CALENDAR
+═══════════════════════════════ */
+function renderCalendar() {
+  const grid  = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  const legend= document.getElementById('cal-legend');
+
+  const y = currentMonth.getFullYear();
+  const m = currentMonth.getMonth();
+  label.textContent = `${y}年${m+1}月`;
+
+  // legend
+  legend.innerHTML = '';
+  orders.forEach((order, idx) => {
+    const col = orderColor(idx);
+    legend.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${col};"></div>
+        <span>${esc(order.name.split('/')[0].trim())}</span>
+      </div>`;
+  });
+  if (orders.length === 0) {
+    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">案件を追加するとカレンダーに表示されます</span>`;
+  }
+
+  // build order → phase map for quick lookup
+  const orderPhases = orders.map(order => ({
+    id: order.id,
+    schedule: getPhaseSchedule(order),
+    deadline: dateKey(parseDate(order.deadline))
+  }));
+
+  // calendar grid
+  const firstDay = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const prevDays = new Date(y, m, 0).getDate();
+  const todayKey = dateKey(today());
+
+  grid.innerHTML = '';
+
+  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+
+    let date, dayNum, isOther = false;
+    if (i < firstDay) {
+      dayNum = prevDays - firstDay + i + 1;
+      date = new Date(y, m-1, dayNum);
+      isOther = true;
+    } else if (i >= firstDay + daysInMonth) {
+      dayNum = i - firstDay - daysInMonth + 1;
+      date = new Date(y, m+1, dayNum);
+      isOther = true;
+    } else {
+      dayNum = i - firstDay + 1;
+      date = new Date(y, m, dayNum);
+    }
+
+    const dKey = dateKey(date);
+    const dow  = date.getDay();
+    const isToday = dKey === todayKey;
+
+    if (isOther) cell.classList.add('other-month');
+    if (isToday) cell.classList.add('today');
+    if (dow === 0) cell.classList.add('sun');
+    if (dow === 6) cell.classList.add('sat');
+
+    // deadline circles
+    const deadlineOrders = isOther ? [] : orderPhases.filter(op => op.deadline === dKey);
+    let circleStyle = '';
+    if (deadlineOrders.length > 0) {
+      const idx = orders.findIndex(o => o.id === deadlineOrders[0].id);
+      circleStyle = `border: 2.5px solid ${orderColor(idx)}; color: ${orderColor(idx)};`;
+    }
+
+    cell.innerHTML = `<div class="cal-day-num${deadlineOrders.length>0?' deadline-circle':''}" style="${circleStyle}">${dayNum}</div>`;
+
+    // phase bars
+    if (!isOther) {
+      const barsDiv = document.createElement('div');
+      barsDiv.className = 'cal-bars';
+      orders.forEach((order, idx) => {
+        const op    = orderPhases[idx];
+        const bar   = document.createElement('div');
+        bar.className = 'cal-bar-row';
+        const col   = orderColor(idx);
+
+        // find which phase this day falls in
+        let inPhase = false, isFaded = false;
+        op.schedule.forEach((ph, pi) => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          if (date >= s && date < e) {
+            inPhase = true;
+            if (pi < (order.currentPhase || 0)) isFaded = true;
+          }
+        });
+
+        if (inPhase) {
+          bar.classList.add(isFaded ? 'faded' : 'active');
+          bar.style.background = col;
+        }
+        barsDiv.appendChild(bar);
+      });
+      cell.appendChild(barsDiv);
+
+      // click handler
+      cell.onclick = () => scrollToOrdersForDate(dKey);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+/* scroll to nearest order for clicked date */
+function scrollToOrdersForDate(dKey) {
+  // find order that is active on this day
+  let targetId = null;
+  orders.forEach((order, idx) => {
+    const op = { schedule: getPhaseSchedule(order), deadline: dateKey(parseDate(order.deadline)) };
+    const clickedDate = parseDate(dKey);
+    op.schedule.forEach(ph => {
+      const s = new Date(ph.start); s.setHours(0,0,0,0);
+      const e = new Date(ph.end);   e.setHours(0,0,0,0);
+      if (clickedDate >= s && clickedDate < e) targetId = order.id;
+    });
+    if (op.deadline === dKey) targetId = order.id;
+  });
+
+  if (!targetId && orders.length > 0) return;
+  if (!targetId) return;
+
+  // on mobile, switch to orders tab first
+  if (window.innerWidth < 768) switchTab('orders');
+
+  setTimeout(() => {
+    const card = document.getElementById(`card-${targetId}`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+/* ═══════════════════════════════
+   CALENDAR NAVIGATION
+═══════════════════════════════ */
+function changeMonth(dir) {
+  currentMonth.setMonth(currentMonth.getMonth() + dir);
+  renderCalendar();
+}
+function goToday() {
+  currentMonth = new Date();
+  currentMonth.setDate(1);
+  currentMonth.setHours(0,0,0,0);
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   ADD / EDIT ORDER
+═══════════════════════════════ */
+function openAddOrder() {
+  editingId    = null;
+  selectedType = 'illustration';
+  document.getElementById('order-modal-title').textContent = '案件を追加';
+  document.getElementById('f-name').value     = '';
+  document.getElementById('f-deadline').value = '';
+  document.getElementById('f-phase').value    = '0';
+  document.getElementById('f-notes').value    = '';
+
+  // reset type selection
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === 'illustration');
+  });
+
+  // template dropdown
+  populateTemplateDropdown();
+  document.getElementById('f-template').value = '';
+
+  // phase fields (default to first template's values)
+  renderPhaseFields('f-phases-row', getDefaultPhases());
+
+  // actions
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+
+  showModal('order-modal');
+}
+
+function openEditOrder(id) {
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  editingId    = id;
+  selectedType = order.type;
+
+  document.getElementById('order-modal-title').textContent = '案件を編集';
+  document.getElementById('f-name').value     = order.name;
+  document.getElementById('f-deadline').value = order.deadline;
+  document.getElementById('f-phase').value    = String(order.currentPhase || 0);
+  document.getElementById('f-notes').value    = order.notes || '';
+
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === order.type);
+  });
+
+  // template dropdown (no pre-selection when editing)
+  populateTemplateDropdown();
+  document.getElementById('f-template').value = '';
+
+  const phases = order.phaseDays || getDefaultPhases();
+  renderPhaseFields('f-phases-row', phases);
+
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-delete" onclick="deleteOrder('${id}')">削除</button>
+    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+
+  showModal('order-modal');
+}
+
+function renderPhaseFields(containerId, phases) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = phases.map((p, i) => `
+    <div class="phase-field">
+      <label>${p.name}</label>
+      <input type="number" min="1" max="60" value="${p.days}" id="pf-${containerId}-${i}">
+    </div>`).join('');
+}
+
+function getPhaseDaysFromFields(containerId) {
+  return settings.phases.map((p, i) => ({
+    id:   p.id,
+    name: p.name,
+    days: parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value) || p.days
+  }));
+}
+
+function selectType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType = btn.dataset.type;
+}
+
+function saveOrder() {
+  const name     = document.getElementById('f-name').value.trim();
+  const deadline = document.getElementById('f-deadline').value;
+  const phase    = parseInt(document.getElementById('f-phase').value);
+  const notes    = document.getElementById('f-notes').value.trim();
+  const phaseDays= getPhaseDaysFromFields('f-phases-row');
+
+  if (!name)     { alert('案件名を入力してください'); return; }
+  if (!deadline) { alert('納期を入力してください'); return; }
+
+  if (editingId) {
+    const idx = orders.findIndex(o => o.id === editingId);
+    if (idx > -1) orders[idx] = { ...orders[idx], name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays };
+  } else {
+    orders.push({ id: uid(), name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays });
+  }
+
+  save();
+  closeModal();
+  render();
+}
+
+function deleteOrder(id) {
+  if (!confirm('この案件を削除しますか？')) return;
+  orders = orders.filter(o => o.id !== id);
+  save();
+  closeModal();
+  render();
+}
+
+/* ═══════════════════════════════
+   SETTINGS
+═══════════════════════════════ */
+function openSettings() {
+  renderTemplateList();
+  showModal('settings-modal');
+}
+
+function populateTemplateDropdown() {
+  const sel = document.getElementById('f-template');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">テンプレートなし（手動入力）</option>';
+  settings.templates.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+}
+
+function onTemplateSelect() {
+  const tplId = document.getElementById('f-template').value;
+  if (!tplId) return;
+  const tpl = settings.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  renderPhaseFields('f-phases-row', tpl.phases.map(p=>({...p})));
+}
+
+function renderTemplateList() {
+  const container = document.getElementById('s-templates');
+  const addBtn    = document.getElementById('s-add-tpl-btn');
+  const addForm   = document.getElementById('s-add-tpl-form');
+  const atMax     = settings.templates.length >= 3;
+
+  container.innerHTML = '';
+  settings.templates.forEach(tpl => {
+    const row = document.createElement('div');
+    row.className = 'tpl-row';
+    row.id = `tpl-row-${tpl.id}`;
+    const ph = tpl.phases;
+    row.innerHTML = `
+      <div class="tpl-info">
+        <div class="tpl-name">${esc(tpl.name)}</div>
+        <div class="tpl-days">ラフ${ph[0].days}日・修正${ph[1].days}日・清書${ph[2].days}日</div>
+      </div>
+      <div class="tpl-btns">
+        <button class="tpl-btn" onclick="editTemplate('${tpl.id}')" title="編集">✏️</button>
+        <button class="tpl-btn" onclick="deleteTemplate('${tpl.id}')" title="削除">🗑️</button>
+      </div>`;
+    container.appendChild(row);
+  });
+
+  if (addBtn) {
+    addBtn.disabled    = atMax;
+    addBtn.textContent = atMax ? '🔒' : '＋ 追加';
+    addBtn.title       = atMax ? 'テンプレートは3件までです' : '';
+  }
+  if (addForm) addForm.innerHTML = '';
+}
+
+function editTemplate(id) {
+  const tpl = settings.templates.find(t => t.id === id);
+  if (!tpl) return;
+  const row = document.getElementById(`tpl-row-${id}`);
+  if (!row) return;
+  row.innerHTML = `
+    <div style="width:100%;">
+      <input class="tpl-form-name" type="text" id="tpl-edit-name-${id}" value="${esc(tpl.name)}" placeholder="テンプレート名" maxlength="20">
+      <div class="tpl-form-phases">
+        <div class="tpl-form-day"><label>ラフ</label><input type="number" min="1" max="60" id="tpl-edit-0-${id}" value="${tpl.phases[0].days}"></div>
+        <div class="tpl-form-day"><label>修正</label><input type="number" min="1" max="60" id="tpl-edit-1-${id}" value="${tpl.phases[1].days}"></div>
+        <div class="tpl-form-day"><label>清書</label><input type="number" min="1" max="60" id="tpl-edit-2-${id}" value="${tpl.phases[2].days}"></div>
+      </div>
+      <div class="tpl-form-actions">
+        <button class="tpl-form-cancel" onclick="renderTemplateList()">キャンセル</button>
+        <button class="tpl-form-save" onclick="saveEditTemplate('${id}')">保存</button>
+      </div>
+    </div>`;
+  document.getElementById(`tpl-edit-name-${id}`).focus();
+}
+
+function saveEditTemplate(id) {
+  const idx = settings.templates.findIndex(t => t.id === id);
+  if (idx < 0) return;
+  const name = document.getElementById(`tpl-edit-name-${id}`)?.value.trim();
+  if (!name) { alert('テンプレート名を入力してください'); return; }
+  const days = [0,1,2].map(i => parseInt(document.getElementById(`tpl-edit-${i}-${id}`)?.value) || 1);
+  settings.templates[idx] = {
+    ...settings.templates[idx],
+    name,
+    phases: [
+      {id:'rough', name:'ラフ',  days:days[0]},
+      {id:'fix',   name:'修正',  days:days[1]},
+      {id:'final', name:'清書',  days:days[2]},
+    ]
+  };
+  save();
+  renderTemplateList();
+}
+
+function deleteTemplate(id) {
+  if (!confirm('このテンプレートを削除しますか？')) return;
+  settings.templates = settings.templates.filter(t => t.id !== id);
+  save();
+  renderTemplateList();
+}
+
+function startAddTemplate() {
+  if (settings.templates.length >= 3) return;
+  const addBtn = document.getElementById('s-add-tpl-btn');
+  if (addBtn) { addBtn.disabled = true; addBtn.textContent = '＋ 追加'; }
+  const addForm = document.getElementById('s-add-tpl-form');
+  addForm.innerHTML = `
+    <div class="tpl-form">
+      <input class="tpl-form-name" type="text" id="tpl-new-name" placeholder="テンプレート名（例：立ち絵）" maxlength="20">
+      <div class="tpl-form-phases">
+        <div class="tpl-form-day"><label>ラフ</label><input type="number" min="1" max="60" id="tpl-new-0" value="5"></div>
+        <div class="tpl-form-day"><label>修正</label><input type="number" min="1" max="60" id="tpl-new-1" value="3"></div>
+        <div class="tpl-form-day"><label>清書</label><input type="number" min="1" max="60" id="tpl-new-2" value="2"></div>
+      </div>
+      <div class="tpl-form-actions">
+        <button class="tpl-form-cancel" onclick="renderTemplateList()">キャンセル</button>
+        <button class="tpl-form-save" onclick="saveNewTemplate()">追加</button>
+      </div>
+    </div>`;
+  document.getElementById('tpl-new-name').focus();
+}
+
+function saveNewTemplate() {
+  const name = document.getElementById('tpl-new-name')?.value.trim();
+  if (!name) { alert('テンプレート名を入力してください'); return; }
+  if (settings.templates.length >= 3) { alert('テンプレートは3件までです'); return; }
+  const days = [0,1,2].map(i => parseInt(document.getElementById(`tpl-new-${i}`)?.value) || 1);
+  settings.templates.push({
+    id: 'tpl_' + uid(),
+    name,
+    phases: [
+      {id:'rough', name:'ラフ',  days:days[0]},
+      {id:'fix',   name:'修正',  days:days[1]},
+      {id:'final', name:'清書',  days:days[2]},
+    ]
+  });
+  save();
+  renderTemplateList();
+}
+
+/* ═══════════════════════════════
+   MODAL HELPERS
+═══════════════════════════════ */
+function showModal(id) {
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+/* ═══════════════════════════════
+   MOBILE TABS
+═══════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  const sidebar  = document.getElementById('sidebar');
+  const calendar = document.getElementById('calendar-panel');
+
+  sidebar.classList.remove('mobile-active');
+  calendar.classList.remove('mobile-active');
+
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+
+  if (tab === 'calendar') {
+    calendar.classList.add('mobile-active');
+    document.getElementById('bnav-calendar').classList.add('active');
+  } else if (tab === 'orders') {
+    sidebar.classList.add('mobile-active');
+    document.getElementById('bnav-orders').classList.add('active');
+  }
+}
+
+/* ═══════════════════════════════
+   ESCAPE
+═══════════════════════════════ */
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════
+   RENDER ALL
+═══════════════════════════════ */
+function render() {
+  renderOrders();
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   BACKUP / RESTORE
+═══════════════════════════════ */
+function exportData() {
+  const data = JSON.stringify({ orders, settings, exportedAt: new Date().toISOString() }, null, 2);
+  const blob  = new Blob([data], { type: 'application/json' });
+  const url   = URL.createObjectURL(blob);
+  const a     = document.createElement('a');
+  const date  = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.href     = url;
+  a.download = `shimesuke_backup_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.orders || !data.settings) throw new Error('形式が違います');
+      if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
+      orders   = data.orders;
+      settings = data.settings;
+      save();
+      closeModal();
+      render();
+      alert('復元しました！');
+    } catch(err) {
+      alert('読み込みに失敗しました。〆スケのバックアップファイルを選択してください。');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════
+   ICS EXPORT
+═══════════════════════════════ */
+function exportICS() {
+  if (orders.length === 0) { alert('案件がありません'); return; }
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//〆スケ//shimesuke//JA',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH'
+  ];
+
+  orders.forEach(order => {
+    const dl = order.deadline.replace(/-/g, '');
+    const nextDay = new Date(parseDate(order.deadline));
+    nextDay.setDate(nextDay.getDate() + 1);
+    const dlEnd = dateKey(nextDay).replace(/-/g, '');
+    const label = { illustration:'イラスト', design:'デザイン', video:'動画', other:'その他' }[order.type] || order.type;
+    const desc = [label, order.notes].filter(Boolean).join(' / ').replace(/[\r\n]+/g, '\\n');
+
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:${order.id}@shimesuke`);
+    lines.push(`SUMMARY:【〆】${order.name}`);
+    lines.push(`DTSTART;VALUE=DATE:${dl}`);
+    lines.push(`DTEND;VALUE=DATE:${dlEnd}`);
+    if (desc) lines.push(`DESCRIPTION:${desc}`);
+    lines.push(`CATEGORIES:${label}`);
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `shimesuke_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══════════════════════════════
+   ICS IMPORT
+═══════════════════════════════ */
+function importICS(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const events = parseICS(e.target.result);
+      if (events.length === 0) { alert('読み込める予定が見つかりませんでした'); return; }
+      if (!confirm(`${events.length}件の予定を読み込みます。既存データは保持されます。よろしいですか？`)) return;
+      let added = 0;
+      events.forEach(ev => {
+        const dup = orders.find(o => o.name === ev.name && o.deadline === ev.deadline);
+        if (!dup) { orders.push(ev); added++; }
+      });
+      save(); render(); closeModal();
+      alert(`${added}件追加しました（重複スキップ：${events.length - added}件）`);
+    } catch(err) {
+      alert('.icsファイルの読み込みに失敗しました');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function parseICS(text) {
+  const events = [];
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  let inEvent = false, cur = {};
+  lines.forEach(line => {
+    if (line === 'BEGIN:VEVENT') { inEvent = true; cur = {}; return; }
+    if (line === 'END:VEVENT') {
+      inEvent = false;
+      if (cur.name && cur.deadline) {
+        // 【〆】プレフィックスがあれば除去
+        const name = cur.name.replace(/^【〆】/, '');
+        events.push({
+          id: uid(), name, type: 'other',
+          deadline: cur.deadline, currentPhase: 0,
+          notes: cur.notes || '',
+          phaseDays: settings.phases.map(p => ({ ...p }))
+        });
+      }
+      return;
+    }
+    if (!inEvent) return;
+    const colonIdx = line.indexOf(':');
+    if (colonIdx < 0) return;
+    const key = line.slice(0, colonIdx).split(';')[0];
+    const val = line.slice(colonIdx + 1).trim();
+    if (key === 'SUMMARY')     cur.name  = val;
+    if (key === 'DESCRIPTION') cur.notes = val.replace(/\\n/g, '\n');
+    if (key === 'DTSTART') {
+      const d = val.replace(/T.*$/, '');
+      if (d.length === 8) cur.deadline = `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;
+    }
+  });
+  return events;
+}
+
+/* ═══════════════════════════════
+   SERVICE WORKER
+═══════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+/* ═══════════════════════════════
+   KEYBOARD
+═══════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+// default mobile tab
+if (window.innerWidth < 768) {
+  switchTab('calendar');
+}
+
+render();
+</script>
+</body>
+</html>
