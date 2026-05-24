@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アーカイブタブ 位置確認</title>
+<style>
+:root {
+  --main:   #2E3460;
+  --mid:    #3E4880;
+  --bg:     #F5F1EB;
+  --surface:#FFFFFF;
+  --border: #DDD8D0;
+  --text:   #2A2A2A;
+  --muted:  #7A8090;
+  --safe:   #3A9A88;
+  --sidebar-w: 280px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'BIZ UDGothic', sans-serif; background: #E8E4DC; padding: 24px; display: flex; flex-direction: column; gap: 32px; }
+h2 { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; }
+
+/* ── PC SIDEBAR ── */
+.pc-frame {
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  width: var(--sidebar-w);
+}
+.sidebar-header {
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sidebar-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted);
+  white-space: nowrap;
+}
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.ftab {
+  font-size: 10px; font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.ftab.active {
+  background: var(--main);
+  color: #fff;
+  border-color: var(--main);
+}
+.btn-add {
+  background: var(--main); color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 10px; border-radius: 8px;
+  white-space: nowrap;
+}
+.order-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.order-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--safe); }
+.card-dot.done { background: var(--border); }
+.card-name { font-size: 12px; font-weight: 700; color: var(--text); flex: 1; }
+.card-badge {
+  font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  background: #E8F5F3; color: var(--safe);
+}
+.card-badge.done { background: var(--border); color: var(--muted); }
+
+/* ── MOBILE ── */
+.mobile-frame {
+  width: 360px;
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+.mobile-header {
+  background: var(--main);
+  padding: 14px 16px 10px;
+  color: #fff;
+  font-size: 14px; font-weight: 700;
+}
+.mobile-orders-header {
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mobile-order-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.mobile-bnav {
+  display: flex;
+  border-top: 1px solid var(--border);
+  background: var(--main);
+}
+.bnav-item {
+  flex: 1; padding: 8px 0 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: rgba(255,255,255,0.5);
+  font-size: 9px; font-weight: 700;
+}
+.bnav-item.active { color: #fff; }
+.bnav-icon { font-size: 18px; line-height: 1; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div>
+  <h2>PC — サイドバー（幅280px）</h2>
+  <div class="pc-frame">
+    <div class="sidebar-header">
+      <span class="sidebar-title">案件一覧</span>
+      <div class="filter-tabs">
+        <button class="ftab active">進行中 2件</button>
+        <button class="ftab">完了</button>
+      </div>
+      <button class="btn-add">＋ 追加</button>
+    </div>
+    <div class="order-list">
+      <div class="order-card">
+        <div class="card-dot"></div>
+        <span class="card-name">キャラクターイラスト</span>
+        <span class="card-badge">ラフ中</span>
+      </div>
+      <div class="order-card">
+        <div class="card-dot" style="background:#E07820;"></div>
+        <span class="card-name">アイコン制作</span>
+        <span class="card-badge" style="background:#FFF2E0;color:#E07820;">修正中</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h2>PC — 「完了」タブ選択時</h2>
+  <div class="pc-frame">
+    <div class="sidebar-header">
+      <span class="sidebar-title">案件一覧</span>
+      <div class="filter-tabs">
+        <button class="ftab">進行中 2件</button>
+        <button class="ftab active">完了</button>
+      </div>
+      <!-- ＋追加は完了タブでは非表示 -->
+    </div>
+    <div class="order-list">
+      <div class="order-card" style="opacity:0.7;">
+        <div class="card-dot done"></div>
+        <span class="card-name">ヘッダーバナー</span>
+        <span class="card-badge done">完了</span>
+      </div>
+      <div class="order-card" style="opacity:0.7;">
+        <div class="card-dot done"></div>
+        <span class="card-name">グッズデザイン</span>
+        <span class="card-badge done">完了</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <h2>スマホ — 案件タブ（進行中）</h2>
+  <div class="mobile-frame">
+    <div class="mobile-header">〆スケ</div>
+    <div class="mobile-orders-header">
+      <span class="sidebar-title">案件一覧</span>
+      <div class="filter-tabs">
+        <button class="ftab active">進行中 2件</button>
+        <button class="ftab">完了</button>
+      </div>
+      <button class="btn-add">＋ 追加</button>
+    </div>
+    <div class="mobile-order-list">
+      <div class="order-card">
+        <div class="card-dot"></div>
+        <span class="card-name">キャラクターイラスト</span>
+        <span class="card-badge">ラフ中</span>
+      </div>
+      <div class="order-card">
+        <div class="card-dot" style="background:#E07820;"></div>
+        <span class="card-name">アイコン制作</span>
+        <span class="card-badge" style="background:#FFF2E0;color:#E07820;">修正中</span>
+      </div>
+    </div>
+    <div class="mobile-bnav">
+      <div class="bnav-item"><span class="bnav-icon">🗓</span>カレンダー</div>
+      <div class="bnav-item active"><span class="bnav-icon">📋</span>案件</div>
+      <div class="bnav-item"><span class="bnav-icon">⚙️</span>設定</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

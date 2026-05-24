@@ -148,7 +148,20 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   justify-content: space-between;
 }
-.sidebar-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
+.sidebar-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); white-space: nowrap; }
+.filter-tabs { display: flex; gap: 4px; flex: 1; margin: 0 6px; }
+.ftab {
+  font-size: 10px; font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ftab.active { background: var(--main); color: #fff; border-color: var(--main); }
 .btn-add {
   background: var(--main);
   color: #fff;
@@ -980,8 +993,12 @@ input, select, textarea { font-family: inherit; }
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-title" id="order-count-label">案件一覧</span>
-        <button class="btn-add" onclick="openAddOrder()">＋ 追加</button>
+        <span class="sidebar-title">案件一覧</span>
+        <div class="filter-tabs">
+          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span>件</button>
+          <button class="ftab" id="ftab-done" onclick="setOrderFilter('done')">完了</button>
+        </div>
+        <button class="btn-add" id="btn-add-order" onclick="openAddOrder()">＋ 追加</button>
       </div>
       <div id="order-list"></div>
       <!-- AD SLOT START
@@ -1267,6 +1284,7 @@ currentMonth.setHours(0,0,0,0);
 let editingId = null;
 let selectedType = 'illustration';
 let activeTab = 'calendar'; // mobile tab
+let ordersFilter = 'active'; // 'active' | 'done'
 
 // チャートカラーテーマ
 const COLOR_THEMES = [
@@ -1386,22 +1404,39 @@ function phaseName(idx) {
 /* ═══════════════════════════════
    RENDER ORDERS
 ═══════════════════════════════ */
+function setOrderFilter(filter) {
+  ordersFilter = filter;
+  document.getElementById('ftab-active').classList.toggle('active', filter === 'active');
+  document.getElementById('ftab-done').classList.toggle('active', filter === 'done');
+  renderOrders();
+}
+
 function renderOrders() {
   const list = document.getElementById('order-list');
-  const label = document.getElementById('order-count-label');
-  label.textContent = `案件一覧 ${orders.length}件`;
 
-  if (orders.length === 0) {
-    list.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">📋</div>
-        <div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div>
-      </div>`;
+  const activeCount = orders.filter(o => (o.currentPhase || 0) < 3).length;
+  const countEl = document.getElementById('ftab-active-count');
+  if (countEl) countEl.textContent = activeCount;
+
+  // 完了タブでは＋追加ボタンを非表示
+  const addBtn = document.getElementById('btn-add-order');
+  if (addBtn) addBtn.style.display = ordersFilter === 'done' ? 'none' : '';
+
+  // フィルタ適用
+  const filtered = orders.filter(o => ordersFilter === 'done'
+    ? (o.currentPhase || 0) >= 3
+    : (o.currentPhase || 0) < 3
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML = ordersFilter === 'done'
+      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">完了済みの案件はありません</div></div>`
+      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div></div>`;
     return;
   }
 
   // 緊急度順（日数が少ない順）にソート。元配列は変えない
-  const sorted = [...orders].sort((a, b) => getDaysUntil(a.deadline) - getDaysUntil(b.deadline));
+  const sorted = [...filtered].sort((a, b) => getDaysUntil(a.deadline) - getDaysUntil(b.deadline));
 
   list.innerHTML = '';
   sorted.forEach((order, idx) => {
@@ -1457,29 +1492,29 @@ function renderOrders() {
       <div class="card-deadline-row" style="color:${utxt};">
         🗓 〆 ${fmtDate(dl)} — ${dlLabel}
       </div>`;
-    if (isCompleted) card.style.opacity = '0.55';
+    if (isCompleted) card.style.opacity = '0.7';
     list.appendChild(card);
   });
 
-  // アクティブ案件数チェック → ＋追加ボタン制御
-  const activeCount = orders.filter(o => (o.currentPhase || 0) < 3).length;
-  const addBtn = document.querySelector('.sidebar-header .btn-add');
-  if (addBtn) {
-    if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
-      addBtn.disabled = true;
-      addBtn.style.opacity = '0.35';
-      addBtn.style.cursor = 'default';
-      addBtn.onclick = null;
-    } else {
-      addBtn.disabled = false;
-      addBtn.style.opacity = '';
-      addBtn.style.cursor = '';
-      addBtn.onclick = openAddOrder;
+  // アクティブ案件数チェック → ＋追加ボタン制御（進行中タブのみ）
+  if (ordersFilter === 'active') {
+    if (addBtn) {
+      if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+        addBtn.disabled = true;
+        addBtn.style.opacity = '0.35';
+        addBtn.style.cursor = 'default';
+        addBtn.onclick = null;
+      } else {
+        addBtn.disabled = false;
+        addBtn.style.opacity = '';
+        addBtn.style.cursor = '';
+        addBtn.onclick = openAddOrder;
+      }
     }
   }
 
-  // アクティブ3件上限時 UNLOCK カード表示
-  if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+  // アクティブ3件上限時 UNLOCK カード表示（進行中タブのみ）
+  if (ordersFilter === 'active' && activeCount >= MAX_FREE_ORDERS && !isPremium()) {
     const wrap = document.createElement('div');
     wrap.innerHTML = `
       <div style="border:1.5px dashed #E1B75B;border-radius:10px;padding:12px 10px;margin:8px 4px 4px;text-align:center;">
