@@ -221,7 +221,7 @@ h1 {
 .plans-inner { max-width: 900px; margin: 0 auto; }
 .plans-title { font-family: 'Kaisei Opti', serif; font-size: 38px; color: var(--white); text-align: center; margin-bottom: 8px; }
 .plans-sub { font-size: 14px; color: rgba(255,255,255,0.55); text-align: center; margin-bottom: 60px; }
-.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
 .plan { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14); border-radius: 16px; padding: 32px 28px; }
 .plan.pro { background: var(--white); border: 2px solid var(--gold); position: relative; }
 .plan-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--gold); color: white; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; letter-spacing: 0.05em; white-space: nowrap; }
@@ -276,6 +276,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   .feat-row.rev { direction: ltr; }
   .plans { padding: 64px 20px; }
   .plan-grid { grid-template-columns: 1fr; }
+  .plan { padding: 24px 20px; }
   .plans-title { font-size: 30px; }
   .fcta { padding: 64px 20px; }
   .fcta-title { font-size: 36px; }
@@ -595,6 +596,37 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       </div>
     </div>
 
+    <!-- Feature 04 -->
+    <div class="feat-row rev">
+      <div>
+        <p class="feat-eye">Feature 04 — 汎用スケジュール</p>
+        <h3 class="feat-head">仕事も趣味も、<br>フェーズのある予定ならなんでも。</h3>
+        <p class="feat-body">
+          クライアント案件だけでなく、同人誌制作・旅行の準備・DIYなど「期限のある複数ステップ」なら何でも管理できます。ガントチャート感覚で全体を俯瞰しながら、今やるべきことだけに集中できます。
+        </p>
+      </div>
+      <div class="feat-vis" style="display:flex;flex-direction:column;gap:10px;font-family:'BIZ UDGothic',sans-serif;">
+        <div style="background:#E8F5F3;border-radius:10px;padding:10px 14px;border:1px solid #C0DDD8;">
+          <div style="font-size:10px;font-weight:700;color:#3A9A88;margin-bottom:6px;">✈️ 旅行準備</div>
+          <div style="font-size:11px;color:#2A2A2A;font-weight:700;margin-bottom:4px;">北海道旅行 / 7月末</div>
+          <div style="display:flex;gap:2px;height:4px;margin-bottom:4px;"><div style="flex:5;border-radius:2px;background:#3A9A88;"></div><div style="flex:3;border-radius:2px;background:#3A9A88;opacity:0.4;"></div><div style="flex:2;border-radius:2px;background:#DDD5C8;opacity:0.5;"></div></div>
+          <div style="font-size:9px;color:#3A9A88;">📐 計画中 → 予約 → 荷造り</div>
+        </div>
+        <div style="background:#FFF2E0;border-radius:10px;padding:10px 14px;border:1px solid #F0CCAA;">
+          <div style="font-size:10px;font-weight:700;color:#E07820;margin-bottom:6px;">📚 同人誌</div>
+          <div style="font-size:11px;color:#2A2A2A;font-weight:700;margin-bottom:4px;">夏コミ新刊 / 8月上旬</div>
+          <div style="display:flex;gap:2px;height:4px;margin-bottom:4px;"><div style="flex:7;border-radius:2px;background:#E07820;"></div><div style="flex:3;border-radius:2px;background:#E07820;opacity:0.3;"></div><div style="flex:3;border-radius:2px;background:#DDD5C8;opacity:0.5;"></div></div>
+          <div style="font-size:9px;color:#E07820;">📐 ネーム → 作画 → 入稿</div>
+        </div>
+        <div style="background:#ECEEF8;border-radius:10px;padding:10px 14px;border:1px solid #C8CCE8;">
+          <div style="font-size:10px;font-weight:700;color:#3E4880;margin-bottom:6px;">🎸 趣味の発表</div>
+          <div style="font-size:11px;color:#2A2A2A;font-weight:700;margin-bottom:4px;">バンド演奏 / 9月</div>
+          <div style="display:flex;gap:2px;height:4px;margin-bottom:4px;"><div style="flex:3;border-radius:2px;background:#3E4880;"></div><div style="flex:4;border-radius:2px;background:#DDD5C8;opacity:0.5;"></div><div style="flex:3;border-radius:2px;background:#DDD5C8;opacity:0.5;"></div></div>
+          <div style="font-size:9px;color:#3E4880;">📐 練習 → 合わせ → 本番</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -602,8 +634,8 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
 <section class="plans">
   <div class="plans-inner">
     <p class="eyebrow" style="text-align:center;color:rgba(255,255,255,0.5);">Plans</p>
-    <h2 class="plans-title">シンプルな2プラン</h2>
-    <p class="plans-sub">まずは無料から。使い続けたくなったらPROへ。</p>
+    <h2 class="plans-title">3つのプラン</h2>
+    <p class="plans-sub">まずは無料から。使い続けたくなったら、好みのプランへ。</p>
     <div class="plan-grid">
 
       <div class="plan">
@@ -637,15 +669,32 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
           <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
           <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
-          <li class="pi"><span class="ck">✓</span><span>フェーズテンプレート <strong>無制限</strong><small>FREEは3件まで</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span>データ書き出し（バックアップ）</span></li>
-          <li class="pi"><span class="ck">✓</span><span>自分の絵をスタンプに<small>カスタムスタンプ追加（最大5枚）</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span>データ復元・引き継ぎ<small>バックアップから読み込み</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span>UIテーマ マイカラー2枠<small>ヘッダー・背景・カード色を自由に</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span>チャートカラー マイカラー2枠<small>カレンダーの配色をオリジナルに</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>フェーズテンプレート <strong>無制限</strong></span></li>
+          <li class="pi"><span class="ck">✓</span>データ書き出し・読み込み</li>
+          <li class="pi"><span class="ck">✓</span><span>カスタムスタンプ<small>自分の絵をスタンプに（最大5枚）</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>マイカラー2枠 × 2種<small>UIテーマ・チャートカラー</small></span></li>
+          <li class="pi"><span class="na">—</span><span style="opacity:0.5;">クラウド同期・どこでもログイン</span></li>
         </ul>
         <div class="btn-soon">近日公開</div>
-        <p style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;">EasyReply連携・クラウド保存はサブスクプランで準備中</p>
+      </div>
+
+      <div class="plan" style="border-color:rgba(138,144,204,0.4);position:relative;">
+        <div class="plan-badge" style="background:var(--light);">☁️ クラウド版</div>
+        <p class="plan-name" style="color:rgba(255,255,255,0.55);">サブスク</p>
+        <p class="plan-price" style="color:white;">¥???</p>
+        <p class="plan-note" style="color:rgba(255,255,255,0.4);">月額 · 準備中</p>
+        <ul class="plan-items" style="margin-top:20px;">
+          <li class="pi"><span class="ck">✓</span><span>案件管理 <strong>無制限</strong></span></li>
+          <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
+          <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
+          <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
+          <li class="pi"><span class="ck">✓</span>フェーズテンプレート無制限</li>
+          <li class="pi"><span class="ck">✓</span><span><strong>Googleログイン</strong><small>どの端末からでも同じデータで使える</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span><strong>クラウド自動保存</strong><small>バックアップ操作不要</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>マイカラー2枠 × 2種</span></li>
+          <li class="pi"><span class="na">—</span><span style="opacity:0.5;">カスタムスタンプ（PRO専用）</span></li>
+        </ul>
+        <div class="btn-soon">準備中</div>
       </div>
 
     </div>
@@ -667,7 +716,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <span class="ft-by">by Mimily</span>
   </div>
   <div class="ft-links">
-    <a href="#" class="ft-link">利用規約</a>
+    <a href="./terms.html" class="ft-link">利用規約</a>
     <a href="https://mimilyappdev.github.io/legal/privacy.html" class="ft-link">プライバシーポリシー</a>
     <a href="https://mimilyappdev.github.io/" class="ft-link">Mimilyアプリ一覧</a>
   </div>
