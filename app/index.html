@@ -1539,9 +1539,10 @@ function renderCalendar() {
   const m = currentMonth.getMonth();
   label.textContent = `${y}年${m+1}月`;
 
-  // legend
+  // legend（完了案件は除外）
   legend.innerHTML = '';
   orders.forEach((order, idx) => {
+    if ((order.currentPhase || 0) >= 3) return;
     const col = orderColor(idx);
     legend.innerHTML += `
       <div class="legend-item">
@@ -1638,6 +1639,7 @@ function renderCalendar() {
     const activeOrders = orders
       .map((order, idx) => ({ order, idx, op: orderPhases[idx] }))
       .filter(({ op }) =>
+        op.currentPhase < 3 &&
         op.schedule.some(ph => {
           const s = new Date(ph.start); s.setHours(0,0,0,0);
           const e = new Date(ph.end);   e.setHours(0,0,0,0);
