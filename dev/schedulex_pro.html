@@ -719,9 +719,12 @@ input, select, textarea { font-family: inherit; }
   #sidebar.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; overflow-y: auto; }
   #calendar-panel { display: none; }
   #calendar-panel.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; }
-  #bottom-nav { display: block; }
+  #bottom-nav { display: block; position: relative; z-index: 10; }
   .cal-cell { min-height: 54px; }
   .logo { font-size: 16px; }
+  .header-theme-label { display: none; }
+  .user-display-name { display: none; }
+  .btn-login { padding: 5px 8px; font-size: 11px; }
 }
 
 /* ── STICKER LAYER ── */
