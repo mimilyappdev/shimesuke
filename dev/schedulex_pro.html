@@ -1316,6 +1316,22 @@ const I18N = {
     empty_cal:'案件を追加するとカレンダーに表示されます',
     phase_label_rough:'ラフ', phase_label_fix:'修正', phase_label_final:'清書',
     settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
+    tpl_empty:'テンプレートがありません',
+    btn_tpl_edit:'編集', btn_tpl_del:'削除',
+    tpl_locked:'🔒 テンプレート追加（無料枠：{n}件まで）',
+    alert_enter_name:'案件名を入力してください',
+    alert_enter_deadline:'納期を入力してください',
+    confirm_delete_order:'この案件を削除しますか？',
+    alert_enter_tpl_name:'テンプレート名を入力してください',
+    confirm_delete_tpl:'このテンプレートを削除しますか？',
+    alert_invalid_format:'形式が違います',
+    confirm_restore:'{n}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？',
+    alert_restored:'復元しました！',
+    alert_restore_fail:'読み込みに失敗しました。\n',
+    alert_no_orders:'案件がありません',
+    skin_labels:['ヘッダー色','背景色','カード色','テキスト色'],
+    chart_labels:['色①','色②','色③','色④','色⑤'],
+    phase_fallback:['ラフ','修正','清書'],
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1350,6 +1366,22 @@ const I18N = {
     empty_cal:'Add projects to see them on the calendar',
     phase_label_rough:'Rough', phase_label_fix:'Fix', phase_label_final:'Final',
     settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
+    tpl_empty:'No templates yet',
+    btn_tpl_edit:'Edit', btn_tpl_del:'Delete',
+    tpl_locked:'🔒 Add Template (free limit: {n})',
+    alert_enter_name:'Please enter a project name',
+    alert_enter_deadline:'Please enter a deadline',
+    confirm_delete_order:'Delete this project?',
+    alert_enter_tpl_name:'Please enter a template name',
+    confirm_delete_tpl:'Delete this template?',
+    alert_invalid_format:'Invalid file format',
+    confirm_restore:'Restore {n} projects? This will overwrite your current data.',
+    alert_restored:'Restored!',
+    alert_restore_fail:'Failed to restore.\n',
+    alert_no_orders:'No projects to export',
+    skin_labels:['Header','Background','Card','Text'],
+    chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
+    phase_fallback:['Rough','Fix','Final'],
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1564,7 +1596,8 @@ function typeLabel(type) {
 }
 
 function phaseName(idx) {
-  return settings.phases[idx]?.name || ['ラフ','修正','清書'][idx] || '';
+  const phaseKeyMap = ['phase_label_rough','phase_label_fix','phase_label_final'];
+  return (phaseKeyMap[idx] ? t(phaseKeyMap[idx]) : settings.phases[idx]?.name) || '';
 }
 
 /* ═══════════════════════════════
@@ -2019,8 +2052,8 @@ function saveOrder() {
   const notes    = document.getElementById('f-notes').value.trim();
   const phaseDays= getPhaseDaysFromFields('f-phases-row');
 
-  if (!name)     { alert('案件名を入力してください'); return; }
-  if (!deadline) { alert('納期を入力してください'); return; }
+  if (!name)     { alert(t('alert_enter_name')); return; }
+  if (!deadline) { alert(t('alert_enter_deadline')); return; }
 
   if (editingId) {
     const idx = orders.findIndex(o => o.id === editingId);
@@ -2035,7 +2068,7 @@ function saveOrder() {
 }
 
 function deleteOrder(id) {
-  if (!confirm('この案件を削除しますか？')) return;
+  if (!confirm(t('confirm_delete_order'))) return;
   orders = orders.filter(o => o.id !== id);
   save();
   closeModal();
@@ -2050,7 +2083,7 @@ let editingTemplateId = null;
 function renderTemplateSelect() {
   const sel = document.getElementById('f-template');
   if (!sel) return;
-  sel.innerHTML = '<option value="">テンプレートなし（手動入力）</option>';
+  sel.innerHTML = `<option value="">${t('no_template')}</option>`;
   (settings.templates || []).forEach(t => {
     const opt = document.createElement('option');
     opt.value = t.id;
@@ -2076,15 +2109,16 @@ function renderTemplateList() {
   if (!list) return;
   const tmpls = settings.templates || [];
 
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
   list.innerHTML = tmpls.length === 0
-    ? '<p style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0;">テンプレートがありません</p>'
-    : tmpls.map(t => `
+    ? `<p style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0;">${t('tpl_empty')}</p>`
+    : tmpls.map(tpl => `
       <div class="template-item">
-        <span class="template-item-name">${esc(t.name)}</span>
-        <span class="template-item-days">${t.phases.map(p => `${p.name}${p.days}日`).join(' · ')}</span>
+        <span class="template-item-name">${esc(tpl.name)}</span>
+        <span class="template-item-days">${tpl.phases.map(p => `${phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name}${p.days}${t('days_unit')}`).join(' · ')}</span>
         <div class="template-item-actions">
-          <button class="btn-tpl-edit" onclick="openEditTemplate('${t.id}')">編集</button>
-          <button class="btn-tpl-del" onclick="deleteTemplate('${t.id}')">削除</button>
+          <button class="btn-tpl-edit" onclick="openEditTemplate('${tpl.id}')">${t('btn_tpl_edit')}</button>
+          <button class="btn-tpl-del" onclick="deleteTemplate('${tpl.id}')">${t('btn_tpl_del')}</button>
         </div>
       </div>`).join('');
 
@@ -2092,8 +2126,8 @@ function renderTemplateList() {
     const locked = tmpls.length >= MAX_FREE_TEMPLATES && !isPremium();
     btn.className = locked ? 'btn-add-tpl locked' : 'btn-add-tpl';
     btn.textContent = locked
-      ? `🔒 テンプレート追加（無料枠：${MAX_FREE_TEMPLATES}件まで）`
-      : '＋ テンプレートを追加';
+      ? t('tpl_locked').replace('{n}', MAX_FREE_TEMPLATES)
+      : t('btn_add_tpl');
     btn.onclick = locked ? null : openAddTemplate;
   }
 }
@@ -2118,7 +2152,7 @@ function openEditTemplate(id) {
 
 function saveTemplate() {
   const name = document.getElementById('tpl-name').value.trim();
-  if (!name) { alert('テンプレート名を入力してください'); return; }
+  if (!name) { alert(t('alert_enter_tpl_name')); return; }
   const phases = getPhaseDaysFromFields('tpl-phases-row');
   if (!settings.templates) settings.templates = [];
 
@@ -2133,7 +2167,7 @@ function saveTemplate() {
 }
 
 function deleteTemplate(id) {
-  if (!confirm('このテンプレートを削除しますか？')) return;
+  if (!confirm(t('confirm_delete_tpl'))) return;
   settings.templates = (settings.templates || []).filter(t => t.id !== id);
   save();
   renderTemplateList();
@@ -2238,11 +2272,12 @@ function renderSkinList() {
     if (isActive && isCustom) {
       const pickerWrap = document.createElement('div');
       pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const skinLabels = t('skin_labels');
       const fields = [
-        { key:'main',    label:'ヘッダー色' },
-        { key:'bg',      label:'背景色' },
-        { key:'surface', label:'カード色' },
-        { key:'text',    label:'テキスト色' },
+        { key:'main',    label:skinLabels[0] },
+        { key:'bg',      label:skinLabels[1] },
+        { key:'surface', label:skinLabels[2] },
+        { key:'text',    label:skinLabels[3] },
       ];
       fields.forEach(f => {
         const line = document.createElement('div');
@@ -2313,7 +2348,7 @@ function renderChartThemeList() {
     if (isActive && isCustom) {
       const pickerWrap = document.createElement('div');
       pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
-      const labels = ['色①','色②','色③','色④','色⑤'];
+      const labels = t('chart_labels');
       myChartColors[theme.id].forEach((col, idx) => {
         const line = document.createElement('div');
         line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
@@ -2452,9 +2487,9 @@ function importData(input) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.orders) throw new Error('形式が違います');
+      if (!data.orders) throw new Error(t('alert_invalid_format'));
       if (!data.settings) data.settings = settings;
-      if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
+      if (!confirm(t('confirm_restore').replace('{n}', data.orders.length))) return;
       orders   = data.orders;
       settings = data.settings;
       if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
@@ -2464,9 +2499,9 @@ function importData(input) {
       save();
       closeModal();
       render();
-      alert('復元しました！');
+      alert(t('alert_restored'));
     } catch(err) {
-      alert('読み込みに失敗しました。\n' + err.message);
+      alert(t('alert_restore_fail') + err.message);
     }
     input.value = '';
   };
@@ -2477,7 +2512,7 @@ function importData(input) {
    ICS EXPORT
 ═══════════════════════════════ */
 function exportICS() {
-  if (orders.length === 0) { alert('案件がありません'); return; }
+  if (orders.length === 0) { alert(t('alert_no_orders')); return; }
 
   const lines = [
     'BEGIN:VCALENDAR',
@@ -2492,7 +2527,7 @@ function exportICS() {
     const nextDay = new Date(parseDate(order.deadline));
     nextDay.setDate(nextDay.getDate() + 1);
     const dlEnd = dateKey(nextDay).replace(/-/g, '');
-    const label = { illustration:'イラスト', design:'デザイン', video:'動画', other:'その他' }[order.type] || order.type;
+    const label = typeLabel(order.type);
     const desc = [label, order.notes].filter(Boolean).join(' / ').replace(/[\r\n]+/g, '\\n');
 
     lines.push('BEGIN:VEVENT');
