@@ -894,7 +894,7 @@ input, select, textarea { font-family: inherit; }
         <div class="header-theme-dots" id="header-theme-dots"></div>
         <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
-      <button class="btn-icon" id="btn-lang" onclick="setLang(lang()==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
+      <button class="btn-icon" id="btn-lang" onclick="setLang(document.documentElement.lang==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
       <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
