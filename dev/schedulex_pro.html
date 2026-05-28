@@ -1065,7 +1065,7 @@ input, select, textarea { font-family: inherit; }
               <path d="M13 36 Q21 27 29 36"/>
               <path d="M31 28 L41 18"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="currentColor"/>
             </svg>
-            イラスト
+            <span data-i18n="type_illustration">イラスト</span>
           </button>
           <button class="type-btn" data-type="design" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1075,7 +1075,7 @@ input, select, textarea { font-family: inherit; }
               <path d="M27 30 L39 18 L43 22 L31 34 Z" fill="currentColor" stroke="currentColor"/>
               <circle cx="27" cy="38" r="3" fill="currentColor"/>
             </svg>
-            デザイン
+            <span data-i18n="type_design">デザイン</span>
           </button>
           <button class="type-btn" data-type="video" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1084,14 +1084,14 @@ input, select, textarea { font-family: inherit; }
               <line x1="14" y1="42" x2="30" y2="42"/>
               <path d="M17 16 L17 28 L30 22 Z" fill="currentColor" stroke="currentColor"/>
             </svg>
-            動画
+            <span data-i18n="type_video">動画</span>
           </button>
           <button class="type-btn" data-type="other" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/>
               <line x1="5" y1="26" x2="43" y2="26"/>
             </svg>
-            その他
+            <span data-i18n="type_other">その他</span>
           </button>
         </div>
       </div>
@@ -1311,6 +1311,9 @@ const I18N = {
     empty_done:'完了済みの案件はありません',
     snav_easyreply:'EasyReply連携', snav_gcal:'Googleカレンダー同期', snav_finance:'収支確認',
     snav_note:'※ サブスク版（開発中）の機能です',
+    months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    dow:['日','月','火','水','木','金','土'],
+    empty_cal:'案件を追加するとカレンダーに表示されます',
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1340,6 +1343,9 @@ const I18N = {
     empty_done:'No completed projects',
     snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
     snav_note:'* Features in development (subscription)',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    empty_cal:'Add projects to see them on the calendar',
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1517,7 +1523,9 @@ function orderColor(idx) {
 }
 
 function fmtDate(d) {
-  return `${d.getMonth()+1}月${d.getDate()}日`;
+  return lang() === 'ja'
+    ? `${d.getMonth()+1}月${d.getDate()}日`
+    : `${d.getMonth()+1}/${d.getDate()}`;
 }
 
 function uid() {
@@ -1544,8 +1552,8 @@ function pict(type, color, size=20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" ${s}>${svgs[type]||svgs.other}</svg>`;
 }
 
-function typeLabel(t) {
-  return {illustration:'イラスト', design:'デザイン', video:'動画', other:'その他'}[t] || t;
+function typeLabel(type) {
+  return t('type_' + type) || type;
 }
 
 function phaseName(idx) {
@@ -1581,8 +1589,8 @@ function renderOrders() {
 
   if (filtered.length === 0) {
     list.innerHTML = ordersFilter === 'done'
-      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">完了済みの案件はありません</div></div>`
-      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div></div>`;
+      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">${t('empty_done')}</div></div>`
+      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">${t('empty_orders')}<br>${t('empty_orders_hint')}</div></div>`;
     return;
   }
 
@@ -1602,7 +1610,7 @@ function renderOrders() {
     const schedule    = getPhaseSchedule(order);
     const curPhase    = order.currentPhase || 0;
     const isCompleted = curPhase >= 3;
-    const phasesBadge = isCompleted ? '完了' : (['ラフ中','修正中','清書中'][curPhase] || '');
+    const phasesBadge = isCompleted ? t('phase_badge_done') : (t('phase_badge')[curPhase] || '');
 
     // phase bar
     let barHTML = '';
@@ -1615,9 +1623,9 @@ function renderOrders() {
     // deadline label
     const dl      = parseDate(order.deadline);
     const dlLabel = days < 0
-      ? `超過 ${Math.abs(days)}日`
-      : days === 0 ? '今日が締め切り！'
-      : `あと${days}日`;
+      ? `${t('overdue')} ${Math.abs(days)}${t('days_unit')}`
+      : days === 0 ? t('today_deadline')
+      : `${t('days_left')}${days}${t('days_unit')}${t('days_suffix')}`;
 
     const card = document.createElement('div');
     card.className = `order-card card-${urgency}`;
@@ -1625,11 +1633,11 @@ function renderOrders() {
     card.onclick = () => openEditOrder(order.id);
     card.innerHTML = `
       <div class="card-tab" style="background:${uc};">
-        <span class="tab-ato${isDark?' dark':''}">あと</span>
+        <span class="tab-ato${isDark?' dark':''}">${t('days_left')}</span>
         <span class="tab-num${isDark?' dark':''}">
           ${days < 0 ? '!' : days > 99 ? '∞' : days}
         </span>
-        <span class="tab-nichi${isDark?' dark':''}">日</span>
+        <span class="tab-nichi${isDark?' dark':''}">${t('days_unit')}</span>
       </div>
       <div class="card-row1">
         <div class="card-name">${esc(order.name)}</div>
@@ -1688,7 +1696,7 @@ function renderCalendar() {
 
   const y = currentMonth.getFullYear();
   const m = currentMonth.getMonth();
-  label.textContent = `${y}年${m+1}月`;
+  label.textContent = lang() === 'ja' ? `${y}年${m+1}月` : `${t('months')[m]} ${y}`;
 
   // アクティブ案件のみで色番号を割り当てる
   const activeOrderIds = orders
@@ -1708,12 +1716,12 @@ function renderCalendar() {
       </div>`;
   });
   if (orders.length === 0) {
-    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">案件を追加するとカレンダーに表示されます</span>`;
+    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">${t('empty_cal')}</span>`;
   }
 
   const todayKey  = dateKey(today());
   const showStamp = settings.showShimekiriStamp !== false;
-  const DOW_LABELS = ['日','月','火','水','木','金','土'];
+  const DOW_LABELS = t('dow');
 
   const orderPhases = orders.map(order => ({
     id:       order.id,
