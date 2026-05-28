@@ -1440,6 +1440,13 @@ const DEFAULT_TEMPLATES = [
 ];
 
 // 既存ユーザー向けマイグレーション
+// phases に id がない古いデータを補完
+const _phaseNameToId = { 'ラフ':'rough', '修正':'fix', '清書':'final' };
+if (settings.phases) {
+  settings.phases = settings.phases.map(p =>
+    p.id ? p : { ...p, id: _phaseNameToId[p.name] || p.name }
+  );
+}
 if (!settings.templates || settings.templates.length === 0) {
   settings.templates = DEFAULT_TEMPLATES.map(t => ({ ...t, phases: t.phases.map(p => ({ ...p })) }));
   save();
@@ -2138,6 +2145,7 @@ function openAddTemplate() {
   document.getElementById('tpl-name').value = '';
   renderPhaseFields('tpl-phases-row', settings.phases.map(p => ({ ...p })));
   showModal('template-modal');
+  applyI18n();
 }
 
 function openEditTemplate(id) {
@@ -2148,6 +2156,7 @@ function openEditTemplate(id) {
   document.getElementById('tpl-name').value = tpl.name;
   renderPhaseFields('tpl-phases-row', tpl.phases.map(p => ({ ...p })));
   showModal('template-modal');
+  applyI18n();
 }
 
 function saveTemplate() {
@@ -2187,6 +2196,7 @@ function openSettings() {
   renderTemplateList();
   showModal('settings-modal');
   initStampToggle();
+  applyI18n();
 }
 
 function selectTheme(id) {
