@@ -2573,7 +2573,7 @@ if ('serviceWorker' in navigator) {
    STICKER SYSTEM
 ═══════════════════════════════ */
 const DEFAULT_STAMPS = [
-  { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', bg: '#FF6B6B', color: '#fff' },
+  { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', label_en: 'DUE!', bg: '#FF6B6B', color: '#fff' },
   { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', bg: '#FFD93D', color: '#333' },
   { id: 'def_kanryo',    emoji: '✨', label: '完了！',     bg: '#6BCB77', color: '#fff' },
   { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     bg: '#4D96FF', color: '#fff' },
@@ -2623,7 +2623,7 @@ function renderStickerLayer() {
     const bodyStyle = stamp.dataUrl ? '' : `background:${stamp.bg};color:${stamp.color}`;
     const inner = stamp.dataUrl
       ? `<img src="${stamp.dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-      : `<span class="s-emoji">${stamp.emoji}</span><span class="s-label">${stamp.label}</span>`;
+      : `<span class="s-emoji">${stamp.emoji}</span><span class="s-label">${lang() === 'en' && stamp.label_en ? stamp.label_en : stamp.label}</span>`;
 
     el.innerHTML = `
       <div class="s-body" style="${bodyStyle}">
@@ -2731,7 +2731,7 @@ function renderStampOptions() {
   const defaultHtml = DEFAULT_STAMPS.map(s => `
     <div class="stamp-option" style="background:${s.bg};color:${s.color}" onclick="addSticker('${s.id}')">
       <span class="so-emoji">${s.emoji}</span>
-      <span class="so-label">${s.label}</span>
+      <span class="so-label">${lang() === 'en' && s.label_en ? s.label_en : s.label}</span>
     </div>`).join('');
 
   const customHtml = customStamps.map(s => `
