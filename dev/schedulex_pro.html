@@ -1170,7 +1170,7 @@ input, select, textarea { font-family: inherit; }
         <button class="btn-primary" data-i18n="btn_export_ics" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
       </div>
     </div>
-    <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;">
+    <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;" data-i18n-html="settings_footer">
       <strong>フォント・動作環境について</strong><br>
       日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br>
       <strong>データについて</strong><br>
@@ -1314,6 +1314,8 @@ const I18N = {
     months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
     dow:['日','月','火','水','木','金','土'],
     empty_cal:'案件を追加するとカレンダーに表示されます',
+    phase_label_rough:'ラフ', phase_label_fix:'修正', phase_label_final:'清書',
+    settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1346,6 +1348,8 @@ const I18N = {
     months:['January','February','March','April','May','June','July','August','September','October','November','December'],
     dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
     empty_cal:'Add projects to see them on the calendar',
+    phase_label_rough:'Rough', phase_label_fix:'Fix', phase_label_final:'Final',
+    settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1359,6 +1363,9 @@ function setLang(l) {
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const v = t(el.dataset.i18n); if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = t(el.dataset.i18nHtml); if (v !== undefined) el.innerHTML = v;
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const v = t(el.dataset.i18nPlaceholder); if (v) el.placeholder = v;
@@ -1982,10 +1989,11 @@ function openEditOrder(id) {
 }
 
 function renderPhaseFields(containerId, phases) {
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
   const container = document.getElementById(containerId);
   container.innerHTML = phases.map((p, i) => `
     <div class="phase-field">
-      <label>${p.name}</label>
+      <label>${esc(phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name)}</label>
       <input type="number" min="1" max="60" value="${p.days}" id="pf-${containerId}-${i}">
     </div>`).join('');
 }
