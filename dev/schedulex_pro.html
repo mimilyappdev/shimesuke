@@ -913,27 +913,27 @@ input, select, textarea { font-family: inherit; }
   <header id="header">
     <div class="logo">
       SchedulEX
-      <span class="logo-sub">〆スケ</span>
-      <span class="logo-tagline">締め切りが、見える。〆スケで、守ろう。</span>
+      <span class="logo-sub" data-i18n="logo_sub">〆スケ</span>
+      <span class="logo-tagline" data-i18n="tagline">締め切りが、見える。〆スケで、守ろう。</span>
       <a class="btn-top" href="../index.html">🏠 TOP</a>
     </div>
     <div class="header-actions">
       <div class="auth-area">
         <button class="btn-login" id="btn-login" onclick="signInWithGoogle()">
           <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          ログイン
+          <span data-i18n="btn_login">ログイン</span>
         </button>
         <div class="user-area" id="user-area" style="display:none;">
           <img class="user-avatar" id="user-avatar" src="" alt="">
           <span class="user-display-name" id="user-display-name"></span>
-          <button class="btn-signout" onclick="signOutUser()">ログアウト</button>
+          <button class="btn-signout" data-i18n="btn_logout" onclick="signOutUser()">ログアウト</button>
         </div>
       </div>
       <button class="header-theme-btn" id="header-theme-btn" onclick="toggleSkinPopup(event)" title="テーマカラー">
         <div class="header-theme-dots" id="header-theme-dots"></div>
-        <span class="header-theme-label">テーマ｜カラー変更</span>
+        <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
-      <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
+      <button class="btn-icon" id="btn-lang" onclick="setLang(lang()==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
   </header>
@@ -941,11 +941,11 @@ input, select, textarea { font-family: inherit; }
 
   <!-- SUB NAV -->
   <div id="sub-nav">
-    <button class="snav-btn locked">EasyReply連携 <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked">Googleカレンダー同期 <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked">収支確認 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_easyreply">EasyReply連携</span> <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_gcal">Googleカレンダー同期</span> <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_finance">収支確認</span> <span class="snav-lock">🔒</span></button>
     <span class="snav-divider"></span>
-    <span class="snav-note">※ サブスク版（開発中）の機能です</span>
+    <span class="snav-note" data-i18n="snav_note">※ サブスク版（開発中）の機能です</span>
   </div>
 
   <!-- テーマカラー（UIスキン）ポップアップ -->
@@ -970,10 +970,10 @@ input, select, textarea { font-family: inherit; }
 
   <!-- STAMP PANEL -->
   <div id="stamp-panel">
-    <p class="stamp-panel-title">🎨 スタンプを選んで画面に貼ろう</p>
+    <p class="stamp-panel-title" data-i18n="stamp_title">🎨 スタンプを選んで画面に貼ろう</p>
     <div class="stamp-options" id="stamp-options"></div>
-    <p class="stamp-panel-hint">貼った後はドラッグで移動・タップで削除</p>
-    <p class="stamp-panel-close" onclick="closeStampPanel()">閉じる</p>
+    <p class="stamp-panel-hint" data-i18n="stamp_hint">貼った後はドラッグで移動・タップで削除</p>
+    <p class="stamp-panel-close" data-i18n="btn_close" onclick="closeStampPanel()">閉じる</p>
   </div>
 
   <!-- MAIN -->
@@ -982,12 +982,12 @@ input, select, textarea { font-family: inherit; }
     <!-- SIDEBAR -->
     <div id="sidebar">
       <div class="sidebar-header">
-        <span class="sidebar-title">案件一覧</span>
+        <span class="sidebar-title" data-i18n="orders_title">案件一覧</span>
         <div class="filter-tabs">
-          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span>件</button>
-          <button class="ftab" id="ftab-done" onclick="setOrderFilter('done')">完了</button>
+          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span><span id="ftab-unit">件</span></button>
+          <button class="ftab" id="ftab-done" data-i18n="filter_done" onclick="setOrderFilter('done')">完了</button>
         </div>
-        <button class="btn-add" id="btn-add-order" onclick="openAddOrder()">＋ 追加</button>
+        <button class="btn-add" id="btn-add-order" data-i18n="btn_add" onclick="openAddOrder()">＋ 追加</button>
       </div>
       <div id="order-list"></div>
       <!-- AD SLOT START
@@ -1006,10 +1006,10 @@ input, select, textarea { font-family: inherit; }
           <span class="cal-month-label" id="cal-month-label">2026年5月</span>
           <button class="chart-color-btn" id="chart-color-btn" onclick="toggleChartColorPopup(event)" title="チャートカラー">
             <div id="chart-color-dots" style="display:flex;gap:2px;"></div>
-            <span class="chart-color-label">カラー変更</span>
+            <span class="chart-color-label" data-i18n="color_change">カラー変更</span>
           </button>
         </div>
-        <button class="cal-today-btn" onclick="toggleStampPanel()">🎨 スタンプ</button>
+        <button class="cal-today-btn" data-i18n="btn_stamp" onclick="toggleStampPanel()">🎨 スタンプ</button>
       </div>
       <div class="cal-legend" id="cal-legend"></div>
       <div class="cal-grid-wrap">
@@ -1024,15 +1024,15 @@ input, select, textarea { font-family: inherit; }
     <div class="bnav-inner">
       <button class="bnav-item active" id="bnav-calendar" onclick="switchTab('calendar')">
         <span class="bnav-icon">🗓</span>
-        <span class="bnav-label">カレンダー</span>
+        <span class="bnav-label" data-i18n="nav_calendar">カレンダー</span>
       </button>
       <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders')">
         <span class="bnav-icon">📋</span>
-        <span class="bnav-label">案件</span>
+        <span class="bnav-label" data-i18n="nav_orders">案件</span>
       </button>
       <button class="bnav-item" id="bnav-settings" onclick="openSettings()">
         <span class="bnav-icon">⚙️</span>
-        <span class="bnav-label">設定</span>
+        <span class="bnav-label" data-i18n="nav_settings">設定</span>
       </button>
     </div>
   </div>
@@ -1051,12 +1051,12 @@ input, select, textarea { font-family: inherit; }
     <div class="modal-body">
 
       <div class="field">
-        <label>案件名 / クライアント名</label>
-        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ">
+        <label data-i18n="label_order_name">案件名 / クライアント名</label>
+        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ" data-i18n-placeholder="placeholder_order_name">
       </div>
 
       <div class="field">
-        <label>依頼の種類</label>
+        <label data-i18n="label_type">依頼の種類</label>
         <div class="type-grid" id="type-grid">
           <button class="type-btn selected" data-type="illustration" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1097,32 +1097,32 @@ input, select, textarea { font-family: inherit; }
       </div>
 
       <div class="field">
-        <label>納期（締め切り）</label>
+        <label data-i18n="label_deadline">納期（締め切り）</label>
         <input type="date" id="f-deadline">
       </div>
 
       <div class="field">
-        <label>現在のフェーズ</label>
+        <label data-i18n="label_phase">現在のフェーズ</label>
         <select id="f-phase">
-          <option value="0">ラフ中</option>
-          <option value="1">修正中</option>
-          <option value="2">清書中</option>
-          <option value="3">完了</option>
+          <option value="0" data-i18n="phase_rough">ラフ中</option>
+          <option value="1" data-i18n="phase_fix">修正中</option>
+          <option value="2" data-i18n="phase_final">清書中</option>
+          <option value="3" data-i18n="phase_done">完了</option>
         </select>
       </div>
 
       <div class="field">
-        <label>スケジュール設定（日数）</label>
+        <label data-i18n="label_schedule">スケジュール設定（日数）</label>
         <select id="f-template" onchange="applyTemplate()" style="margin-bottom:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);outline:none;">
-          <option value="">テンプレートなし（手動入力）</option>
+          <option value="" data-i18n="no_template">テンプレートなし（手動入力）</option>
         </select>
         <div class="phases-row" id="f-phases-row"></div>
-        <p class="phase-hint">※ テンプレートを選ぶと日数が自動で入ります</p>
+        <p class="phase-hint" data-i18n="template_hint">※ テンプレートを選ぶと日数が自動で入ります</p>
       </div>
 
       <div class="field">
-        <label>メモ</label>
-        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など"></textarea>
+        <label data-i18n="label_notes">メモ</label>
+        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など" data-i18n-placeholder="placeholder_notes"></textarea>
       </div>
 
     </div>
@@ -1135,39 +1135,39 @@ input, select, textarea { font-family: inherit; }
   <!-- SETTINGS MODAL -->
   <div class="modal" id="settings-modal" style="display:none;">
     <div class="modal-header">
-      <span class="modal-title">設定</span>
+      <span class="modal-title" data-i18n="modal_settings">設定</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="settings-section">
-        <p class="settings-label">カレンダー表示</p>
+        <p class="settings-label" data-i18n="settings_calendar">カレンダー表示</p>
         <div class="setting-row">
-          <span class="setting-row-label">〆切！スタンプを表示する</span>
+          <span class="setting-row-label" data-i18n="settings_stamp_toggle">〆切！スタンプを表示する</span>
           <button class="toggle-switch" id="stamp-toggle" onclick="toggleShimekiriStamp()"></button>
         </div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">デフォルトのフェーズ日数</p>
+        <p class="settings-label" data-i18n="settings_default_phases">デフォルトのフェーズ日数</p>
         <div class="phases-row" id="s-phases-row"></div>
-        <p class="phase-hint">案件追加時の手動入力デフォルト値になります</p>
+        <p class="phase-hint" data-i18n="settings_phase_hint">案件追加時の手動入力デフォルト値になります</p>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">フェーズテンプレート</p>
+        <p class="settings-label" data-i18n="settings_templates">フェーズテンプレート</p>
         <div id="template-list"></div>
-        <button class="btn-add-tpl" id="btn-add-tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
+        <button class="btn-add-tpl" id="btn-add-tpl" data-i18n="btn_add_tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">バックアップ / 復元</p>
-        <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
-        <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
+        <p class="settings-label" data-i18n="settings_backup">バックアップ / 復元</p>
+        <button class="btn-primary" data-i18n="btn_export" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
+        <button class="btn-primary" data-i18n="btn_import" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">カレンダー連携 (.ics)</p>
-        <button class="btn-primary" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
+        <p class="settings-label" data-i18n="settings_ics">カレンダー連携 (.ics)</p>
+        <button class="btn-primary" data-i18n="btn_export_ics" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
       </div>
     </div>
     <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;">
@@ -1177,8 +1177,8 @@ input, select, textarea { font-family: inherit; }
       入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-      <button class="btn-primary" onclick="saveSettings()">保存</button>
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveSettings()">保存</button>
     </div>
   </div>
 
@@ -1190,17 +1190,17 @@ input, select, textarea { font-family: inherit; }
     </div>
     <div class="modal-body">
       <div class="field">
-        <label>テンプレート名</label>
+        <label data-i18n="label_template_name">テンプレート名</label>
         <input type="text" id="tpl-name" placeholder="例：立ち絵、ミニキャラ、キービジュアル">
       </div>
       <div class="field">
-        <label>フェーズ日数</label>
+        <label data-i18n="label_phase_days">フェーズ日数</label>
         <div class="phases-row" id="tpl-phases-row"></div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="backToSettings()">キャンセル</button>
-      <button class="btn-primary" onclick="saveTemplate()">保存</button>
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="backToSettings()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveTemplate()">保存</button>
     </div>
   </div>
 
@@ -1276,7 +1276,99 @@ auth.onAuthStateChanged(user => {
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';
   }
+  applyI18n();
 });
+
+/* ═══════════════════════════════
+   I18N
+═══════════════════════════════ */
+const I18N = {
+  ja: {
+    logo_sub:'〆スケ', tagline:'締め切りが、見える。〆スケで、守ろう。',
+    theme_label:'テーマ｜カラー変更', color_change:'カラー変更',
+    btn_login:'ログイン', btn_logout:'ログアウト',
+    orders_title:'案件一覧', filter_active:'進行中', filter_done:'完了', filter_unit:'件',
+    btn_add:'＋ 追加', btn_stamp:'🎨 スタンプ', btn_close:'閉じる', btn_cancel:'キャンセル', btn_save:'保存',
+    nav_calendar:'カレンダー', nav_orders:'案件', nav_settings:'設定',
+    modal_add_order:'案件を追加', modal_edit_order:'案件を編集',
+    label_order_name:'案件名 / クライアント名', placeholder_order_name:'例：いぬさん / キャラデザ',
+    label_type:'依頼の種類', type_illustration:'イラスト', type_design:'デザイン', type_video:'動画', type_other:'その他',
+    label_deadline:'納期（締め切り）', label_phase:'現在のフェーズ',
+    phase_rough:'ラフ中', phase_fix:'修正中', phase_final:'清書中', phase_done:'完了',
+    label_schedule:'スケジュール設定（日数）', no_template:'テンプレートなし（手動入力）', template_hint:'※ テンプレートを選ぶと日数が自動で入ります',
+    label_notes:'メモ', placeholder_notes:'キャラデザ：青系・猫耳・前金入金済 など',
+    modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する',
+    settings_default_phases:'デフォルトのフェーズ日数', settings_phase_hint:'案件追加時の手動入力デフォルト値になります',
+    settings_templates:'フェーズテンプレート', btn_add_tpl:'＋ テンプレートを追加',
+    settings_backup:'バックアップ / 復元', btn_export:'💾 JSONに書き出す', btn_import:'📂 JSONから復元',
+    settings_ics:'カレンダー連携 (.ics)', btn_export_ics:'📅 .icsに書き出す',
+    modal_add_template:'テンプレートを追加', modal_edit_template:'テンプレートを編集',
+    label_template_name:'テンプレート名', label_phase_days:'フェーズ日数',
+    stamp_title:'🎨 スタンプを選んで画面に貼ろう', stamp_hint:'貼った後はドラッグで移動・タップで削除',
+    days_left:'あと', days_unit:'日', days_suffix:'', overdue:'超過', today_deadline:'今日が締め切り！',
+    phase_badge:['ラフ中','修正中','清書中'], phase_badge_done:'完了',
+    empty_orders:'案件がまだありません', empty_orders_hint:'「＋ 追加」から登録してください',
+    empty_done:'完了済みの案件はありません',
+    snav_easyreply:'EasyReply連携', snav_gcal:'Googleカレンダー同期', snav_finance:'収支確認',
+    snav_note:'※ サブスク版（開発中）の機能です',
+  },
+  en: {
+    logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
+    theme_label:'Theme | Color', color_change:'Colors',
+    btn_login:'Sign in', btn_logout:'Sign out',
+    orders_title:'Projects', filter_active:'Active', filter_done:'Done', filter_unit:'',
+    btn_add:'+ Add', btn_stamp:'🎨 Stamps', btn_close:'Close', btn_cancel:'Cancel', btn_save:'Save',
+    nav_calendar:'Calendar', nav_orders:'Projects', nav_settings:'Settings',
+    modal_add_order:'Add Project', modal_edit_order:'Edit Project',
+    label_order_name:'Project / Client Name', placeholder_order_name:'e.g. John / Character Design',
+    label_type:'Project Type', type_illustration:'Illustration', type_design:'Design', type_video:'Video', type_other:'Other',
+    label_deadline:'Deadline', label_phase:'Current Phase',
+    phase_rough:'Sketching', phase_fix:'Revising', phase_final:'Finishing', phase_done:'Done',
+    label_schedule:'Schedule (days)', no_template:'No template (manual)', template_hint:'* Select a template to auto-fill days',
+    label_notes:'Notes', placeholder_notes:'e.g. Blue palette, advance payment received',
+    modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp',
+    settings_default_phases:'Default Phase Days', settings_phase_hint:'Used as default values when adding a project',
+    settings_templates:'Phase Templates', btn_add_tpl:'+ Add Template',
+    settings_backup:'Backup / Restore', btn_export:'💾 Export as JSON', btn_import:'📂 Restore from JSON',
+    settings_ics:'Calendar Export (.ics)', btn_export_ics:'📅 Export as .ics',
+    modal_add_template:'Add Template', modal_edit_template:'Edit Template',
+    label_template_name:'Template Name', label_phase_days:'Phase Days',
+    stamp_title:'🎨 Pick a stamp and place it on screen', stamp_hint:'Drag to move · Tap to delete',
+    days_left:'', days_unit:'d', days_suffix:' left', overdue:'Overdue', today_deadline:'Due today!',
+    phase_badge:['Sketching','Revising','Finishing'], phase_badge_done:'Done',
+    empty_orders:'No projects yet', empty_orders_hint:'Tap "+ Add" to get started',
+    empty_done:'No completed projects',
+    snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
+    snav_note:'* Features in development (subscription)',
+  }
+};
+function lang() { return document.documentElement.lang || 'ja'; }
+const t = (key) => (I18N[lang()] || I18N.ja)[key] ?? (I18N.ja[key] ?? key);
+function setLang(l) {
+  document.documentElement.lang = l;
+  try { localStorage.setItem('shimesuke_lang', l); } catch(e) {}
+  render();
+  applyI18n();
+}
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n); if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = t(el.dataset.i18nPlaceholder); if (v) el.placeholder = v;
+  });
+  const btn = document.getElementById('btn-lang');
+  if (btn) btn.textContent = lang() === 'ja' ? 'EN' : 'JP';
+  const countEl = document.getElementById('ftab-active-count');
+  const ftabActive = document.getElementById('ftab-active');
+  if (ftabActive && countEl) {
+    const n = countEl.textContent;
+    ftabActive.childNodes[0].textContent = t('filter_active') + ' ';
+    countEl.textContent = n;
+    const unit = document.getElementById('ftab-unit');
+    if (unit) unit.textContent = t('filter_unit');
+  }
+}
 
 /* ═══════════════════════════════
    STATE
@@ -1358,6 +1450,8 @@ const mySkinColors = {
   const sk = UI_SKINS.find(s => s.id === id);
   if (sk) Object.assign(sk, mySkinColors[id]);
 });
+// ORDER_COLORS はカスタム色反映後に初期化する
+ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
 
 /* ═══════════════════════════════
    UTILS
@@ -1596,11 +1690,17 @@ function renderCalendar() {
   const m = currentMonth.getMonth();
   label.textContent = `${y}年${m+1}月`;
 
+  // アクティブ案件のみで色番号を割り当てる
+  const activeOrderIds = orders
+    .filter(o => (o.currentPhase || 0) < 3)
+    .map(o => o.id);
+  const activeColorIdx = (id) => activeOrderIds.indexOf(id);
+
   // legend
   legend.innerHTML = '';
-  orders.forEach((order, idx) => {
+  orders.forEach((order) => {
     if ((order.currentPhase || 0) >= 3) return;
-    const col = orderColor(idx);
+    const col = orderColor(activeColorIdx(order.id));
     legend.innerHTML += `
       <div class="legend-item">
         <div class="legend-dot" style="background:${col};"></div>
@@ -1654,7 +1754,7 @@ function renderCalendar() {
       if (date) {
         const dKey    = dateKey(date);
         const isToday = dKey === todayKey;
-        const dls     = orderPhases.filter(op => op.deadline === dKey);
+        const dls     = orderPhases.filter(op => op.deadline === dKey && op.currentPhase < 3);
 
         // dow + stamp
         const dowRow = document.createElement('div');
@@ -1675,7 +1775,7 @@ function renderCalendar() {
         const numEl = document.createElement('div');
         numEl.className = 'cal-gantt-num' + (isToday ? ' today' : '');
         if (dls.length > 0 && !isToday) {
-          const idx = orders.findIndex(o => o.id === dls[0].id);
+          const idx = activeColorIdx(dls[0].id);
           numEl.style.border  = `2px solid ${orderColor(idx)}`;
           numEl.style.color   = orderColor(idx);
         }
@@ -1694,7 +1794,7 @@ function renderCalendar() {
     const wEndInclusive = new Date(wEnd); wEndInclusive.setHours(23,59,59,999);
 
     const activeOrders = orders
-      .map((order, idx) => ({ order, idx, op: orderPhases[idx] }))
+      .map((order, orderIdx) => ({ order, idx: activeColorIdx(order.id), op: orderPhases[orderIdx] }))
       .filter(({ op }) =>
         op.currentPhase < 3 &&
         op.schedule.some(ph => {
@@ -1823,7 +1923,7 @@ function goToday() {
 function openAddOrder() {
   editingId    = null;
   selectedType = 'illustration';
-  document.getElementById('order-modal-title').textContent = '案件を追加';
+  document.getElementById('order-modal-title').textContent = t('modal_add_order');
   document.getElementById('f-name').value     = '';
   document.getElementById('f-deadline').value = '';
   document.getElementById('f-phase').value    = '0';
@@ -1840,8 +1940,8 @@ function openAddOrder() {
 
   // actions
   document.getElementById('order-modal-actions').innerHTML = `
-    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
 
   showModal('order-modal');
 }
@@ -1852,7 +1952,7 @@ function openEditOrder(id) {
   editingId    = id;
   selectedType = order.type;
 
-  document.getElementById('order-modal-title').textContent = '案件を編集';
+  document.getElementById('order-modal-title').textContent = t('modal_edit_order');
   document.getElementById('f-name').value     = order.name;
   document.getElementById('f-deadline').value = order.deadline;
   document.getElementById('f-phase').value    = String(order.currentPhase || 0);
@@ -1867,8 +1967,8 @@ function openEditOrder(id) {
 
   document.getElementById('order-modal-actions').innerHTML = `
     <button class="btn-delete" onclick="deleteOrder('${id}')">削除</button>
-    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
 
   showModal('order-modal');
 }
@@ -1984,7 +2084,7 @@ function renderTemplateList() {
 
 function openAddTemplate() {
   editingTemplateId = null;
-  document.getElementById('tpl-modal-title').textContent = 'テンプレートを追加';
+  document.getElementById('tpl-modal-title').textContent = t('modal_add_template');
   document.getElementById('tpl-name').value = '';
   renderPhaseFields('tpl-phases-row', settings.phases.map(p => ({ ...p })));
   showModal('template-modal');
@@ -1994,7 +2094,7 @@ function openEditTemplate(id) {
   const tpl = (settings.templates || []).find(t => t.id === id);
   if (!tpl) return;
   editingTemplateId = id;
-  document.getElementById('tpl-modal-title').textContent = 'テンプレートを編集';
+  document.getElementById('tpl-modal-title').textContent = t('modal_edit_template');
   document.getElementById('tpl-name').value = tpl.name;
   renderPhaseFields('tpl-phases-row', tpl.phases.map(p => ({ ...p })));
   showModal('template-modal');
@@ -2649,6 +2749,9 @@ document.addEventListener('keydown', e => {
 /* ═══════════════════════════════
    INIT
 ═══════════════════════════════ */
+// 言語初期化
+try { document.documentElement.lang = localStorage.getItem('shimesuke_lang') || 'ja'; } catch(e) { document.documentElement.lang = 'ja'; }
+
 // default mobile tab
 if (window.innerWidth < 768) {
   switchTab('calendar');
@@ -2657,6 +2760,7 @@ if (window.innerWidth < 768) {
 applyUISkin(currentSkinId);
 updateHeaderThemeDots();
 render();
+applyI18n();
 updateChartColorDots();
 loadStickerData();
 loadCustomStamps();
