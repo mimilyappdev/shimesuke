@@ -934,6 +934,7 @@ input, select, textarea { font-family: inherit; }
         <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
       <button class="btn-icon" id="btn-lang" onclick="setLang(document.documentElement.lang==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
+      <button class="btn-icon" id="btn-demo" onclick="toggleDemoMode()" title="デモモード" style="font-size:10px;font-weight:700;">📸 デモ</button>
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
   </header>
@@ -2561,6 +2562,44 @@ function exportICS() {
   URL.revokeObjectURL(url);
 }
 
+
+/* ═══════════════════════════════
+   DEMO MODE
+═══════════════════════════════ */
+let demoMode = false;
+let _realOrders = null;
+
+function generateDemoOrders() {
+  const today = new Date();
+  const dl = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return dateKey(d); };
+  const ph = (r,f,fin) => [{id:'rough',name:'ラフ',days:r},{id:'fix',name:'修正',days:f},{id:'final',name:'清書',days:fin}];
+  return [
+    { id:'demo1', name:'いぬさん / キャラデザ',     type:'illustration', deadline:dl(2),  currentPhase:2, notes:'', phaseDays:ph(7,3,2) },
+    { id:'demo2', name:'ねこさん / 背景イラスト',    type:'illustration', deadline:dl(7),  currentPhase:1, notes:'', phaseDays:ph(10,5,3) },
+    { id:'demo3', name:'うさぎさん / ミニキャラ3体', type:'illustration', deadline:dl(13), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo4', name:'とりさん / Live2D素材',      type:'design',       deadline:dl(20), currentPhase:0, notes:'', phaseDays:ph(7,5,3) },
+    { id:'demo5', name:'くまさん / 動画サムネ',      type:'video',        deadline:dl(25), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo6', name:'自分 / 同人誌表紙',          type:'illustration', deadline:dl(31), currentPhase:0, notes:'', phaseDays:ph(14,7,5) },
+  ];
+}
+
+function toggleDemoMode() {
+  demoMode = !demoMode;
+  const authArea = document.querySelector('.auth-area');
+  const btn = document.getElementById('btn-demo');
+  if (demoMode) {
+    _realOrders = orders;
+    orders = generateDemoOrders();
+    if (authArea) authArea.style.visibility = 'hidden';
+    if (btn) { btn.textContent = '🔴 デモ中'; btn.style.background = 'rgba(255,80,80,0.25)'; }
+  } else {
+    orders = _realOrders;
+    _realOrders = null;
+    if (authArea) authArea.style.visibility = '';
+    if (btn) { btn.textContent = '📸 デモ'; btn.style.background = ''; }
+  }
+  render();
+}
 
 /* ═══════════════════════════════
    SERVICE WORKER
