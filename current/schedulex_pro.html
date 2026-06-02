@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -856,6 +856,19 @@ input, select, textarea { font-family: inherit; }
   #calendar-panel { display: flex; }
 }
 
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #2A2A2A; color: #fff;
+  padding: 11px 18px; border-radius: 10px;
+  font-size: 12px; line-height: 1.6; text-align: center;
+  max-width: 320px; width: calc(100% - 48px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; pointer-events: auto; }
+
 /* ── SUB NAV ── */
 #sub-nav {
   position: relative;
@@ -939,6 +952,9 @@ input, select, textarea { font-family: inherit; }
     </div>
   </header>
   <div class="gold-line"></div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
 
   <!-- SUB NAV -->
   <div id="sub-nav">
@@ -1295,7 +1311,7 @@ const I18N = {
     label_order_name:'案件名 / クライアント名', placeholder_order_name:'例：いぬさん / キャラデザ',
     label_type:'依頼の種類', type_illustration:'イラスト', type_design:'デザイン', type_video:'動画', type_other:'その他',
     label_deadline:'納期（締め切り）', label_phase:'現在のフェーズ',
-    phase_rough:'ラフ中', phase_fix:'修正中', phase_final:'清書中', phase_done:'完了',
+    phase_rough:'準備中', phase_fix:'作業中', phase_final:'仕上げ中', phase_done:'完了',
     label_schedule:'スケジュール設定（日数）', no_template:'テンプレートなし（手動入力）', template_hint:'※ テンプレートを選ぶと日数が自動で入ります',
     label_notes:'メモ', placeholder_notes:'キャラデザ：青系・猫耳・前金入金済 など',
     modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する',
@@ -1307,7 +1323,7 @@ const I18N = {
     label_template_name:'テンプレート名', label_phase_days:'フェーズ日数',
     stamp_title:'🎨 スタンプを選んで画面に貼ろう', stamp_hint:'貼った後はドラッグで移動・タップで削除',
     days_left:'あと', days_unit:'日', days_suffix:'', overdue:'超過', today_deadline:'今日が締め切り！',
-    phase_badge:['ラフ中','修正中','清書中'], phase_badge_done:'完了',
+    phase_badge:['準備中','作業中','仕上げ中'], phase_badge_done:'完了',
     empty_orders:'案件がまだありません', empty_orders_hint:'「＋ 追加」から登録してください',
     empty_done:'完了済みの案件はありません',
     snav_easyreply:'EasyReply連携', snav_gcal:'Googleカレンダー同期', snav_finance:'収支確認',
@@ -1315,7 +1331,7 @@ const I18N = {
     months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
     dow:['日','月','火','水','木','金','土'],
     empty_cal:'案件を追加するとカレンダーに表示されます',
-    phase_label_rough:'ラフ', phase_label_fix:'修正', phase_label_final:'清書',
+    phase_label_rough:'準備', phase_label_fix:'作業', phase_label_final:'仕上げ',
     settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
     tpl_empty:'テンプレートがありません',
     btn_tpl_edit:'編集', btn_tpl_del:'削除',
@@ -1325,6 +1341,7 @@ const I18N = {
     confirm_delete_order:'この案件を削除しますか？',
     alert_enter_tpl_name:'テンプレート名を入力してください',
     confirm_delete_tpl:'このテンプレートを削除しますか？',
+    storage_warning:'データはブラウザに保存されます。キャッシュ削除で消える場合があります。💾 定期的にJSONバックアップをおすすめします。',
     alert_invalid_format:'形式が違います',
     confirm_restore:'{n}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？',
     alert_restored:'復元しました！',
@@ -1332,7 +1349,7 @@ const I18N = {
     alert_no_orders:'案件がありません',
     skin_labels:['ヘッダー色','背景色','カード色','テキスト色'],
     chart_labels:['色①','色②','色③','色④','色⑤'],
-    phase_fallback:['ラフ','修正','清書'],
+    phase_fallback:['準備','作業','仕上げ'],
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1345,7 +1362,7 @@ const I18N = {
     label_order_name:'Project / Client Name', placeholder_order_name:'e.g. John / Character Design',
     label_type:'Project Type', type_illustration:'Illustration', type_design:'Design', type_video:'Video', type_other:'Other',
     label_deadline:'Deadline', label_phase:'Current Phase',
-    phase_rough:'Sketching', phase_fix:'Revising', phase_final:'Finishing', phase_done:'Done',
+    phase_rough:'Preparing', phase_fix:'Working', phase_final:'Finishing', phase_done:'Done',
     label_schedule:'Schedule (days)', no_template:'No template (manual)', template_hint:'* Select a template to auto-fill days',
     label_notes:'Notes', placeholder_notes:'e.g. Blue palette, advance payment received',
     modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp',
@@ -1357,7 +1374,7 @@ const I18N = {
     label_template_name:'Template Name', label_phase_days:'Phase Days',
     stamp_title:'🎨 Pick a stamp and place it on screen', stamp_hint:'Drag to move · Tap to delete',
     days_left:'', days_unit:'d', days_suffix:' left', overdue:'Overdue', today_deadline:'Due today!',
-    phase_badge:['Sketching','Revising','Finishing'], phase_badge_done:'Done',
+    phase_badge:['Preparing','Working','Finishing'], phase_badge_done:'Done',
     empty_orders:'No projects yet', empty_orders_hint:'Tap "+ Add" to get started',
     empty_done:'No completed projects',
     snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
@@ -1365,7 +1382,7 @@ const I18N = {
     months:['January','February','March','April','May','June','July','August','September','October','November','December'],
     dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
     empty_cal:'Add projects to see them on the calendar',
-    phase_label_rough:'Rough', phase_label_fix:'Fix', phase_label_final:'Final',
+    phase_label_rough:'Prep', phase_label_fix:'Work', phase_label_final:'Final',
     settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
     tpl_empty:'No templates yet',
     btn_tpl_edit:'Edit', btn_tpl_del:'Delete',
@@ -1375,6 +1392,7 @@ const I18N = {
     confirm_delete_order:'Delete this project?',
     alert_enter_tpl_name:'Please enter a template name',
     confirm_delete_tpl:'Delete this template?',
+    storage_warning:'Data is stored in your browser and may be lost if cache is cleared. 💾 Regular JSON backups are recommended.',
     alert_invalid_format:'Invalid file format',
     confirm_restore:'Restore {n} projects? This will overwrite your current data.',
     alert_restored:'Restored!',
@@ -1382,7 +1400,7 @@ const I18N = {
     alert_no_orders:'No projects to export',
     skin_labels:['Header','Background','Card','Text'],
     chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
-    phase_fallback:['Rough','Fix','Final'],
+    phase_fallback:['Prep','Work','Final'],
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1422,9 +1440,9 @@ function applyI18n() {
 let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
 let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
   phases: [
-    { id: 'rough', name: 'ラフ',   days: 7 },
-    { id: 'fix',   name: '修正',   days: 3 },
-    { id: 'final', name: '清書',   days: 3 }
+    { id: 'rough', name: '準備',   days: 7 },
+    { id: 'fix',   name: '作業',   days: 3 },
+    { id: 'final', name: '仕上げ', days: 3 }
   ]
 };
 
@@ -2035,7 +2053,7 @@ function renderPhaseFields(containerId, phases) {
   container.innerHTML = phases.map((p, i) => `
     <div class="phase-field">
       <label>${esc(phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name)}</label>
-      <input type="number" min="1" max="60" value="${p.days}" id="pf-${containerId}-${i}">
+      <input type="number" min="0" max="60" value="${p.days}" id="pf-${containerId}-${i}">
     </div>`).join('');
 }
 
@@ -2043,7 +2061,7 @@ function getPhaseDaysFromFields(containerId) {
   return settings.phases.map((p, i) => ({
     id:   p.id,
     name: p.name,
-    days: parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value) || p.days
+    days: (v => isNaN(v) ? p.days : v)(parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value))
   }));
 }
 
@@ -2865,6 +2883,24 @@ updateChartColorDots();
 loadStickerData();
 loadCustomStamps();
 renderStickerLayer();
+
+function showToast(msg, duration = 5000) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function showStorageWarning() {
+  if (localStorage.getItem('shimesuke_storage_warned')) return;
+  setTimeout(() => {
+    showToast(t('storage_warning'), 7000);
+    localStorage.setItem('shimesuke_storage_warned', '1');
+  }, 1500);
+}
+
+showStorageWarning();
 </script>
 </body>
 </html>

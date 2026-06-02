@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog — 2026.06.02</title>
+<style>
+  :root {
+    --main: #2E3460;
+    --gold: #E1B75B;
+    --bg: #F5F1EB;
+    --surface: #fff;
+    --ink: #2A2A2A;
+    --muted: #7A8090;
+    --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+    --claude-bg: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'BIZ UDGothic', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.8;
+    padding: 48px 24px 80px;
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+
+  /* header */
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--main); background: var(--me-bg);
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .log-header h1 {
+    font-size: 28px; font-weight: 700; color: var(--main);
+    line-height: 1.3; margin-bottom: 8px;
+  }
+  .log-header .date { font-size: 13px; color: var(--muted); }
+  .log-header .gold-bar {
+    height: 3px; background: linear-gradient(90deg, var(--gold), transparent);
+    margin-top: 20px; border-radius: 2px;
+  }
+
+  /* section */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 16px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* chat */
+  .chat { display: flex; flex-direction: column; gap: 12px; }
+  .bubble { display: flex; gap: 10px; align-items: flex-start; }
+  .bubble.me { flex-direction: row-reverse; }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0; margin-top: 2px;
+  }
+  .avatar.me { background: var(--main); color: #fff; }
+  .avatar.claude { background: var(--gold); color: #fff; }
+  .msg {
+    max-width: 80%; padding: 10px 14px; border-radius: 12px;
+    font-size: 13px; line-height: 1.7;
+  }
+  .bubble.me .msg {
+    background: var(--me-bg); color: var(--main);
+    border-radius: 12px 2px 12px 12px;
+  }
+  .bubble.claude .msg {
+    background: var(--surface); color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 2px 12px 12px 12px;
+  }
+  .msg strong { color: var(--main); }
+  .msg .note { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* done list */
+  .done-list { display: flex; flex-direction: column; gap: 8px; }
+  .done-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 16px;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .done-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .done-text { font-size: 13px; line-height: 1.6; }
+  .done-text .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* decision */
+  .decision-list { display: flex; flex-direction: column; gap: 8px; }
+  .decision-item {
+    background: var(--surface); border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0; padding: 10px 14px;
+    font-size: 13px; line-height: 1.6;
+  }
+  .decision-item .label {
+    font-size: 10px; font-weight: 700; color: var(--gold);
+    letter-spacing: 0.08em; margin-bottom: 2px;
+  }
+
+  /* nope list */
+  .nope-list { display: flex; flex-direction: column; gap: 6px; }
+  .nope-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: 13px; line-height: 1.6;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .nope-item .x { color: var(--muted); flex-shrink: 0; font-size: 12px; margin-top: 2px; }
+  .nope-item .reason { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* next */
+  .next-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .next-tag {
+    background: var(--main); color: #fff;
+    font-size: 12px; font-weight: 700;
+    padding: 5px 14px; border-radius: 20px;
+  }
+
+  footer {
+    margin-top: 64px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--muted); text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.1 〆スケ、一般向けへ</h1>
+    <div class="date">2026年6月2日</div>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- 話したこと -->
+  <div class="section">
+    <div class="section-title">Today's Talk</div>
+    <div class="chat">
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">〆スケ、依頼スケジュール管理じゃなくてギリギリスケジュール管理のほうがいいのかも。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">「依頼」はクリエイター限定になる。<strong>ギリギリ族全員</strong>をターゲットにすれば市場が広がる。学生の課題、仕事の納期、確定申告にも使えますよね。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">一般人は「依頼」ってなんだ…？ってなるもんね。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">そうそう。ラフ・修正・清書もクリエイター言語なので、一般タスクだと違和感が出てくる。フェーズ名を変えるか、カスタムできるようにするか。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">フェーズなんて自分で管理すればええですからね。準備・作業・仕上げでいこう！！！</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">３件までしか予定入れられないの、ちょっと怖くない？ｗ</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">3件は初日に詰まる可能性が高い。5〜7件あると「あ、これ便利」ってなってから課金を考えられる。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">依頼だけなら3件でいいか〜ってなったけど、日常だと7くらい欲しかったりするよね。塩梅が難しいな。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">それ、コンセプトとつながってる。依頼管理なら3件で筋が通る。ギリギリスケジュール管理なら3件じゃ全然足りない。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">うーん…３はないなーって感じ。５にしとく？</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">無料版５かぁ。もっと欲しい！っていう声ね。サブスク版先に実装できたほうがいいのかしら。Googleログインボタンはついた。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">無料5件にするなら、PRO版（無制限）を先に出しておかないと「もっと欲しい」ってなった人の行き場がない。Stripe連携が先ですね。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">ローカル版、買い切り。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">ローカル版（買い切り）→ データ管理は自己責任。Web版PRO（サブスク）→ クラウド同期。課金の動機としてもわかりやすい。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">逆にセキュリティルール決めないと。悪さをする人対策。主にサブスク版だけども。</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg"><strong>一番の問題は isPremium() がクライアント側判定</strong>なこと。開発者ツールで書き換えれば誰でもPRO扱いになってしまう。Stripe決済完了→Cloud Functions→FirestoreにPROフラグ、という流れが必要。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">使い方どっかに書いてあげるのがいいけどどこがいいんだろう。最初にデモ走らせるとか？だるいか？</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">デモモードがすでにあるので、初回起動時に自動ONにするだけでいける。デモに各やりかたの説明書きを入れるのもあり。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">スマホ版もうぎちぎちじゃないかなｗ</div>
+      </div>
+
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">メモはカードに表示されないのでモーダルを開かないと見えない。デモデータはそのままにして、ヘッダーに「？」ボタン→使い方モーダルの方がスマート。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">それでOK！！！</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- やったこと -->
+  <div class="section">
+    <div class="section-title">Done</div>
+    <div class="done-list">
+      <div class="done-item">
+        <div class="done-icon">📁</div>
+        <div class="done-text">
+          作業フォルダ整理
+          <div class="sub">current/ に最新ファイルを移動。dev/ → dev_20260529/ にリネーム。「最新がどれかわからない」問題を解消。</div>
+        </div>
+      </div>
+      <div class="done-item">
+        <div class="done-icon">🏷</div>
+        <div class="done-text">
+          フェーズ名変更：ラフ・修正・清書 → <strong>準備・作業・仕上げ</strong>
+          <div class="sub">JP/EN両対応。EN は Prep / Work / Final。</div>
+        </div>
+      </div>
+      <div class="done-item">
+        <div class="done-icon">🐛</div>
+        <div class="done-text">
+          デフォルト日数を0に設定できないバグを修正
+          <div class="sub">min="1" → "0" に変更 + parseInt の falsy 判定バグを isNaN チェックに修正。</div>
+        </div>
+      </div>
+      <div class="done-item">
+        <div class="done-icon">💬</div>
+        <div class="done-text">
+          ストレージ警告トーストを実装（初回のみ・JP/EN対応）
+          <div class="sub">「データはブラウザに保存されます。キャッシュ削除で消える場合があります。」booth_terms.txt の使い方欄冒頭にも追記。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 決めたこと -->
+  <div class="section">
+    <div class="section-title">Decisions</div>
+    <div class="decision-list">
+      <div class="decision-item">
+        <div class="label">CONCEPT</div>
+        <strong>ギリギリスケジュール管理</strong>に決定。依頼管理ではなく「締め切りがある全員」がターゲット。
+      </div>
+      <div class="decision-item">
+        <div class="label">FREE TIER</div>
+        無料枠は<strong>5件</strong>。3は少なすぎ・7は多すぎ。5件でユーザーが定着してから課金を考えられる設計。
+      </div>
+      <div class="decision-item">
+        <div class="label">PRICING</div>
+        <strong>ローカル版：買い切り</strong> / <strong>Web版：無料5件 + PROサブスク（月額）</strong>の二本立て。
+      </div>
+      <div class="decision-item">
+        <div class="label">RELEASE</div>
+        機能作り切り → Stripe連携 → 無料/PRO制限を本番切替 → <strong>同時リリース</strong>。isPremium() は開発中 return true のまま進める。
+      </div>
+      <div class="decision-item">
+        <div class="label">SECURITY</div>
+        サブスク判定はサーバー側（Cloud Functions）で行う。クライアントJSに判定ロジックを持たせない。
+      </div>
+      <div class="decision-item">
+        <div class="label">PRO ROADMAP</div>
+        将来のPRO機能として<strong>日常タブ・仕事タブ・MIXタブ</strong>を実装予定。
+      </div>
+    </div>
+  </div>
+
+  <!-- やめたこと -->
+  <div class="section">
+    <div class="section-title">Decided Against</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>「依頼スケジュール管理」コンセプト</div>
+          <div class="reason">クリエイター限定になる。一般ユーザーに「依頼」という言葉が伝わらない。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>フェーズ名「着手・進行・追込み」</div>
+          <div class="reason">「追込み」がネガティブすぎて一般向けに使いにくい。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>フェーズ名「計画・実行・仕上げ」</div>
+          <div class="reason">ビジネス寄りすぎて〆スケのブランドに合わない。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>依頼用・一般用の別バージョン</div>
+          <div class="reason">複雑になるうえ、単一バージョンで対応できるため不要。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>デモデータに説明書きを入れる</div>
+          <div class="reason">メモはカードに表示されない。スマホでぎちぎちになる。？ボタン→モーダル方式に変更。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>フェーズカスタム編集UI</div>
+          <div class="reason">「フェーズなんて自分で管理すればいい」という判断でスコープ外に。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 次のアクション -->
+  <div class="section">
+    <div class="section-title">Next</div>
+    <div class="next-list">
+      <div class="next-tag">Stripe連携</div>
+      <div class="next-tag">Cloud Functions</div>
+      <div class="next-tag">Firestoreセキュリティルール</div>
+      <div class="next-tag">？ボタン → 使い方モーダル</div>
+      <div class="next-tag">無料5件制限を本番切替</div>
+    </div>
+  </div>
+
+  <footer>
+    SchedulEX（〆スケ）Devlog Vol.1 — 2026.06.02<br>
+    © Mimily
+  </footer>
+
+</div>
+</body>
+</html>
