@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.3 — 2026.06.05</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .bug-item { background:#FFF5F5;border:1px solid #F5C0C0;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.6; }
+  .bug-item .bug-label { font-size:10px;font-weight:700;color:#C83030;margin-bottom:4px;letter-spacing:.08em; }
+  .bug-item .bug-note { font-size:11px;color:#7A5050;margin-top:4px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  .schema-box { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:monospace;font-size:12px;line-height:1.8;color:var(--ink); }
+  .schema-box .comment { color:var(--muted); }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.3 3アプリ連携の設計を整理する</h1>
+    <div class="date">2026年6月5日</div>
+    <a class="prev-link" href="devlog_20260603.html">← Vol.2（2026.06.03）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- 話したこと -->
+  <div class="section">
+    <div class="section-title">Today's Talk</div>
+    <div class="chat">
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">書き込み増えてきたら完了案件消した方がいいって言われたんだけど、ユーザー的に勝手に消されるのはいやじゃない？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">全データが1ドキュメント構造なので、書き込み回数は案件数と無関係。1案件は約200〜400バイトなので1MBに詰まるのは2,500件〜。フリーランスが10〜50年分。今は気にしなくていい。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">MiteOrder→EasyReplyで受注確定→shimesukeに案件追加したい。RakuThroughにも飛ばせるようにしたい（任意）。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">RakuThroughは別Firebaseプロジェクトなので直接書き込み不可。MiteOrder・EasyReply・shimesukeは全部mimilyappなのでFirestore共有できる。RakuThrough連携は手動入力で割り切りが現実的。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">MiteOrderの見積もりを読んでどんなスキーマにするか相談しよう。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">MiteOrderの見積もりデータを確認。clientName / items / totalMin / notes / status / createdAt のスキーマ案を提示。EasyReplyが「ハブ」になる構造で合意。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">statusの設計は他のAIにも意見聞いてから決めたい。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">保留。明日（2026-06-06）に他AIへ「pending/negotiating/confirmed/declinedで足りるか」を相談予定。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 決定事項 -->
+  <div class="section">
+    <div class="section-title">Decisions</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🏗</div>
+        <div class="done-text">
+          3アプリ連携フローの確定
+          <div class="sub">MiteOrder（見積もり）→ EasyReply（やりとり・受注確定）→ shimesuke（案件追加）。RakuThroughは別プロジェクトのため手動入力。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📐</div>
+        <div class="done-text">
+          MiteOrder見積もり依頼スキーマ（案）
+          <div class="sub">users/{uid}/miteorder/requests/{requestId} に保存。EasyReplyがstatusを更新し、confirmed時にshimesukeへ追加。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">💾</div>
+        <div class="done-text">
+          shimesuke完了案件の扱いは現状維持
+          <div class="sub">1ドキュメント構造のまま。1件200〜400バイトで1MBに詰まるのは数千件規模。現フェーズでは対応不要。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- スキーマメモ -->
+  <div class="section">
+    <div class="section-title">Schema Draft</div>
+    <div class="schema-box">
+users/{uid}/miteorder/requests/{requestId}<br>
+&nbsp;&nbsp;clientName: string<br>
+&nbsp;&nbsp;items: [{id, name, price}, ...]<br>
+&nbsp;&nbsp;totalMin: number<br>
+&nbsp;&nbsp;notes: string<br>
+&nbsp;&nbsp;status: <span class="comment">"pending" | "negotiating" | "confirmed" | "declined"</span><br>
+&nbsp;&nbsp;createdAt: timestamp<br>
+<br>
+<span class="comment">// confirmed になったら EasyReply が shimesuke の orders に addDoc</span>
+    </div>
+  </div>
+
+  <!-- ボツ -->
+  <div class="section">
+    <div class="section-title">Decided Against</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>完了案件の自動削除・アーカイブ実装</div>
+          <div class="reason">フリーランスの完了記録は振り返り・請求書・ポートフォリオ用途があるため価値がある。データ量も当面問題なし。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>MiteOrder→EasyReplyをURLパラメータで引き継ぎ</div>
+          <div class="reason">全アプリがmimilyapp（同一Firestore）にある前提なのでFirestore経由の方がシンプル。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>RakuThroughとの自動連携</div>
+          <div class="reason">RakuThroughは別Firebaseプロジェクト。移行コストが大きく当面は手動入力で割り切り。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 次のアクション -->
+  <div class="section">
+    <div class="section-title">Next</div>
+    <div class="next-list">
+      <div class="next-tag warn">🐛 デモ未表示バグ修正</div>
+      <div class="next-tag pending">⏳ statusスキーマ設計（他AIに相談後）</div>
+      <div class="next-tag">EasyReplyにFirebase実装</div>
+      <div class="next-tag">MiteOrderにFirestore書き込み実装</div>
+      <div class="next-tag">shimesuke → サブコレクション移行（連携実装時）</div>
+      <div class="next-tag">Stripe連携</div>
+      <div class="next-tag">Firestoreセキュリティルール</div>
+    </div>
+  </div>
+
+  <footer>SchedulEX devlog — generated with Claude Code</footer>
+
+</div>
+</body>
+</html>
