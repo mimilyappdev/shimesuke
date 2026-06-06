@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isValidSchedulEXData() {
+      return request.resource.data.keys().hasOnly([
+        "orders",
+        "settings"
+      ]);
+    }
+
+    match /users/{uid}/schedulex/data {
+      allow read: if isOwner(uid);
+      allow create, update: if isOwner(uid) && isValidSchedulEXData();
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
