@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.4 — 2026.06.07</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.4 Booth出品準備・Firestoreルール整備</h1>
+    <div class="date">2026年6月7日</div>
+    <a class="prev-link" href="devlog_20260605.html">← Vol.3（2026.06.05）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- 話したこと -->
+  <div class="section">
+    <div class="section-title">Today's Talk</div>
+    <div class="chat">
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">BoothのReadmeと説明文直せる？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">READMEはデータ消失警告の3重複・ライセンス重複・Firefox警告を整理。Booth商品説明文は「買いたくなる文章」として別途新規作成（JP/EN）。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">strategy.htmlにMiteOrder・EasyReply・RakuThroughの思想も書いてほしい。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">各アプリの思想・コンセプト・3アプリ連携フローをプロダクト概要タブに追加。連携設計ブリーフタブも新設（他AIへの相談用・クリックでコピー）。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">FirestoreのordersのサイズのLimit100件って悪用防止の意図だったんだっけ。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">isOwner認証と1MB自然制限で十分。100件上限はPRO無制限と矛盾しており削除を推奨。→ 削除して本番反映済み。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- やったこと -->
+  <div class="section">
+    <div class="section-title">Done</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">📄</div>
+        <div class="done-text">
+          README（booth_terms.txt）整備
+          <div class="sub">データ消失警告の3箇所重複を1箇所に集約。ライセンス重複削除。Firefox警告削除。HTML改変禁止を復活。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🛒</div>
+        <div class="done-text">
+          Booth商品説明文を新規作成（JP・EN）
+          <div class="sub">booth_description.txt（JP）・booth_description_en.txt（EN）を新規作成。キャッチコピー→機能→こんな人に→FREE/PRO比較→注意の構成。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📐</div>
+        <div class="done-text">
+          strategy.htmlに全アプリ思想・連携フロー追記
+          <div class="sub">〆スケ・MiteOrder・EasyReply・RakuThrough各アプリの思想を整理。連携設計ブリーフタブを新設（他AIへの相談用コピー機能付き）。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🔒</div>
+        <div class="done-text">
+          Firestoreルール orders上限100件制限を削除・本番反映
+          <div class="sub">悪用防止の意図だったがisOwner認証＋1MB上限で十分。PRO版無制限との矛盾も解消。Firestoreコンソールに反映済み。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ボツ -->
+  <div class="section">
+    <div class="section-title">Decided Against</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>orders.size() &lt;= 100 での悪用防止</div>
+          <div class="reason">本人しか書けない（isOwner）＋1MB自然制限で十分。正規ユーザーが詰まるリスクの方が高い。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>ローカル版READMEに1MB制限の免責を追記</div>
+          <div class="reason">ローカル版はFirestoreを使わないので無関係。サブスク版の利用規約作成時に追記する。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 次のアクション -->
+  <div class="section">
+    <div class="section-title">Next</div>
+    <div class="next-list">
+      <div class="next-tag warn">🎨 Booth用画像作成（本日）</div>
+      <div class="next-tag">Booth出品（画像完成後）</div>
+      <div class="next-tag warn">🐛 デモ未表示バグ修正</div>
+      <div class="next-tag pending">⏳ statusスキーマ設計（他AIに相談後）</div>
+      <div class="next-tag">Firebaseログイン動作確認</div>
+      <div class="next-tag">サブスク版利用規約作成</div>
+    </div>
+  </div>
+
+  <footer>SchedulEX devlog — generated with Claude Code</footer>
+
+</div>
+</body>
+</html>
