@@ -237,14 +237,77 @@
   </div>
 
   <!-- 次のアクション -->
+  <!-- 午後追記 -->
+  <div class="section">
+    <div class="section-title">Done (午後)</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🌐</div>
+        <div class="done-text">
+          LP全面リニューアル・push済み
+          <div class="sub">「デモ版」表記を全削除→「無料版公開中！近日アップデート予定！」に変更。ローカル版¥780をリリース価格の直下に配置。Boothリンクをヒーローに追加。サブスクカードに¥480/月・¥3,980/年を表示・マルチデバイスを最下部ハイライト。カスタムスタンプ「ローカル版のみ」明示。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🔢</div>
+        <div class="done-text">
+          無料版を5件に確定・push済み
+          <div class="sub">app/index.html の MAX_FREE_ORDERS を3→5に変更。LP表記も統一。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📣</div>
+        <div class="done-text">
+          Xポスト文案作成（Booth版リリース告知）
+          <div class="sub">「JSONバックアップ経由でWeb版→ローカル版にデータ移行できます」を含むポスト文。動画と一緒に投稿予定。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Decided Against (午後)</div>
+    <div class="nope-list">
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>1ヶ月全員PRO → その後フリーミアムへのダウングレード</div>
+          <div class="reason">使えてた機能が突然消えるのは最悪UX。離脱・低評価のリスクが高い。永続フリーミアム（5件）に確定。</div>
+        </div>
+      </div>
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>schedulex_pro.html を今すぐ index.html に差し替えてデプロイ</div>
+          <div class="reason">isPremium()=return true のままでは全員タダでPROになる。Webhook完成までデプロイ保留。</div>
+        </div>
+      </div>
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>Booth有料版をそのままWebで無料公開</div>
+          <div class="reason">Booth売上が消える。Web無料版（5件）とBooth版（買い切り¥780）は別物として維持。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <div class="section">
     <div class="section-title">Next</div>
     <div class="next-list">
-      <div class="next-tag pending">📣 Xポスト（URL確認後）</div>
-      <div class="next-tag">EasyReply Booth出品</div>
+      <div class="next-tag">EasyReply Booth画像・出品</div>
       <div class="next-tag">〆スケ残スライド03〜05 画像作成</div>
       <div class="next-tag warn">🐛 デモ未表示バグ修正</div>
-      <div class="next-tag">デプロイ（auth-testブランチ）</div>
+      <div class="next-tag pending">⏳ Webhook完成後→PRO版デプロイ</div>
+      <div class="next-tag pending">⏳ PRO版デプロイ時にJSONバックアップtostも追加</div>
       <div class="next-tag pending">⏳ Cloud Functions→サブスク判定をサーバー側へ</div>
     </div>
   </div>
