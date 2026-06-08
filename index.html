@@ -95,6 +95,13 @@ h1 {
   cursor: pointer; display: inline-block; transition: all 0.2s;
 }
 .btn-primary:hover { background: var(--main-dk); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,52,96,0.28); }
+.btn-secondary {
+  padding: 14px 28px; background: transparent; color: var(--main);
+  border: 2px solid var(--main); border-radius: 10px;
+  font-family: 'Zen Kaku Gothic New', sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; display: inline-block; transition: all 0.2s; text-decoration: none;
+}
+.btn-secondary:hover { background: var(--main); color: var(--white); transform: translateY(-2px); }
 .cta-note { font-size: 12px; color: var(--border-dk); }
 
 /* ── MOCKUP TABS ── */
@@ -293,14 +300,14 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <span class="hd-logo">SchedulEX</span>
     <span class="hd-kana">〆スケ</span>
   </div>
-  <a href="./app/" class="btn-nav">デモを触る →</a>
+  <a href="./app/" class="btn-nav">無料版を使う →</a>
 </header>
 
 <!-- HERO -->
 <section class="hero">
   <div>
     <p class="eyebrow">For Creators</p>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;">📸 デモ版公開中！</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;">🎉 無料版公開中！近日アップデート予定！</div>
     <h1>「いつまでだっけ」<br>がなくなる。<br><span style="font-size:0.75em;line-height:1.5;">期限が近い順に<br>あなたのやることが見える。</span></h1>
     <p class="hero-desc">
       イラストレーター・デザイナー・ハンドメイド作家・Mix師など、<br>
@@ -308,9 +315,10 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       ラフ・修正・納品を締め切りから逆算し、全案件をカレンダーで一目管理。
     </p>
     <div class="cta-group">
-      <a href="./app/" class="btn-primary">デモを触る →</a>
+      <a href="./app/" class="btn-primary">無料版を使う →</a>
+      <a href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-secondary">📦 ローカル版（買い切り）</a>
     </div>
-    <p style="font-size:11px;color:var(--muted);margin-top:10px;">📸 デモ版は案件5件まで · デモ&amp;無料版は登録不要 · サブスク版はGoogleログイン</p>
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;">✅ 無料版は案件5件まで · 登録不要 · マルチデバイスはサブスク版で</p>
   </div>
 
   <!-- MINI APP MOCKUP - TABBED -->
@@ -662,37 +670,39 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
         <div class="plan-badge">🎉 早割価格</div>
         <p class="plan-name">PRO</p>
         <p class="plan-note" style="color:var(--gold);font-weight:700;font-size:16px;margin-bottom:4px;">🔥 期間限定リリース価格！</p>
-        <ul class="plan-items" style="margin-top:20px;">
+        <p class="plan-price">¥780<span style="font-size:12px;font-weight:400;opacity:0.7;">（税込・買い切り）</span></p>
+        <ul class="plan-items" style="margin-top:16px;">
           <li class="pi"><span class="ck">✓</span><span>案件管理 <strong>無制限</strong><small>FREEは5件まで</small></span></li>
           <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
           <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
           <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
           <li class="pi"><span class="ck">✓</span><span>フェーズテンプレート <strong>無制限</strong></span></li>
           <li class="pi"><span class="ck">✓</span>データ書き出し・読み込み</li>
-          <li class="pi"><span class="ck">✓</span><span>カスタムスタンプ<small>自分の絵をスタンプに（最大5枚）</small></span></li>
           <li class="pi"><span class="ck">✓</span><span>マイカラー2枠 × 2種<small>UIテーマ・チャートカラー</small></span></li>
+          <li class="pi"><span class="ck">✓</span><span>カスタムスタンプ<small>自分の絵をスタンプに（最大5枚）</small></span></li>
           <li class="pi"><span class="na">—</span><span style="opacity:0.5;">クラウド同期・どこでもログイン</span></li>
         </ul>
-        <div class="btn-soon">近日公開</div>
+        <a href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-free" style="text-align:center;text-decoration:none;display:block;margin-top:16px;">Boothで購入する</a>
       </div>
 
-      <div class="plan" style="border-color:rgba(138,144,204,0.4);position:relative;">
-        <div class="plan-badge" style="background:var(--light);">☁️ クラウド版</div>
-        <p class="plan-name" style="color:rgba(255,255,255,0.55);">サブスク</p>
-        <p class="plan-price" style="color:white;">¥???</p>
-        <p class="plan-note" style="color:rgba(255,255,255,0.4);">月額 · 準備中</p>
-        <ul class="plan-items" style="margin-top:20px;">
+      <div class="plan" style="border-color:rgba(138,144,204,0.6);position:relative;">
+        <div class="plan-badge" style="background:var(--light);">☁️ マルチデバイス対応</div>
+        <p class="plan-name">サブスク</p>
+        <p class="plan-price" style="color:white;">¥480<span style="font-size:14px;font-weight:400;opacity:0.7;">/月</span></p>
+        <p class="plan-note" style="color:rgba(255,255,255,0.7);">年額 ¥3,980（約17%お得）</p>
+        <ul class="plan-items" style="margin-top:16px;">
           <li class="pi"><span class="ck">✓</span><span>案件管理 <strong>無制限</strong></span></li>
           <li class="pi"><span class="ck">✓</span>月カレンダー表示</li>
           <li class="pi"><span class="ck">✓</span>緊急度タブ（あと〇日）</li>
           <li class="pi"><span class="ck">✓</span>納期逆算スケジュール</li>
           <li class="pi"><span class="ck">✓</span>フェーズテンプレート無制限</li>
-          <li class="pi"><span class="ck">✓</span><span><strong>Googleログイン</strong><small>どの端末からでも同じデータで使える</small></span></li>
-          <li class="pi"><span class="ck">✓</span><span><strong>クラウド自動保存</strong><small>バックアップ操作不要</small></span></li>
+          <li class="pi"><span class="ck">✓</span>データ書き出し・読み込み</li>
           <li class="pi"><span class="ck">✓</span><span>マイカラー2枠 × 2種</span></li>
-          <li class="pi"><span class="na">—</span><span style="opacity:0.5;">カスタムスタンプ（PRO専用）</span></li>
+          <li class="pi"><span class="ck">✓</span><span><strong>クラウド自動保存</strong><small>バックアップ操作不要</small></span></li>
+          <li class="pi"><span class="na">—</span><span style="opacity:0.5;">カスタムスタンプ（ローカル版のみ）</span></li>
+          <li class="pi" style="background:rgba(138,144,204,0.15);border-radius:8px;padding:6px 8px;"><span class="ck">✓</span><span><strong>📱💻🖥 PC・スマホ・タブレット同期</strong><small>どの端末からでも同じデータ</small></span></li>
         </ul>
-        <div class="btn-soon">準備中</div>
+        <div class="btn-soon" style="margin-top:16px;">近日公開</div>
       </div>
 
     </div>
