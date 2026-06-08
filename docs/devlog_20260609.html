@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.5 — 2026.06.09</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  .highlight-box { background:var(--me-bg);border-left:3px solid var(--main);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7;margin-bottom:12px; }
+  .highlight-box .label { font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--main);margin-bottom:4px; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX / EasyReply — Devlog</div>
+    <h1>Vol.5 EasyReplyリリース・合体君Webアプリ化計画</h1>
+    <div class="date">2026年6月9日</div>
+    <a class="prev-link" href="devlog_20260607.html">← Vol.4（2026.06.07）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- ── 今日の出来事 ── -->
+  <div class="section">
+    <div class="section-title">今日の出来事</div>
+    <div class="chat">
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">Shimesukeでつくった合体君（PNGファイルとかを合体して出力するやつ）、WEBツールにしたら売れそうなんだけど</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">ファイル探したら <strong>Documents/booth-composer.html</strong> が見つかった。Booth用サムネ合成ツールだった。競合調査したところ「Booth/同人向け・登録不要・日本語・複数画像レイヤー管理」の空白地帯あり。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">Undoとレイヤー触れるといいなぁ</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">合体君を全面改修して Webアプリ版として再整備しました。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">ラクリプも公開！おめでとうございます。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 完了したこと ── -->
+  <div class="section">
+    <div class="section-title">完了したこと</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🎉</div>
+        <div class="done-text">
+          <strong>EasyReply（ラクリプ）Booth出品 完了</strong>
+          <div class="sub">JP/EN ZIP・README・商品説明文・タイトルすべて揃えて出品。〆スケに続いてRAKUシリーズ2本目のリリース。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🎨</div>
+        <div class="done-text">
+          <strong>合体君（booth-composer.html）大幅改修</strong>
+          <div class="sub">Undo/Redo（最大20件）・レイヤードラッグ並び替え・サムネイル表示・表示/非表示トグル・不透明度スライダー・背景設定（白/透明/カスタムカラー）・キャンバスサイズプリセット（1:1/OGP/横長/カスタム）・タッチ対応・サーバー参照削除・広告スロット追加</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📋</div>
+        <div class="done-text">
+          <strong>EasyReply 商品タイトル確定</strong>
+          <div class="sub">【返信テンプレ管理ツール】EasyReply ラクリプ ローカル版｜買い切り/広告なし | Reply Template Manager for Creators</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📄</div>
+        <div class="done-text">
+          <strong>EasyReply 商品説明文HTML作成</strong>
+          <div class="sub">shimesuke/Booth用データ/booth_description_easyreply.html。JP・EN両方をワンファイルに収めてコピーボタン付き。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 検討・決定事項 ── -->
+  <div class="section">
+    <div class="section-title">検討・決定事項</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🌐</div>
+        <div class="done-text">
+          <strong>合体君 Webアプリ化方針 → Option B で進める</strong>
+          <div class="sub">機能強化版を独立ドメインWebアプリとして公開・広告収益モデル。競合は大手（Canva/Pixlr）が機能過多、overlay系が2枚合成のみで、「Booth向け軽量日本語コンポーザー」は空白地帯。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📝</div>
+        <div class="done-text">
+          <strong>EasyReply タイトルは短縮版に</strong>
+          <div class="sub">〆スケに揃えるとくそ長くなるので短縮。検索性より読みやすさを優先。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 却下したこと ── -->
+  <div class="section">
+    <div class="section-title">検討してやめたこと</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          合体君 Option A（GitHub Pages最小版）
+          <div class="reason">差別化不足。最小改修だと既存ツールとの違いが薄い。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          合体君 Option C（Booth有料HTMLダウンロード版）
+          <div class="reason">広告収益モデルの方が継続収益・認知拡大に向いている。</div>
+        </div>
+      </div>
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          EasyReply Twitter宣伝文（今日中）
+          <div class="reason">文章の方向性を「同じ返信をメモ/Excelから探すの大変じゃないですか？」から始める案で一旦合意したが、詰めは持ち越し。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 残タスク ── -->
+  <div class="section">
+    <div class="section-title">残タスク</div>
+    <div class="next-list">
+      <span class="next-tag warn">合体君 公開先・ドメイン検討</span>
+      <span class="next-tag warn">合体君 収益化モデル詳細</span>
+      <span class="next-tag">EasyReply Booth画像作成</span>
+      <span class="next-tag">EasyReply Twitter宣伝文</span>
+      <span class="next-tag pending">EasyReply Gumroad/itch.io 展開</span>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="highlight-box">
+        <div class="label">合体君 Webアプリ化 — 次に詰めること</div>
+        公開先（Vercel / GitHub Pages / 独自ドメイン）・ドメイン名・AdSense申請タイミング・追加機能（テキスト追加など）の優先順位
+      </div>
+      <div class="highlight-box">
+        <div class="label">EasyReply Booth画像 — 作業手順</div>
+        booth-server.js起動 → booth-screenshot.jsでPC/SPスクショ取得 → 合体君で合成 → Boothアップ
+      </div>
+    </div>
+  </div>
+
+  <footer>SchedulEX / EasyReply Devlog — mimilyappdev</footer>
+</div>
+</body>
+</html>
