@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.5 — 2026.06.08</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+  .milestone { background:var(--main);color:#fff;border-radius:12px;padding:14px 18px;font-size:14px;font-weight:700;text-align:center;margin-bottom:24px;letter-spacing:.04em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.5 正式オープン・Stripe・Booth画像完成</h1>
+    <div class="date">2026年6月8日</div>
+    <a class="prev-link" href="devlog_20260607.html">← Vol.4（2026.06.07）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <div class="milestone">🎉 SchedulEX 無料版・買い切り・サブスク版 正式オープン</div>
+
+  <!-- 話したこと -->
+  <div class="section">
+    <div class="section-title">Today's Talk</div>
+    <div class="chat">
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">7日間詰まってた…PCからiPad・iPhoneにデータ転送するのが死ぬほど面倒でBoothサムネが進まない。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">Puppeteerで実アプリを自動スクショ→HTMLに直接埋め込む仕組みを作成。iPad不要、PC完結。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">透過になってない涙</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">原因① el.screenshot()のomitBackgroundは要素のCSS背景に効かない。原因② bodyのbackground:#111が透けていた。el＋body両方にsetProperty('background','transparent','important')で解決。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">位置・サイズ・回転を自分で調整して決定したい。OKを押したらスクショされる感じで。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">booth-composer.htmlを新規作成。ドラッグ移動・矢印キー微調整・レイヤー管理・OKで直接保存。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">一旦2枚Boothに挙げた。バックアップ取ってください。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">Documents/booth-backup-20260608/ に全ファイル＋作業メモ（えーんポイント改善案付き）を保存。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">Stripe連携した。商品つくるだけ。月額¥480・年額¥3,980。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">Cloud Functionsがまだなので、Stripe Payment Linksで実装。アップグレードモーダル（月額・年額選択UI）を組み込み。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">メンテナンスがあるときは告知を出してあげるのがいいと思うけど。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">Firestoreのconfig/maintenanceドキュメントにmessageを入れるだけで全ユーザーにバナーを表示する仕組みを実装。コンソール操作のみでデプロイ不要。</div>
+      </div>
+
+      <div class="bubble me">
+        <div class="avatar me">私</div>
+        <div class="msg">まずは使ってもらうために期間限定7件まで無料にしよう。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">AI</div>
+        <div class="msg">MAX_FREE_ORDERS を 3→7 に変更。i18nの表示文にも「期間限定」を追記。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- やったこと -->
+  <div class="section">
+    <div class="section-title">Done</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">📸</div>
+        <div class="done-text">
+          Puppeteer自動スクショパイプライン完成
+          <div class="sub">booth-screenshot.js：実アプリをPC(1280×800)・SP(390×844)で自動撮影。booth-capture.js：bg/mock/textの3レイヤーを透過PNGで出力。deviceScaleFactor:2で高解像度。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🎨</div>
+        <div class="done-text">
+          booth-composer.html 新規作成
+          <div class="sub">1000×1000キャンバスにドラッグ配置・回転・拡大。矢印キー1px微調整。レイヤー管理。OKでbooth-images/に直接保存（サーバー経由）。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">✅</div>
+        <div class="done-text">
+          〆スケ Booth出品 2枚完了
+          <div class="sub">booth-image.png（スライド1：メインビジュアル）・booth-image2.png（スライド2：ペインポイント）をBoothにアップ。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">💳</div>
+        <div class="done-text">
+          Stripe Payment Links 組み込み
+          <div class="sub">月額¥480・年額¥3,980のPayment LinkをアップグレードモーダルのCTAボタンに接続。Cloud Functions不要。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🚨</div>
+        <div class="done-text">
+          メンテナンスバナー実装
+          <div class="sub">Firestore config/maintenance.message に文字を入れると即時全ユーザーに表示。空なら非表示。デプロイ不要で告知できる。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🎁</div>
+        <div class="done-text">
+          期間限定 無料上限 3件→7件に変更
+          <div class="sub">MAX_FREE_ORDERS = 7。「期間限定」の文言をi18n（JP/EN）に追加。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">📝</div>
+        <div class="done-text">
+          〆スケ商品説明文（JP・EN）完成＋日常タスクアピール文追加
+          <div class="sub">「病院予約・役所手続きなど日常のタスクも全部入れられます」をJP・ENで作成。作業メモに保存済み。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ボツ・却下 -->
+  <div class="section">
+    <div class="section-title">Decided Against</div>
+    <div class="nope-list">
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>Cloud Functions経由でStripe Checkoutセッションを作成</div>
+          <div class="reason">Cloud Functionsがまだ未構築。Payment Linksで先に動かし、後でサーバー側判定に移行する方針。</div>
+        </div>
+      </div>
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>page.screenshot({ clip: boundingBox }) での透過出力</div>
+          <div class="reason">ビューポート外の要素はレンダリングされずすべてA=0になる。el.screenshot()を使う必要がある。</div>
+        </div>
+      </div>
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>el.style.background = 'transparent' での透過</div>
+          <div class="reason">CSSクラスに !important が付いていると上書きできない。setProperty('background','transparent','important') が必要。</div>
+        </div>
+      </div>
+
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          <div>Canvaでサムネ作成</div>
+          <div class="reason">登録とPro契約が必要。booth-composer.htmlをゼロから作ることで回避。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 次のアクション -->
+  <div class="section">
+    <div class="section-title">Next</div>
+    <div class="next-list">
+      <div class="next-tag pending">📣 Xポスト（URL確認後）</div>
+      <div class="next-tag">EasyReply Booth出品</div>
+      <div class="next-tag">〆スケ残スライド03〜05 画像作成</div>
+      <div class="next-tag warn">🐛 デモ未表示バグ修正</div>
+      <div class="next-tag">デプロイ（auth-testブランチ）</div>
+      <div class="next-tag pending">⏳ Cloud Functions→サブスク判定をサーバー側へ</div>
+    </div>
+  </div>
+
+  <footer>SchedulEX devlog — generated with Claude Code</footer>
+
+</div>
+</body>
+</html>
