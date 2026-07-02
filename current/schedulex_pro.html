@@ -947,20 +947,26 @@ input, select, textarea { font-family: inherit; }
         <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
       <button class="btn-icon" id="btn-lang" onclick="setLang(document.documentElement.lang==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
-      <button class="btn-icon" id="btn-demo" onclick="toggleDemoMode()" title="デモモード" style="font-size:10px;font-weight:700;">📸 デモ</button>
+
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
   </header>
   <div class="gold-line"></div>
+
+  <!-- MAINTENANCE BANNER -->
+  <div id="maintenance-banner" style="display:none;background:#E3CF57;color:#5A3A00;font-size:12px;font-weight:700;padding:8px 16px;text-align:center;position:relative;">
+    <span id="maintenance-msg"></span>
+    <button onclick="document.getElementById('maintenance-banner').style.display='none'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;color:#5A3A00;line-height:1;">×</button>
+  </div>
 
   <!-- TOAST -->
   <div id="toast"></div>
 
   <!-- SUB NAV -->
   <div id="sub-nav">
-    <button class="snav-btn locked"><span data-i18n="snav_easyreply">EasyReply連携</span> <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked"><span data-i18n="snav_gcal">Googleカレンダー同期</span> <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked"><span data-i18n="snav_finance">収支確認</span> <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_easyreply">EasyReply連携</span> <span class="snav-lock">🛠️</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_gcal">Googleカレンダー同期</span> <span class="snav-lock">🛠️</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_finance">収支確認</span> <span class="snav-lock">🛠️</span></button>
     <span class="snav-divider"></span>
     <span class="snav-note" data-i18n="snav_note">※ サブスク版（開発中）の機能です</span>
   </div>
@@ -998,6 +1004,10 @@ input, select, textarea { font-family: inherit; }
 
     <!-- SIDEBAR -->
     <div id="sidebar">
+      <div id="demo-banner" style="display:none;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:8px 12px;display:none;align-items:center;justify-content:space-between;gap:8px;">
+        <span>📸 <span data-i18n="demo_banner_text">サンプルデータを表示中</span></span>
+        <button onclick="clearDemoAndStart()" style="background:#5A3A00;color:#E1B75B;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;" data-i18n="demo_banner_btn">クリアして始める</button>
+      </div>
       <div class="sidebar-header">
         <span class="sidebar-title" data-i18n="orders_title">案件一覧</span>
         <div class="filter-tabs">
@@ -1221,12 +1231,45 @@ input, select, textarea { font-family: inherit; }
     </div>
   </div>
 
+  <!-- UPGRADE MODAL -->
+  <div class="modal" id="upgrade-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title">✨ SchedulEX PRO</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px 16px;">
+      <p style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;" id="upgrade-desc-text"></p>
+      <ul style="list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text);">
+        <li>✅ <span id="upg-f1"></span></li>
+        <li>✅ <span id="upg-f2"></span></li>
+        <li>🛠️ <span id="upg-f3"></span></li>
+        <li>🛠️ <span id="upg-f4"></span></li>
+        <li>🛠️ <span id="upg-f5"></span></li>
+      </ul>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a id="upg-monthly-btn" href="https://buy.stripe.com/9B68wRaqv79M2KG16H9R601" target="_blank"
+           style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:1.5px solid var(--light);background:var(--surface);text-decoration:none;color:var(--text);">
+          <span style="font-weight:700;font-size:13px;" id="upg-monthly-label"></span>
+          <span style="font-size:16px;font-weight:700;color:var(--main);">¥380<span style="font-size:10px;font-weight:400;color:var(--muted);">/月</span></span>
+        </a>
+        <a id="upg-annual-btn" href="https://buy.stripe.com/fZu28t0PV8dQ0CyaHh9R600" target="_blank"
+           style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:2px solid var(--main);background:var(--main);text-decoration:none;color:#fff;position:relative;">
+          <span style="font-weight:700;font-size:13px;" id="upg-annual-label"></span>
+          <span style="font-size:16px;font-weight:700;">¥2,480<span style="font-size:10px;font-weight:400;opacity:.8;">/年</span></span>
+          <span style="position:absolute;top:-8px;right:12px;background:#E1B75B;color:#5A3A00;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;" id="upg-badge"></span>
+        </a>
+      </div>
+      <p style="font-size:10px;color:var(--muted);text-align:center;margin-top:14px;" id="upg-footer-text"></p>
+    </div>
+  </div>
+
 </div><!-- /modal-overlay -->
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-functions-compat.js"></script>
 
 <script>
 /* ═══════════════════════════════
@@ -1245,6 +1288,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 let currentUser = null;
+let userIsPro   = false;
 
 function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -1255,9 +1299,20 @@ function signOutUser() {
 }
 function saveToFirestore() {
   if (!currentUser) return;
+  const now = Date.now();
+  localStorage.setItem('shimesuke_lastSaved', now);
   db.collection('users').doc(currentUser.uid)
     .collection('schedulex').doc('data')
-    .set({ orders, settings })
+    .set({
+      orders, settings,
+      theme:    currentThemeId,
+      skin:     currentSkinId,
+      mychart1: myChartColors.mycolor1,
+      mychart2: myChartColors.mycolor2,
+      myskin1:  mySkinColors.mycolor1,
+      myskin2:  mySkinColors.mycolor2,
+      updatedAt: now,
+    })
     .catch(e => console.error('Firestore save error:', e));
 }
 function loadFromFirestore() {
@@ -1266,17 +1321,46 @@ function loadFromFirestore() {
     .get()
     .then(doc => {
       if (doc.exists && doc.data().orders) {
-        orders   = doc.data().orders;
-        settings = doc.data().settings || settings;
+        const d = doc.data();
+        const localTs    = parseInt(localStorage.getItem('shimesuke_lastSaved') || '0');
+        const firestoreTs = d.updatedAt || 0;
+        if (localTs > firestoreTs) {
+          // ローカルの方が新しい → Firestoreを上書き
+          saveToFirestore();
+          render();
+          return;
+        }
+        // Firestoreの方が新しい → ローカルを上書き
+        orders   = d.orders;
+        settings = d.settings || settings;
         localStorage.setItem('shimesuke_orders',   JSON.stringify(orders));
         localStorage.setItem('shimesuke_settings', JSON.stringify(settings));
+        if (d.theme)    { currentThemeId = d.theme;  localStorage.setItem('shimesuke_theme', d.theme); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === d.theme) || COLOR_THEMES[0]).colors.slice(); }
+        if (d.skin)     { currentSkinId  = d.skin;   localStorage.setItem('shimesuke_skin',  d.skin);  applyUISkin(d.skin); }
+        if (d.mychart1) { myChartColors.mycolor1 = d.mychart1; localStorage.setItem('shimesuke_mychart1', JSON.stringify(d.mychart1)); }
+        if (d.mychart2) { myChartColors.mycolor2 = d.mychart2; localStorage.setItem('shimesuke_mychart2', JSON.stringify(d.mychart2)); }
+        if (d.myskin1)  { mySkinColors.mycolor1  = d.myskin1;  localStorage.setItem('shimesuke_myskin1',  JSON.stringify(d.myskin1)); Object.assign(UI_SKINS.find(s => s.id === 'mycolor1'), d.myskin1); }
+        if (d.myskin2)  { mySkinColors.mycolor2  = d.myskin2;  localStorage.setItem('shimesuke_myskin2',  JSON.stringify(d.myskin2)); Object.assign(UI_SKINS.find(s => s.id === 'mycolor2'), d.myskin2); }
+        if (!d.skin) saveToFirestore();
         render();
       } else {
-        saveToFirestore(); // 初回ログイン：ローカルデータをアップロード
+        render(); // 初回ログイン：Firestoreにデータなし → 空の状態から始める
       }
     })
     .catch(e => console.error('Firestore load error:', e));
 }
+/* ═══════════════════════════════
+   CHECKOUT RESULT
+═══════════════════════════════ */
+(function() {
+  const p = new URLSearchParams(location.search);
+  if (p.get('checkout') === 'success') {
+    history.replaceState(null, '', location.pathname);
+    // isPro反映まで少し待ってからリロード
+    setTimeout(() => location.reload(), 1500);
+  }
+})();
+
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const btnLogin   = document.getElementById('btn-login');
@@ -1288,13 +1372,68 @@ auth.onAuthStateChanged(user => {
     if (userArea)  userArea.style.display  = 'flex';
     if (userNameEl) userNameEl.textContent = user.displayName || user.email;
     if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
-    loadFromFirestore();
+    db.collection('users').doc(user.uid).get().then(doc => {
+      userIsPro = doc.exists && doc.data().isPro === true;
+      loadFromFirestore();
+      if (!userIsPro) setTimeout(() => openUpgradeModal(), 600);
+    }).catch(() => { loadFromFirestore(); });
   } else {
+    userIsPro = false;
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';
   }
   applyI18n();
 });
+
+/* ═══════════════════════════════
+   MAINTENANCE BANNER
+═══════════════════════════════ */
+db.collection('config').doc('maintenance').get().then(doc => {
+  if (doc.exists) {
+    const msg = doc.data().message;
+    if (msg) {
+      document.getElementById('maintenance-msg').textContent = msg;
+      document.getElementById('maintenance-banner').style.display = '';
+    }
+  }
+}).catch(() => {});
+
+/* ═══════════════════════════════
+   UPGRADE MODAL
+═══════════════════════════════ */
+function openUpgradeModal() {
+  document.getElementById('upgrade-desc-text').textContent = t('upgrade_desc');
+  document.getElementById('upg-f1').textContent = t('upg_f1');
+  document.getElementById('upg-f2').textContent = t('upg_f2');
+  document.getElementById('upg-f3').textContent = t('upg_f3');
+  document.getElementById('upg-f4').textContent = t('upg_f4');
+  document.getElementById('upg-f5').textContent = t('upg_f5');
+  document.getElementById('upg-monthly-label').textContent = t('upg_monthly');
+  document.getElementById('upg-annual-label').textContent = t('upg_annual');
+  document.getElementById('upg-badge').textContent = t('upg_badge');
+  document.getElementById('upg-footer-text').textContent = t('upg_footer');
+  document.getElementById('upg-monthly-btn').onclick = (e) => { e.preventDefault(); startCheckout('monthly'); };
+  document.getElementById('upg-annual-btn').onclick  = (e) => { e.preventDefault(); startCheckout('annual');  };
+  showModal('upgrade-modal');
+}
+
+async function startCheckout(plan) {
+  if (!currentUser) { signInWithGoogle(); return; }
+  const btnId = plan === 'monthly' ? 'upg-monthly-btn' : 'upg-annual-btn';
+  const btn = document.getElementById(btnId);
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+  try {
+    const fn = firebase.app().functions('asia-northeast1').httpsCallable('createCheckoutSession');
+    const result = await fn({ plan });
+    window.location.href = result.data.url;
+  } catch (e) {
+    console.error(e);
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+    showToast(lang() === 'ja' ? 'エラーが発生しました。もう一度お試しください。' : 'Something went wrong. Please try again.');
+  }
+}
 
 /* ═══════════════════════════════
    I18N
@@ -1334,7 +1473,7 @@ const I18N = {
     phase_label_rough:'準備', phase_label_fix:'作業', phase_label_final:'仕上げ',
     settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
     tpl_empty:'テンプレートがありません',
-    btn_tpl_edit:'編集', btn_tpl_del:'削除',
+    btn_tpl_edit:'編集', btn_tpl_del:'削除', btn_delete:'削除',
     tpl_locked:'🔒 テンプレート追加（無料枠：{n}件まで）',
     alert_enter_name:'案件名を入力してください',
     alert_enter_deadline:'納期を入力してください',
@@ -1350,6 +1489,14 @@ const I18N = {
     skin_labels:['ヘッダー色','背景色','カード色','テキスト色'],
     chart_labels:['色①','色②','色③','色④','色⑤'],
     phase_fallback:['準備','作業','仕上げ'],
+    demo_banner_text:'サンプルデータを表示中', demo_banner_btn:'クリアして始める',
+    upgrade_limit:'アクティブ案件は{n}件まで（期間限定）', upgrade_hint:'案件を「完了」にすると枠が空きます\nPROで無制限に追加できます',
+    btn_upgrade:'PRO にアップグレード',
+    upgrade_desc:'手帳1冊分で、どの端末からでもずっと使える。',
+    upg_f1:'スマホ・PC・タブレット、どの端末からでもアクセス', upg_f2:'案件数 無制限＋クラウド自動バックアップ',
+    upg_f3:'EasyReply連携（開発中）', upg_f4:'Googleカレンダー同期（開発中）', upg_f5:'収支管理（開発中）',
+    upg_monthly:'月額プラン', upg_annual:'年額プラン', upg_badge:'約46%お得',
+    upg_footer:'決済はStripeで安全に処理されます',
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1385,7 +1532,7 @@ const I18N = {
     phase_label_rough:'Prep', phase_label_fix:'Work', phase_label_final:'Final',
     settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
     tpl_empty:'No templates yet',
-    btn_tpl_edit:'Edit', btn_tpl_del:'Delete',
+    btn_tpl_edit:'Edit', btn_tpl_del:'Delete', btn_delete:'Delete',
     tpl_locked:'🔒 Add Template (free limit: {n})',
     alert_enter_name:'Please enter a project name',
     alert_enter_deadline:'Please enter a deadline',
@@ -1401,6 +1548,14 @@ const I18N = {
     skin_labels:['Header','Background','Card','Text'],
     chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
     phase_fallback:['Prep','Work','Final'],
+    demo_banner_text:'Showing sample data', demo_banner_btn:'Clear & Start',
+    upgrade_limit:'Up to {n} active projects (limited time)', upgrade_hint:'Mark projects as Done to free up slots\nUnlimited with PRO',
+    btn_upgrade:'Upgrade to PRO',
+    upgrade_desc:'One planner\'s price. Access from any device, anytime.',
+    upg_f1:'Access from any device — phone, PC, tablet', upg_f2:'Unlimited projects + auto cloud backup',
+    upg_f3:'EasyReply sync (in development)', upg_f4:'Google Calendar sync (in development)', upg_f5:'Finance tracking (in development)',
+    upg_monthly:'Monthly plan', upg_annual:'Annual plan', upg_badge:'Save ~46%',
+    upg_footer:'Payments processed securely by Stripe',
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1437,6 +1592,7 @@ function applyI18n() {
 /* ═══════════════════════════════
    STATE
 ═══════════════════════════════ */
+const _isFirstVisit = localStorage.getItem('shimesuke_orders') === null;
 let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
 let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
   phases: [
@@ -1447,8 +1603,8 @@ let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') 
 };
 
 const MAX_FREE_TEMPLATES = 3;
-const MAX_FREE_ORDERS = 3;
-function isPremium() { return true; }
+const MAX_FREE_ORDERS = 7;
+function isPremium() { return userIsPro; }
 const DEFAULT_TEMPLATES = [
   { id: 'tpl_illust', name: 'イラスト',     phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
   { id: 'tpl_mini',   name: 'ミニキャラ',   phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
@@ -1706,7 +1862,7 @@ function renderOrders() {
         <span class="tab-nichi${isDark?' dark':''}">${t('days_unit')}</span>
       </div>
       <div class="card-row1">
-        <div class="card-name">${esc(order.name)}</div>
+        <div class="card-name" style="font-size:${lang()==='en'&&order.name_en?'11px':'12px'}">${esc(lang()==='en'&&order.name_en?order.name_en:order.name)}</div>
         <div class="card-phase-badge" style="background:${isCompleted?'var(--border)':''+uc+'22'};color:${isCompleted?'var(--muted)':utxt};">${phasesBadge}</div>
       </div>
       <div class="card-type-row">
@@ -1744,9 +1900,9 @@ function renderOrders() {
     wrap.innerHTML = `
       <div style="border:1.5px dashed #E1B75B;border-radius:10px;padding:12px 10px;margin:8px 4px 4px;text-align:center;">
         <div style="font-size:18px;margin-bottom:4px;">🔒</div>
-        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">アクティブ案件は${MAX_FREE_ORDERS}件まで</div>
-        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">案件を「完了」にすると枠が空きます<br>PROで無制限に追加できます</div>
-        <button style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">👑 アップグレード</button>
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">${t('upgrade_limit').replace('{n}', MAX_FREE_ORDERS)}</div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">${t('upgrade_hint').replace(/\n/g,'<br>')}</div>
+        <button onclick="openUpgradeModal()" style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">${t('btn_upgrade')}</button>
       </div>`;
     list.appendChild(wrap);
   }
@@ -2040,7 +2196,7 @@ function openEditOrder(id) {
   renderPhaseFields('f-phases-row', phases);
 
   document.getElementById('order-modal-actions').innerHTML = `
-    <button class="btn-delete" onclick="deleteOrder('${id}')">削除</button>
+    <button class="btn-delete" onclick="deleteOrder('${id}')">${t('btn_delete')}</button>
     <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
     <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
 
@@ -2225,6 +2381,7 @@ function selectTheme(id) {
   localStorage.setItem('shimesuke_theme', id);
   updateChartColorDots();
   render();
+  saveToFirestore();
 }
 
 /* ═══════════════════════════════
@@ -2243,6 +2400,7 @@ function applyUISkin(id) {
   currentSkinId = id;
   localStorage.setItem('shimesuke_skin', id);
   updateHeaderThemeDots();
+  saveToFirestore();
 }
 
 function updateHeaderThemeDots() {
@@ -2487,6 +2645,10 @@ function exportData() {
     settings,
     theme:         currentThemeId,
     skin:          currentSkinId,
+    myskin1:       mySkinColors.mycolor1,
+    myskin2:       mySkinColors.mycolor2,
+    mychart1:      myChartColors.mycolor1,
+    mychart2:      myChartColors.mycolor2,
     stickers:      placedStickers,
     customStamps,
     exportedAt:    new Date().toISOString()
@@ -2521,7 +2683,11 @@ function importData(input) {
       if (!confirm(t('confirm_restore').replace('{n}', data.orders.length))) return;
       orders   = data.orders;
       settings = data.settings;
-      if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.theme)    { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.myskin1)  { mySkinColors.mycolor1 = data.myskin1;  localStorage.setItem('shimesuke_myskin1',  JSON.stringify(data.myskin1));  Object.assign(UI_SKINS.find(s => s.id === 'mycolor1'), data.myskin1); }
+      if (data.myskin2)  { mySkinColors.mycolor2 = data.myskin2;  localStorage.setItem('shimesuke_myskin2',  JSON.stringify(data.myskin2));  Object.assign(UI_SKINS.find(s => s.id === 'mycolor2'), data.myskin2); }
+      if (data.mychart1) { myChartColors.mycolor1 = data.mychart1; localStorage.setItem('shimesuke_mychart1', JSON.stringify(data.mychart1)); }
+      if (data.mychart2) { myChartColors.mycolor2 = data.mychart2; localStorage.setItem('shimesuke_mychart2', JSON.stringify(data.mychart2)); }
       if (data.skin)         { currentSkinId  = data.skin;   localStorage.setItem('shimesuke_skin',  currentSkinId);  applyUISkin(currentSkinId); }
       if (data.stickers)     { placedStickers = data.stickers;   saveStickerData(); }
       if (data.customStamps) { customStamps   = data.customStamps; saveCustomStamps(); }
@@ -2592,31 +2758,35 @@ function generateDemoOrders() {
   const dl = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return dateKey(d); };
   const ph = (r,f,fin) => [{id:'rough',name:'ラフ',days:r},{id:'fix',name:'修正',days:f},{id:'final',name:'清書',days:fin}];
   return [
-    { id:'demo1', name:'いぬさん / キャラデザ',     type:'illustration', deadline:dl(2),  currentPhase:2, notes:'', phaseDays:ph(7,3,2) },
-    { id:'demo2', name:'ねこさん / 背景イラスト',    type:'illustration', deadline:dl(7),  currentPhase:1, notes:'', phaseDays:ph(10,5,3) },
-    { id:'demo3', name:'うさぎさん / ミニキャラ3体', type:'illustration', deadline:dl(13), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
-    { id:'demo4', name:'とりさん / Live2D素材',      type:'design',       deadline:dl(20), currentPhase:0, notes:'', phaseDays:ph(7,5,3) },
-    { id:'demo5', name:'くまさん / 動画サムネ',      type:'video',        deadline:dl(25), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
-    { id:'demo6', name:'自分 / 同人誌表紙',          type:'illustration', deadline:dl(31), currentPhase:0, notes:'', phaseDays:ph(14,7,5) },
+    { id:'demo1', name:'いぬさん / キャラデザ',     name_en:'Pochi / Character Design',  type:'illustration', deadline:dl(2),  currentPhase:2, notes:'', phaseDays:ph(7,3,2) },
+    { id:'demo2', name:'ねこさん / 背景イラスト',    name_en:'Tama / Background Art',      type:'illustration', deadline:dl(7),  currentPhase:1, notes:'', phaseDays:ph(10,5,3) },
+    { id:'demo3', name:'うさぎさん / ミニキャラ3体', name_en:'Mochi / Mini Chars ×3',      type:'illustration', deadline:dl(13), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo4', name:'とりさん / Live2D素材',      name_en:'Tori / Live2D Assets',       type:'design',       deadline:dl(20), currentPhase:0, notes:'', phaseDays:ph(7,5,3) },
+    { id:'demo5', name:'くまさん / 動画サムネ',      name_en:'Kuma / Video Thumbnail',     type:'video',        deadline:dl(25), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo6', name:'自分 / 同人誌表紙',          name_en:'Me / Doujin Cover',          type:'illustration', deadline:dl(31), currentPhase:0, notes:'', phaseDays:ph(14,7,5) },
   ];
 }
 
-function toggleDemoMode() {
-  demoMode = !demoMode;
-  const authArea = document.querySelector('.auth-area');
-  const btn = document.getElementById('btn-demo');
-  if (demoMode) {
-    _realOrders = orders;
-    orders = generateDemoOrders();
-    if (authArea) authArea.style.visibility = 'hidden';
-    if (btn) { btn.textContent = '🔴 デモ中'; btn.style.background = 'rgba(255,80,80,0.25)'; }
-  } else {
-    orders = _realOrders;
-    _realOrders = null;
-    if (authArea) authArea.style.visibility = '';
-    if (btn) { btn.textContent = '📸 デモ'; btn.style.background = ''; }
-  }
+function clearDemoAndStart() {
+  orders = [];
+  save();
+  localStorage.removeItem('shimesuke_demo_active');
+  const banner = document.getElementById('demo-banner');
+  if (banner) banner.style.display = 'none';
   render();
+}
+
+function initDemoIfFirstVisit() {
+  if (!_isFirstVisit) return;
+  orders = generateDemoOrders();
+  save();
+  localStorage.setItem('shimesuke_demo_active', '1');
+}
+
+function updateDemoBanner() {
+  const banner = document.getElementById('demo-banner');
+  if (!banner) return;
+  banner.style.display = localStorage.getItem('shimesuke_demo_active') ? 'flex' : 'none';
 }
 
 /* ═══════════════════════════════
@@ -2631,10 +2801,10 @@ if ('serviceWorker' in navigator) {
 ═══════════════════════════════ */
 const DEFAULT_STAMPS = [
   { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', label_en: 'DUE!', bg: '#FF6B6B', color: '#fff' },
-  { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', bg: '#FFD93D', color: '#333' },
-  { id: 'def_kanryo',    emoji: '✨', label: '完了！',     bg: '#6BCB77', color: '#fff' },
-  { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     bg: '#4D96FF', color: '#fff' },
-  { id: 'def_fix',       emoji: '🔄', label: '修正中',     bg: '#C77DFF', color: '#fff' },
+  { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', label_en: 'Go!',      bg: '#FFD93D', color: '#333' },
+  { id: 'def_kanryo',    emoji: '✨', label: '完了！',     label_en: 'Done!',    bg: '#6BCB77', color: '#fff' },
+  { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     label_en: 'Draft',    bg: '#4D96FF', color: '#fff' },
+  { id: 'def_fix',       emoji: '🔄', label: '修正中',     label_en: 'Revising', bg: '#C77DFF', color: '#fff' },
 ];
 
 let placedStickers = [];
@@ -2877,8 +3047,10 @@ if (window.innerWidth < 768) {
 
 applyUISkin(currentSkinId);
 updateHeaderThemeDots();
+initDemoIfFirstVisit();
 render();
 applyI18n();
+updateDemoBanner();
 updateChartColorDots();
 loadStickerData();
 loadCustomStamps();
