@@ -88,6 +88,22 @@
         <div class="avatar claude">C</div>
         <div class="msg">了解、ロールは見送り。ローカルサーバーを立ててF5リロードのテストも実施 → データ消失なし確認。</div>
       </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">実際のリンク、いれていく？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">index.htmlのサブスクプラン欄が「近日公開」のまま＆価格も古かったので修正。ハブサイトからの導線も確認。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">これをメインで動かしてローンチする予定だった。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">GitHub Pagesが実はauth-testブランチ配信のままだったと判明。main←auth-testマージの準備（差分・コンフリクト箇所）を確認。マージ実行は次回に持ち越し。</div>
+      </div>
     </div>
   </div>
 
@@ -120,6 +136,22 @@
         </div>
       </div>
 
+      <div class="done-item">
+        <div class="done-icon">🔗</div>
+        <div class="done-text">
+          <strong>LPのサブスクプラン修正・push完了</strong>
+          <div class="sub">「近日公開」→ https://mimilyapp.web.app/pro への実リンクに変更。価格も月額¥380・年額¥2,480の確定価格に修正（commit f83e491）。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🧭</div>
+        <div class="done-text">
+          <strong>ハブサイトからの導線確認</strong>
+          <div class="sub">mimilyappdev.github.io → mimilyappdev.github.io/shimesuke/ → mimilyapp.web.app/pro の順で到達可能と確認。ハブ側の修正は不要。</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -141,6 +173,14 @@
         <div class="done-text">
           <strong>マイカラーのローカル→Firestore引き継ぎは対応不要と判断</strong>
           <div class="sub">既存Firestoreデータが優先されローカル事前作成カラーは読み込まれないが、デフォルト運用で許容。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🚀</div>
+        <div class="done-text">
+          <strong>本番運用はmainブランチに統一する方針</strong>
+          <div class="sub">GitHub Pagesが実はauth-testブランチ配信のままだったと判明。「mainで動かしてローンチする予定だった」ため、auth-test→mainマージ→Pagesソース切替の方針に決定（実行は次回）。</div>
         </div>
       </div>
 
@@ -172,13 +212,19 @@
   <div class="section">
     <div class="section-title">残タスク</div>
     <div class="next-list">
+      <span class="next-tag warn">auth-test→mainマージ実行</span>
+      <span class="next-tag warn">GitHub Pagesソースをmainに切替</span>
+      <span class="next-tag">MimilyAppDevハブサイトのURL確認</span>
       <span class="next-tag pending">テスト決済確認（実機）</span>
-      <span class="next-tag">git commit & push</span>
       <span class="next-tag">フォントbase64埋め込み</span>
-      <span class="next-tag warn">GitHubリポジトリPrivate化</span>
+      <span class="next-tag">GitHubリポジトリPrivate化</span>
     </div>
 
     <div style="margin-top:20px">
+      <div class="highlight-box">
+        <div class="label">mainマージ — 注意点</div>
+        index.htmlのサブスクプラン欄で2箇所コンフリクト（auth-test側の最新内容を優先して解決する方針）。main独自の3コミットはauth-test側に重複して存在済みのため実質問題なし。
+      </div>
       <div class="highlight-box">
         <div class="label">テスト決済 — 実施タイミング</div>
         ユーザーが実機で手が空いたときに対応予定。Stripeテストモードで一通り確認。
