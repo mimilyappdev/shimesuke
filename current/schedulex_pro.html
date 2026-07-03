@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -719,9 +719,13 @@ input, select, textarea { font-family: inherit; }
   #sidebar.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; overflow-y: auto; }
   #calendar-panel { display: none; }
   #calendar-panel.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; }
-  #bottom-nav { display: block; }
+  #bottom-nav { display: block; position: relative; z-index: 10; }
   .cal-cell { min-height: 54px; }
   .logo { font-size: 16px; }
+  .header-theme-label { display: none; }
+  .user-display-name { display: none; }
+  .btn-login { padding: 5px 8px; font-size: 11px; }
+  .logo { flex-direction: column; align-items: flex-start; gap: 1px; }
 }
 
 /* ── STICKER LAYER ── */
@@ -852,6 +856,19 @@ input, select, textarea { font-family: inherit; }
   #calendar-panel { display: flex; }
 }
 
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #2A2A2A; color: #fff;
+  padding: 11px 18px; border-radius: 10px;
+  font-size: 12px; line-height: 1.6; text-align: center;
+  max-width: 320px; width: calc(100% - 48px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; pointer-events: auto; }
+
 /* ── SUB NAV ── */
 #sub-nav {
   position: relative;
@@ -909,39 +926,49 @@ input, select, textarea { font-family: inherit; }
   <header id="header">
     <div class="logo">
       SchedulEX
-      <span class="logo-sub">〆スケ</span>
-      <span class="logo-tagline">締め切りが、見える。〆スケで、守ろう。</span>
+      <span class="logo-sub" data-i18n="logo_sub">〆スケ</span>
+      <span class="logo-tagline" data-i18n="tagline">締め切りが、見える。〆スケで、守ろう。</span>
       <a class="btn-top" href="../index.html">🏠 TOP</a>
     </div>
     <div class="header-actions">
       <div class="auth-area">
         <button class="btn-login" id="btn-login" onclick="signInWithGoogle()">
           <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          ログイン
+          <span data-i18n="btn_login">ログイン</span>
         </button>
         <div class="user-area" id="user-area" style="display:none;">
           <img class="user-avatar" id="user-avatar" src="" alt="">
           <span class="user-display-name" id="user-display-name"></span>
-          <button class="btn-signout" onclick="signOutUser()">ログアウト</button>
+          <button class="btn-signout" data-i18n="btn_logout" onclick="signOutUser()">ログアウト</button>
         </div>
       </div>
       <button class="header-theme-btn" id="header-theme-btn" onclick="toggleSkinPopup(event)" title="テーマカラー">
         <div class="header-theme-dots" id="header-theme-dots"></div>
-        <span class="header-theme-label">テーマ｜カラー変更</span>
+        <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
-      <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
+      <button class="btn-icon" id="btn-lang" onclick="setLang(document.documentElement.lang==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
+
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
   </header>
   <div class="gold-line"></div>
 
+  <!-- MAINTENANCE BANNER -->
+  <div id="maintenance-banner" style="display:none;background:#E3CF57;color:#5A3A00;font-size:12px;font-weight:700;padding:8px 16px;text-align:center;position:relative;">
+    <span id="maintenance-msg"></span>
+    <button onclick="document.getElementById('maintenance-banner').style.display='none'" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;color:#5A3A00;line-height:1;">×</button>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
   <!-- SUB NAV -->
   <div id="sub-nav">
-    <button class="snav-btn locked">EasyReply連携 <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked">Googleカレンダー同期 <span class="snav-lock">🔒</span></button>
-    <button class="snav-btn locked">収支確認 <span class="snav-lock">🔒</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_easyreply">EasyReply連携</span> <span class="snav-lock">🛠️</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_gcal">Googleカレンダー同期</span> <span class="snav-lock">🛠️</span></button>
+    <button class="snav-btn locked"><span data-i18n="snav_finance">収支確認</span> <span class="snav-lock">🛠️</span></button>
     <span class="snav-divider"></span>
-    <span class="snav-note">※ サブスク版（開発中）の機能です</span>
+    <span class="snav-note" data-i18n="snav_note">※ サブスク版（開発中）の機能です</span>
   </div>
 
   <!-- テーマカラー（UIスキン）ポップアップ -->
@@ -966,10 +993,10 @@ input, select, textarea { font-family: inherit; }
 
   <!-- STAMP PANEL -->
   <div id="stamp-panel">
-    <p class="stamp-panel-title">🎨 スタンプを選んで画面に貼ろう</p>
+    <p class="stamp-panel-title" data-i18n="stamp_title">🎨 スタンプを選んで画面に貼ろう</p>
     <div class="stamp-options" id="stamp-options"></div>
-    <p class="stamp-panel-hint">貼った後はドラッグで移動・タップで削除</p>
-    <p class="stamp-panel-close" onclick="closeStampPanel()">閉じる</p>
+    <p class="stamp-panel-hint" data-i18n="stamp_hint">貼った後はドラッグで移動・タップで削除</p>
+    <p class="stamp-panel-close" data-i18n="btn_close" onclick="closeStampPanel()">閉じる</p>
   </div>
 
   <!-- MAIN -->
@@ -977,13 +1004,17 @@ input, select, textarea { font-family: inherit; }
 
     <!-- SIDEBAR -->
     <div id="sidebar">
+      <div id="demo-banner" style="display:none;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:8px 12px;display:none;align-items:center;justify-content:space-between;gap:8px;">
+        <span>📸 <span data-i18n="demo_banner_text">サンプルデータを表示中</span></span>
+        <button onclick="clearDemoAndStart()" style="background:#5A3A00;color:#E1B75B;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;" data-i18n="demo_banner_btn">クリアして始める</button>
+      </div>
       <div class="sidebar-header">
-        <span class="sidebar-title">案件一覧</span>
+        <span class="sidebar-title" data-i18n="orders_title">案件一覧</span>
         <div class="filter-tabs">
-          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span>件</button>
-          <button class="ftab" id="ftab-done" onclick="setOrderFilter('done')">完了</button>
+          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span><span id="ftab-unit">件</span></button>
+          <button class="ftab" id="ftab-done" data-i18n="filter_done" onclick="setOrderFilter('done')">完了</button>
         </div>
-        <button class="btn-add" id="btn-add-order" onclick="openAddOrder()">＋ 追加</button>
+        <button class="btn-add" id="btn-add-order" data-i18n="btn_add" onclick="openAddOrder()">＋ 追加</button>
       </div>
       <div id="order-list"></div>
       <!-- AD SLOT START
@@ -1002,11 +1033,10 @@ input, select, textarea { font-family: inherit; }
           <span class="cal-month-label" id="cal-month-label">2026年5月</span>
           <button class="chart-color-btn" id="chart-color-btn" onclick="toggleChartColorPopup(event)" title="チャートカラー">
             <div id="chart-color-dots" style="display:flex;gap:2px;"></div>
-            <span class="chart-color-label">カラー変更</span>
+            <span class="chart-color-label" data-i18n="color_change">カラー変更</span>
           </button>
         </div>
-        <button class="cal-today-btn" onclick="toggleStampPanel()">🎨 スタンプ</button>
-        <button class="cal-today-btn" onclick="goToday()">今日</button>
+        <button class="cal-today-btn" data-i18n="btn_stamp" onclick="toggleStampPanel()">🎨 スタンプ</button>
       </div>
       <div class="cal-legend" id="cal-legend"></div>
       <div class="cal-grid-wrap">
@@ -1021,15 +1051,15 @@ input, select, textarea { font-family: inherit; }
     <div class="bnav-inner">
       <button class="bnav-item active" id="bnav-calendar" onclick="switchTab('calendar')">
         <span class="bnav-icon">🗓</span>
-        <span class="bnav-label">カレンダー</span>
+        <span class="bnav-label" data-i18n="nav_calendar">カレンダー</span>
       </button>
       <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders')">
         <span class="bnav-icon">📋</span>
-        <span class="bnav-label">案件</span>
+        <span class="bnav-label" data-i18n="nav_orders">案件</span>
       </button>
       <button class="bnav-item" id="bnav-settings" onclick="openSettings()">
         <span class="bnav-icon">⚙️</span>
-        <span class="bnav-label">設定</span>
+        <span class="bnav-label" data-i18n="nav_settings">設定</span>
       </button>
     </div>
   </div>
@@ -1048,12 +1078,12 @@ input, select, textarea { font-family: inherit; }
     <div class="modal-body">
 
       <div class="field">
-        <label>案件名 / クライアント名</label>
-        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ">
+        <label data-i18n="label_order_name">案件名 / クライアント名</label>
+        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ" data-i18n-placeholder="placeholder_order_name">
       </div>
 
       <div class="field">
-        <label>依頼の種類</label>
+        <label data-i18n="label_type">依頼の種類</label>
         <div class="type-grid" id="type-grid">
           <button class="type-btn selected" data-type="illustration" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1062,7 +1092,7 @@ input, select, textarea { font-family: inherit; }
               <path d="M13 36 Q21 27 29 36"/>
               <path d="M31 28 L41 18"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="currentColor"/>
             </svg>
-            イラスト
+            <span data-i18n="type_illustration">イラスト</span>
           </button>
           <button class="type-btn" data-type="design" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1072,7 +1102,7 @@ input, select, textarea { font-family: inherit; }
               <path d="M27 30 L39 18 L43 22 L31 34 Z" fill="currentColor" stroke="currentColor"/>
               <circle cx="27" cy="38" r="3" fill="currentColor"/>
             </svg>
-            デザイン
+            <span data-i18n="type_design">デザイン</span>
           </button>
           <button class="type-btn" data-type="video" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -1081,45 +1111,45 @@ input, select, textarea { font-family: inherit; }
               <line x1="14" y1="42" x2="30" y2="42"/>
               <path d="M17 16 L17 28 L30 22 Z" fill="currentColor" stroke="currentColor"/>
             </svg>
-            動画
+            <span data-i18n="type_video">動画</span>
           </button>
           <button class="type-btn" data-type="other" onclick="selectType(this)">
             <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/>
               <line x1="5" y1="26" x2="43" y2="26"/>
             </svg>
-            その他
+            <span data-i18n="type_other">その他</span>
           </button>
         </div>
       </div>
 
       <div class="field">
-        <label>納期（締め切り）</label>
+        <label data-i18n="label_deadline">納期（締め切り）</label>
         <input type="date" id="f-deadline">
       </div>
 
       <div class="field">
-        <label>現在のフェーズ</label>
+        <label data-i18n="label_phase">現在のフェーズ</label>
         <select id="f-phase">
-          <option value="0">ラフ中</option>
-          <option value="1">修正中</option>
-          <option value="2">清書中</option>
-          <option value="3">完了</option>
+          <option value="0" data-i18n="phase_rough">ラフ中</option>
+          <option value="1" data-i18n="phase_fix">修正中</option>
+          <option value="2" data-i18n="phase_final">清書中</option>
+          <option value="3" data-i18n="phase_done">完了</option>
         </select>
       </div>
 
       <div class="field">
-        <label>スケジュール設定（日数）</label>
+        <label data-i18n="label_schedule">スケジュール設定（日数）</label>
         <select id="f-template" onchange="applyTemplate()" style="margin-bottom:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);outline:none;">
-          <option value="">テンプレートなし（手動入力）</option>
+          <option value="" data-i18n="no_template">テンプレートなし（手動入力）</option>
         </select>
         <div class="phases-row" id="f-phases-row"></div>
-        <p class="phase-hint">※ テンプレートを選ぶと日数が自動で入ります</p>
+        <p class="phase-hint" data-i18n="template_hint">※ テンプレートを選ぶと日数が自動で入ります</p>
       </div>
 
       <div class="field">
-        <label>メモ</label>
-        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など"></textarea>
+        <label data-i18n="label_notes">メモ</label>
+        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など" data-i18n-placeholder="placeholder_notes"></textarea>
       </div>
 
     </div>
@@ -1132,50 +1162,50 @@ input, select, textarea { font-family: inherit; }
   <!-- SETTINGS MODAL -->
   <div class="modal" id="settings-modal" style="display:none;">
     <div class="modal-header">
-      <span class="modal-title">設定</span>
+      <span class="modal-title" data-i18n="modal_settings">設定</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
       <div class="settings-section">
-        <p class="settings-label">カレンダー表示</p>
+        <p class="settings-label" data-i18n="settings_calendar">カレンダー表示</p>
         <div class="setting-row">
-          <span class="setting-row-label">〆切！スタンプを表示する</span>
+          <span class="setting-row-label" data-i18n="settings_stamp_toggle">〆切！スタンプを表示する</span>
           <button class="toggle-switch" id="stamp-toggle" onclick="toggleShimekiriStamp()"></button>
         </div>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">デフォルトのフェーズ日数</p>
+        <p class="settings-label" data-i18n="settings_default_phases">デフォルトのフェーズ日数</p>
         <div class="phases-row" id="s-phases-row"></div>
-        <p class="phase-hint">案件追加時の手動入力デフォルト値になります</p>
+        <p class="phase-hint" data-i18n="settings_phase_hint">案件追加時の手動入力デフォルト値になります</p>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">フェーズテンプレート</p>
+        <p class="settings-label" data-i18n="settings_templates">フェーズテンプレート</p>
         <div id="template-list"></div>
-        <button class="btn-add-tpl" id="btn-add-tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
+        <button class="btn-add-tpl" id="btn-add-tpl" data-i18n="btn_add_tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">バックアップ / 復元</p>
-        <button class="btn-primary" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
-        <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
+        <p class="settings-label" data-i18n="settings_backup">バックアップ / 復元</p>
+        <button class="btn-primary" data-i18n="btn_export" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
+        <button class="btn-primary" data-i18n="btn_import" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
-        <p class="settings-label">カレンダー連携 (.ics)</p>
-        <button class="btn-primary" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
+        <p class="settings-label" data-i18n="settings_ics">カレンダー連携 (.ics)</p>
+        <button class="btn-primary" data-i18n="btn_export_ics" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
       </div>
     </div>
-    <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;">
+    <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;" data-i18n-html="settings_footer">
       <strong>フォント・動作環境について</strong><br>
       日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br>
       <strong>データについて</strong><br>
       入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-      <button class="btn-primary" onclick="saveSettings()">保存</button>
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveSettings()">保存</button>
     </div>
   </div>
 
@@ -1187,17 +1217,49 @@ input, select, textarea { font-family: inherit; }
     </div>
     <div class="modal-body">
       <div class="field">
-        <label>テンプレート名</label>
+        <label data-i18n="label_template_name">テンプレート名</label>
         <input type="text" id="tpl-name" placeholder="例：立ち絵、ミニキャラ、キービジュアル">
       </div>
       <div class="field">
-        <label>フェーズ日数</label>
+        <label data-i18n="label_phase_days">フェーズ日数</label>
         <div class="phases-row" id="tpl-phases-row"></div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="backToSettings()">キャンセル</button>
-      <button class="btn-primary" onclick="saveTemplate()">保存</button>
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="backToSettings()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveTemplate()">保存</button>
+    </div>
+  </div>
+
+  <!-- UPGRADE MODAL -->
+  <div class="modal" id="upgrade-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title">✨ SchedulEX PRO</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px 16px;">
+      <p style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;" id="upgrade-desc-text"></p>
+      <ul style="list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--text);">
+        <li>✅ <span id="upg-f1"></span></li>
+        <li>✅ <span id="upg-f2"></span></li>
+        <li>🛠️ <span id="upg-f3"></span></li>
+        <li>🛠️ <span id="upg-f4"></span></li>
+        <li>🛠️ <span id="upg-f5"></span></li>
+      </ul>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a id="upg-monthly-btn" href="https://buy.stripe.com/9B68wRaqv79M2KG16H9R601" target="_blank"
+           style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:1.5px solid var(--light);background:var(--surface);text-decoration:none;color:var(--text);">
+          <span style="font-weight:700;font-size:13px;" id="upg-monthly-label"></span>
+          <span style="font-size:16px;font-weight:700;color:var(--main);">¥380<span style="font-size:10px;font-weight:400;color:var(--muted);">/月</span></span>
+        </a>
+        <a id="upg-annual-btn" href="https://buy.stripe.com/fZu28t0PV8dQ0CyaHh9R600" target="_blank"
+           style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:2px solid var(--main);background:var(--main);text-decoration:none;color:#fff;position:relative;">
+          <span style="font-weight:700;font-size:13px;" id="upg-annual-label"></span>
+          <span style="font-size:16px;font-weight:700;">¥2,480<span style="font-size:10px;font-weight:400;opacity:.8;">/年</span></span>
+          <span style="position:absolute;top:-8px;right:12px;background:#E1B75B;color:#5A3A00;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;" id="upg-badge"></span>
+        </a>
+      </div>
+      <p style="font-size:10px;color:var(--muted);text-align:center;margin-top:14px;" id="upg-footer-text"></p>
     </div>
   </div>
 
@@ -1207,6 +1269,7 @@ input, select, textarea { font-family: inherit; }
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-functions-compat.js"></script>
 
 <script>
 /* ═══════════════════════════════
@@ -1225,6 +1288,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db   = firebase.firestore();
 let currentUser = null;
+let userIsPro   = false;
 
 function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -1235,9 +1299,20 @@ function signOutUser() {
 }
 function saveToFirestore() {
   if (!currentUser) return;
+  const now = Date.now();
+  localStorage.setItem('shimesuke_lastSaved', now);
   db.collection('users').doc(currentUser.uid)
     .collection('schedulex').doc('data')
-    .set({ orders, settings })
+    .set({
+      orders, settings,
+      theme:    currentThemeId,
+      skin:     currentSkinId,
+      mychart1: myChartColors.mycolor1,
+      mychart2: myChartColors.mycolor2,
+      myskin1:  mySkinColors.mycolor1,
+      myskin2:  mySkinColors.mycolor2,
+      updatedAt: now,
+    })
     .catch(e => console.error('Firestore save error:', e));
 }
 function loadFromFirestore() {
@@ -1246,17 +1321,46 @@ function loadFromFirestore() {
     .get()
     .then(doc => {
       if (doc.exists && doc.data().orders) {
-        orders   = doc.data().orders;
-        settings = doc.data().settings || settings;
+        const d = doc.data();
+        const localTs    = parseInt(localStorage.getItem('shimesuke_lastSaved') || '0');
+        const firestoreTs = d.updatedAt || 0;
+        if (localTs > firestoreTs) {
+          // ローカルの方が新しい → Firestoreを上書き
+          saveToFirestore();
+          render();
+          return;
+        }
+        // Firestoreの方が新しい → ローカルを上書き
+        orders   = d.orders;
+        settings = d.settings || settings;
         localStorage.setItem('shimesuke_orders',   JSON.stringify(orders));
         localStorage.setItem('shimesuke_settings', JSON.stringify(settings));
+        if (d.theme)    { currentThemeId = d.theme;  localStorage.setItem('shimesuke_theme', d.theme); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === d.theme) || COLOR_THEMES[0]).colors.slice(); }
+        if (d.skin)     { currentSkinId  = d.skin;   localStorage.setItem('shimesuke_skin',  d.skin);  applyUISkin(d.skin); }
+        if (d.mychart1) { myChartColors.mycolor1 = d.mychart1; localStorage.setItem('shimesuke_mychart1', JSON.stringify(d.mychart1)); }
+        if (d.mychart2) { myChartColors.mycolor2 = d.mychart2; localStorage.setItem('shimesuke_mychart2', JSON.stringify(d.mychart2)); }
+        if (d.myskin1)  { mySkinColors.mycolor1  = d.myskin1;  localStorage.setItem('shimesuke_myskin1',  JSON.stringify(d.myskin1)); Object.assign(UI_SKINS.find(s => s.id === 'mycolor1'), d.myskin1); }
+        if (d.myskin2)  { mySkinColors.mycolor2  = d.myskin2;  localStorage.setItem('shimesuke_myskin2',  JSON.stringify(d.myskin2)); Object.assign(UI_SKINS.find(s => s.id === 'mycolor2'), d.myskin2); }
+        if (!d.skin) saveToFirestore();
         render();
       } else {
-        saveToFirestore(); // 初回ログイン：ローカルデータをアップロード
+        render(); // 初回ログイン：Firestoreにデータなし → 空の状態から始める
       }
     })
     .catch(e => console.error('Firestore load error:', e));
 }
+/* ═══════════════════════════════
+   CHECKOUT RESULT
+═══════════════════════════════ */
+(function() {
+  const p = new URLSearchParams(location.search);
+  if (p.get('checkout') === 'success') {
+    history.replaceState(null, '', location.pathname);
+    // isPro反映まで少し待ってからリロード
+    setTimeout(() => location.reload(), 1500);
+  }
+})();
+
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const btnLogin   = document.getElementById('btn-login');
@@ -1268,28 +1372,239 @@ auth.onAuthStateChanged(user => {
     if (userArea)  userArea.style.display  = 'flex';
     if (userNameEl) userNameEl.textContent = user.displayName || user.email;
     if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
-    loadFromFirestore();
+    db.collection('users').doc(user.uid).get().then(doc => {
+      userIsPro = doc.exists && doc.data().isPro === true;
+      loadFromFirestore();
+      if (!userIsPro) setTimeout(() => openUpgradeModal(), 600);
+    }).catch(() => { loadFromFirestore(); });
   } else {
+    userIsPro = false;
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';
   }
+  applyI18n();
 });
+
+/* ═══════════════════════════════
+   MAINTENANCE BANNER
+═══════════════════════════════ */
+db.collection('config').doc('maintenance').get().then(doc => {
+  if (doc.exists) {
+    const msg = doc.data().message;
+    if (msg) {
+      document.getElementById('maintenance-msg').textContent = msg;
+      document.getElementById('maintenance-banner').style.display = '';
+    }
+  }
+}).catch(() => {});
+
+/* ═══════════════════════════════
+   UPGRADE MODAL
+═══════════════════════════════ */
+function openUpgradeModal() {
+  document.getElementById('upgrade-desc-text').textContent = t('upgrade_desc');
+  document.getElementById('upg-f1').textContent = t('upg_f1');
+  document.getElementById('upg-f2').textContent = t('upg_f2');
+  document.getElementById('upg-f3').textContent = t('upg_f3');
+  document.getElementById('upg-f4').textContent = t('upg_f4');
+  document.getElementById('upg-f5').textContent = t('upg_f5');
+  document.getElementById('upg-monthly-label').textContent = t('upg_monthly');
+  document.getElementById('upg-annual-label').textContent = t('upg_annual');
+  document.getElementById('upg-badge').textContent = t('upg_badge');
+  document.getElementById('upg-footer-text').textContent = t('upg_footer');
+  document.getElementById('upg-monthly-btn').onclick = (e) => { e.preventDefault(); startCheckout('monthly'); };
+  document.getElementById('upg-annual-btn').onclick  = (e) => { e.preventDefault(); startCheckout('annual');  };
+  showModal('upgrade-modal');
+}
+
+async function startCheckout(plan) {
+  if (!currentUser) { signInWithGoogle(); return; }
+  const btnId = plan === 'monthly' ? 'upg-monthly-btn' : 'upg-annual-btn';
+  const btn = document.getElementById(btnId);
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+  try {
+    const fn = firebase.app().functions('asia-northeast1').httpsCallable('createCheckoutSession');
+    const result = await fn({ plan });
+    window.location.href = result.data.url;
+  } catch (e) {
+    console.error(e);
+    btn.style.opacity = '';
+    btn.style.pointerEvents = '';
+    showToast(lang() === 'ja' ? 'エラーが発生しました。もう一度お試しください。' : 'Something went wrong. Please try again.');
+  }
+}
+
+/* ═══════════════════════════════
+   I18N
+═══════════════════════════════ */
+const I18N = {
+  ja: {
+    logo_sub:'〆スケ', tagline:'締め切りが、見える。〆スケで、守ろう。',
+    theme_label:'テーマ｜カラー変更', color_change:'カラー変更',
+    btn_login:'ログイン', btn_logout:'ログアウト',
+    orders_title:'案件一覧', filter_active:'進行中', filter_done:'完了', filter_unit:'件',
+    btn_add:'＋ 追加', btn_stamp:'🎨 スタンプ', btn_close:'閉じる', btn_cancel:'キャンセル', btn_save:'保存',
+    nav_calendar:'カレンダー', nav_orders:'案件', nav_settings:'設定',
+    modal_add_order:'案件を追加', modal_edit_order:'案件を編集',
+    label_order_name:'案件名 / クライアント名', placeholder_order_name:'例：いぬさん / キャラデザ',
+    label_type:'依頼の種類', type_illustration:'イラスト', type_design:'デザイン', type_video:'動画', type_other:'その他',
+    label_deadline:'納期（締め切り）', label_phase:'現在のフェーズ',
+    phase_rough:'準備中', phase_fix:'作業中', phase_final:'仕上げ中', phase_done:'完了',
+    label_schedule:'スケジュール設定（日数）', no_template:'テンプレートなし（手動入力）', template_hint:'※ テンプレートを選ぶと日数が自動で入ります',
+    label_notes:'メモ', placeholder_notes:'キャラデザ：青系・猫耳・前金入金済 など',
+    modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する',
+    settings_default_phases:'デフォルトのフェーズ日数', settings_phase_hint:'案件追加時の手動入力デフォルト値になります',
+    settings_templates:'フェーズテンプレート', btn_add_tpl:'＋ テンプレートを追加',
+    settings_backup:'バックアップ / 復元', btn_export:'💾 JSONに書き出す', btn_import:'📂 JSONから復元',
+    settings_ics:'カレンダー連携 (.ics)', btn_export_ics:'📅 .icsに書き出す',
+    modal_add_template:'テンプレートを追加', modal_edit_template:'テンプレートを編集',
+    label_template_name:'テンプレート名', label_phase_days:'フェーズ日数',
+    stamp_title:'🎨 スタンプを選んで画面に貼ろう', stamp_hint:'貼った後はドラッグで移動・タップで削除',
+    days_left:'あと', days_unit:'日', days_suffix:'', overdue:'超過', today_deadline:'今日が締め切り！',
+    phase_badge:['準備中','作業中','仕上げ中'], phase_badge_done:'完了',
+    empty_orders:'案件がまだありません', empty_orders_hint:'「＋ 追加」から登録してください',
+    empty_done:'完了済みの案件はありません',
+    snav_easyreply:'EasyReply連携', snav_gcal:'Googleカレンダー同期', snav_finance:'収支確認',
+    snav_note:'※ サブスク版（開発中）の機能です',
+    months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    dow:['日','月','火','水','木','金','土'],
+    empty_cal:'案件を追加するとカレンダーに表示されます',
+    phase_label_rough:'準備', phase_label_fix:'作業', phase_label_final:'仕上げ',
+    settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
+    tpl_empty:'テンプレートがありません',
+    btn_tpl_edit:'編集', btn_tpl_del:'削除', btn_delete:'削除',
+    tpl_locked:'🔒 テンプレート追加（無料枠：{n}件まで）',
+    alert_enter_name:'案件名を入力してください',
+    alert_enter_deadline:'納期を入力してください',
+    confirm_delete_order:'この案件を削除しますか？',
+    alert_enter_tpl_name:'テンプレート名を入力してください',
+    confirm_delete_tpl:'このテンプレートを削除しますか？',
+    storage_warning:'データはブラウザに保存されます。キャッシュ削除で消える場合があります。💾 定期的にJSONバックアップをおすすめします。',
+    alert_invalid_format:'形式が違います',
+    confirm_restore:'{n}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？',
+    alert_restored:'復元しました！',
+    alert_restore_fail:'読み込みに失敗しました。\n',
+    alert_no_orders:'案件がありません',
+    skin_labels:['ヘッダー色','背景色','カード色','テキスト色'],
+    chart_labels:['色①','色②','色③','色④','色⑤'],
+    phase_fallback:['準備','作業','仕上げ'],
+    demo_banner_text:'サンプルデータを表示中', demo_banner_btn:'クリアして始める',
+    upgrade_limit:'アクティブ案件は{n}件まで（期間限定）', upgrade_hint:'案件を「完了」にすると枠が空きます\nPROで無制限に追加できます',
+    btn_upgrade:'PRO にアップグレード',
+    upgrade_desc:'手帳1冊分で、どの端末からでもずっと使える。',
+    upg_f1:'スマホ・PC・タブレット、どの端末からでもアクセス', upg_f2:'案件数 無制限＋クラウド自動バックアップ',
+    upg_f3:'EasyReply連携（開発中）', upg_f4:'Googleカレンダー同期（開発中）', upg_f5:'収支管理（開発中）',
+    upg_monthly:'月額プラン', upg_annual:'年額プラン', upg_badge:'約46%お得',
+    upg_footer:'決済はStripeで安全に処理されます',
+  },
+  en: {
+    logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
+    theme_label:'Theme | Color', color_change:'Colors',
+    btn_login:'Sign in', btn_logout:'Sign out',
+    orders_title:'Projects', filter_active:'Active', filter_done:'Done', filter_unit:'',
+    btn_add:'+ Add', btn_stamp:'🎨 Stamps', btn_close:'Close', btn_cancel:'Cancel', btn_save:'Save',
+    nav_calendar:'Calendar', nav_orders:'Projects', nav_settings:'Settings',
+    modal_add_order:'Add Project', modal_edit_order:'Edit Project',
+    label_order_name:'Project / Client Name', placeholder_order_name:'e.g. John / Character Design',
+    label_type:'Project Type', type_illustration:'Illustration', type_design:'Design', type_video:'Video', type_other:'Other',
+    label_deadline:'Deadline', label_phase:'Current Phase',
+    phase_rough:'Preparing', phase_fix:'Working', phase_final:'Finishing', phase_done:'Done',
+    label_schedule:'Schedule (days)', no_template:'No template (manual)', template_hint:'* Select a template to auto-fill days',
+    label_notes:'Notes', placeholder_notes:'e.g. Blue palette, advance payment received',
+    modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp',
+    settings_default_phases:'Default Phase Days', settings_phase_hint:'Used as default values when adding a project',
+    settings_templates:'Phase Templates', btn_add_tpl:'+ Add Template',
+    settings_backup:'Backup / Restore', btn_export:'💾 Export as JSON', btn_import:'📂 Restore from JSON',
+    settings_ics:'Calendar Export (.ics)', btn_export_ics:'📅 Export as .ics',
+    modal_add_template:'Add Template', modal_edit_template:'Edit Template',
+    label_template_name:'Template Name', label_phase_days:'Phase Days',
+    stamp_title:'🎨 Pick a stamp and place it on screen', stamp_hint:'Drag to move · Tap to delete',
+    days_left:'', days_unit:'d', days_suffix:' left', overdue:'Overdue', today_deadline:'Due today!',
+    phase_badge:['Preparing','Working','Finishing'], phase_badge_done:'Done',
+    empty_orders:'No projects yet', empty_orders_hint:'Tap "+ Add" to get started',
+    empty_done:'No completed projects',
+    snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
+    snav_note:'* Features in development (subscription)',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    empty_cal:'Add projects to see them on the calendar',
+    phase_label_rough:'Prep', phase_label_fix:'Work', phase_label_final:'Final',
+    settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
+    tpl_empty:'No templates yet',
+    btn_tpl_edit:'Edit', btn_tpl_del:'Delete', btn_delete:'Delete',
+    tpl_locked:'🔒 Add Template (free limit: {n})',
+    alert_enter_name:'Please enter a project name',
+    alert_enter_deadline:'Please enter a deadline',
+    confirm_delete_order:'Delete this project?',
+    alert_enter_tpl_name:'Please enter a template name',
+    confirm_delete_tpl:'Delete this template?',
+    storage_warning:'Data is stored in your browser and may be lost if cache is cleared. 💾 Regular JSON backups are recommended.',
+    alert_invalid_format:'Invalid file format',
+    confirm_restore:'Restore {n} projects? This will overwrite your current data.',
+    alert_restored:'Restored!',
+    alert_restore_fail:'Failed to restore.\n',
+    alert_no_orders:'No projects to export',
+    skin_labels:['Header','Background','Card','Text'],
+    chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
+    phase_fallback:['Prep','Work','Final'],
+    demo_banner_text:'Showing sample data', demo_banner_btn:'Clear & Start',
+    upgrade_limit:'Up to {n} active projects (limited time)', upgrade_hint:'Mark projects as Done to free up slots\nUnlimited with PRO',
+    btn_upgrade:'Upgrade to PRO',
+    upgrade_desc:'One planner\'s price. Access from any device, anytime.',
+    upg_f1:'Access from any device — phone, PC, tablet', upg_f2:'Unlimited projects + auto cloud backup',
+    upg_f3:'EasyReply sync (in development)', upg_f4:'Google Calendar sync (in development)', upg_f5:'Finance tracking (in development)',
+    upg_monthly:'Monthly plan', upg_annual:'Annual plan', upg_badge:'Save ~46%',
+    upg_footer:'Payments processed securely by Stripe',
+  }
+};
+function lang() { return document.documentElement.lang || 'ja'; }
+const t = (key) => (I18N[lang()] || I18N.ja)[key] ?? (I18N.ja[key] ?? key);
+function setLang(l) {
+  document.documentElement.lang = l;
+  try { localStorage.setItem('shimesuke_lang', l); } catch(e) {}
+  render();
+  applyI18n();
+}
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n); if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = t(el.dataset.i18nHtml); if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = t(el.dataset.i18nPlaceholder); if (v) el.placeholder = v;
+  });
+  const btn = document.getElementById('btn-lang');
+  if (btn) btn.textContent = lang() === 'ja' ? 'EN' : 'JP';
+  const countEl = document.getElementById('ftab-active-count');
+  const ftabActive = document.getElementById('ftab-active');
+  if (ftabActive && countEl) {
+    const n = countEl.textContent;
+    ftabActive.childNodes[0].textContent = t('filter_active') + ' ';
+    countEl.textContent = n;
+    const unit = document.getElementById('ftab-unit');
+    if (unit) unit.textContent = t('filter_unit');
+  }
+}
 
 /* ═══════════════════════════════
    STATE
 ═══════════════════════════════ */
+const _isFirstVisit = localStorage.getItem('shimesuke_orders') === null;
 let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
 let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
   phases: [
-    { id: 'rough', name: 'ラフ',   days: 7 },
-    { id: 'fix',   name: '修正',   days: 3 },
-    { id: 'final', name: '清書',   days: 3 }
+    { id: 'rough', name: '準備',   days: 7 },
+    { id: 'fix',   name: '作業',   days: 3 },
+    { id: 'final', name: '仕上げ', days: 3 }
   ]
 };
 
 const MAX_FREE_TEMPLATES = 3;
-const MAX_FREE_ORDERS = 3;
-function isPremium() { return true; }
+const MAX_FREE_ORDERS = 5;
+function isPremium() { return userIsPro; }
 const DEFAULT_TEMPLATES = [
   { id: 'tpl_illust', name: 'イラスト',     phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
   { id: 'tpl_mini',   name: 'ミニキャラ',   phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
@@ -1300,6 +1615,13 @@ const DEFAULT_TEMPLATES = [
 ];
 
 // 既存ユーザー向けマイグレーション
+// phases に id がない古いデータを補完
+const _phaseNameToId = { 'ラフ':'rough', '修正':'fix', '清書':'final' };
+if (settings.phases) {
+  settings.phases = settings.phases.map(p =>
+    p.id ? p : { ...p, id: _phaseNameToId[p.name] || p.name }
+  );
+}
 if (!settings.templates || settings.templates.length === 0) {
   settings.templates = DEFAULT_TEMPLATES.map(t => ({ ...t, phases: t.phases.map(p => ({ ...p })) }));
   save();
@@ -1355,6 +1677,8 @@ const mySkinColors = {
   const sk = UI_SKINS.find(s => s.id === id);
   if (sk) Object.assign(sk, mySkinColors[id]);
 });
+// ORDER_COLORS はカスタム色反映後に初期化する
+ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
 
 /* ═══════════════════════════════
    UTILS
@@ -1420,7 +1744,9 @@ function orderColor(idx) {
 }
 
 function fmtDate(d) {
-  return `${d.getMonth()+1}月${d.getDate()}日`;
+  return lang() === 'ja'
+    ? `${d.getMonth()+1}月${d.getDate()}日`
+    : `${d.getMonth()+1}/${d.getDate()}`;
 }
 
 function uid() {
@@ -1447,12 +1773,13 @@ function pict(type, color, size=20) {
   return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" ${s}>${svgs[type]||svgs.other}</svg>`;
 }
 
-function typeLabel(t) {
-  return {illustration:'イラスト', design:'デザイン', video:'動画', other:'その他'}[t] || t;
+function typeLabel(type) {
+  return t('type_' + type) || type;
 }
 
 function phaseName(idx) {
-  return settings.phases[idx]?.name || ['ラフ','修正','清書'][idx] || '';
+  const phaseKeyMap = ['phase_label_rough','phase_label_fix','phase_label_final'];
+  return (phaseKeyMap[idx] ? t(phaseKeyMap[idx]) : settings.phases[idx]?.name) || '';
 }
 
 /* ═══════════════════════════════
@@ -1484,8 +1811,8 @@ function renderOrders() {
 
   if (filtered.length === 0) {
     list.innerHTML = ordersFilter === 'done'
-      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">完了済みの案件はありません</div></div>`
-      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">案件がまだありません<br>「＋ 追加」から登録してください</div></div>`;
+      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">${t('empty_done')}</div></div>`
+      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">${t('empty_orders')}<br>${t('empty_orders_hint')}</div></div>`;
     return;
   }
 
@@ -1505,7 +1832,7 @@ function renderOrders() {
     const schedule    = getPhaseSchedule(order);
     const curPhase    = order.currentPhase || 0;
     const isCompleted = curPhase >= 3;
-    const phasesBadge = isCompleted ? '完了' : (['ラフ中','修正中','清書中'][curPhase] || '');
+    const phasesBadge = isCompleted ? t('phase_badge_done') : (t('phase_badge')[curPhase] || '');
 
     // phase bar
     let barHTML = '';
@@ -1518,9 +1845,9 @@ function renderOrders() {
     // deadline label
     const dl      = parseDate(order.deadline);
     const dlLabel = days < 0
-      ? `超過 ${Math.abs(days)}日`
-      : days === 0 ? '今日が締め切り！'
-      : `あと${days}日`;
+      ? `${t('overdue')} ${Math.abs(days)}${t('days_unit')}`
+      : days === 0 ? t('today_deadline')
+      : `${t('days_left')}${days}${t('days_unit')}${t('days_suffix')}`;
 
     const card = document.createElement('div');
     card.className = `order-card card-${urgency}`;
@@ -1528,14 +1855,14 @@ function renderOrders() {
     card.onclick = () => openEditOrder(order.id);
     card.innerHTML = `
       <div class="card-tab" style="background:${uc};">
-        <span class="tab-ato${isDark?' dark':''}">あと</span>
+        <span class="tab-ato${isDark?' dark':''}">${t('days_left')}</span>
         <span class="tab-num${isDark?' dark':''}">
           ${days < 0 ? '!' : days > 99 ? '∞' : days}
         </span>
-        <span class="tab-nichi${isDark?' dark':''}">日</span>
+        <span class="tab-nichi${isDark?' dark':''}">${t('days_unit')}</span>
       </div>
       <div class="card-row1">
-        <div class="card-name">${esc(order.name)}</div>
+        <div class="card-name" style="font-size:${lang()==='en'&&order.name_en?'11px':'12px'}">${esc(lang()==='en'&&order.name_en?order.name_en:order.name)}</div>
         <div class="card-phase-badge" style="background:${isCompleted?'var(--border)':''+uc+'22'};color:${isCompleted?'var(--muted)':utxt};">${phasesBadge}</div>
       </div>
       <div class="card-type-row">
@@ -1573,9 +1900,9 @@ function renderOrders() {
     wrap.innerHTML = `
       <div style="border:1.5px dashed #E1B75B;border-radius:10px;padding:12px 10px;margin:8px 4px 4px;text-align:center;">
         <div style="font-size:18px;margin-bottom:4px;">🔒</div>
-        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">アクティブ案件は${MAX_FREE_ORDERS}件まで</div>
-        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">案件を「完了」にすると枠が空きます<br>PROで無制限に追加できます</div>
-        <button style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">👑 アップグレード</button>
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">${t('upgrade_limit').replace('{n}', MAX_FREE_ORDERS)}</div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">${t('upgrade_hint').replace(/\n/g,'<br>')}</div>
+        <button onclick="openUpgradeModal()" style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">${t('btn_upgrade')}</button>
       </div>`;
     list.appendChild(wrap);
   }
@@ -1591,13 +1918,19 @@ function renderCalendar() {
 
   const y = currentMonth.getFullYear();
   const m = currentMonth.getMonth();
-  label.textContent = `${y}年${m+1}月`;
+  label.textContent = lang() === 'ja' ? `${y}年${m+1}月` : `${t('months')[m]} ${y}`;
+
+  // アクティブ案件のみで色番号を割り当てる
+  const activeOrderIds = orders
+    .filter(o => (o.currentPhase || 0) < 3)
+    .map(o => o.id);
+  const activeColorIdx = (id) => activeOrderIds.indexOf(id);
 
   // legend
   legend.innerHTML = '';
-  orders.forEach((order, idx) => {
+  orders.forEach((order) => {
     if ((order.currentPhase || 0) >= 3) return;
-    const col = orderColor(idx);
+    const col = orderColor(activeColorIdx(order.id));
     legend.innerHTML += `
       <div class="legend-item">
         <div class="legend-dot" style="background:${col};"></div>
@@ -1605,12 +1938,12 @@ function renderCalendar() {
       </div>`;
   });
   if (orders.length === 0) {
-    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">案件を追加するとカレンダーに表示されます</span>`;
+    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">${t('empty_cal')}</span>`;
   }
 
   const todayKey  = dateKey(today());
   const showStamp = settings.showShimekiriStamp !== false;
-  const DOW_LABELS = ['日','月','火','水','木','金','土'];
+  const DOW_LABELS = t('dow');
 
   const orderPhases = orders.map(order => ({
     id:       order.id,
@@ -1651,7 +1984,7 @@ function renderCalendar() {
       if (date) {
         const dKey    = dateKey(date);
         const isToday = dKey === todayKey;
-        const dls     = orderPhases.filter(op => op.deadline === dKey);
+        const dls     = orderPhases.filter(op => op.deadline === dKey && op.currentPhase < 3);
 
         // dow + stamp
         const dowRow = document.createElement('div');
@@ -1672,7 +2005,7 @@ function renderCalendar() {
         const numEl = document.createElement('div');
         numEl.className = 'cal-gantt-num' + (isToday ? ' today' : '');
         if (dls.length > 0 && !isToday) {
-          const idx = orders.findIndex(o => o.id === dls[0].id);
+          const idx = activeColorIdx(dls[0].id);
           numEl.style.border  = `2px solid ${orderColor(idx)}`;
           numEl.style.color   = orderColor(idx);
         }
@@ -1691,7 +2024,7 @@ function renderCalendar() {
     const wEndInclusive = new Date(wEnd); wEndInclusive.setHours(23,59,59,999);
 
     const activeOrders = orders
-      .map((order, idx) => ({ order, idx, op: orderPhases[idx] }))
+      .map((order, orderIdx) => ({ order, idx: activeColorIdx(order.id), op: orderPhases[orderIdx] }))
       .filter(({ op }) =>
         op.currentPhase < 3 &&
         op.schedule.some(ph => {
@@ -1820,7 +2153,7 @@ function goToday() {
 function openAddOrder() {
   editingId    = null;
   selectedType = 'illustration';
-  document.getElementById('order-modal-title').textContent = '案件を追加';
+  document.getElementById('order-modal-title').textContent = t('modal_add_order');
   document.getElementById('f-name').value     = '';
   document.getElementById('f-deadline').value = '';
   document.getElementById('f-phase').value    = '0';
@@ -1837,8 +2170,8 @@ function openAddOrder() {
 
   // actions
   document.getElementById('order-modal-actions').innerHTML = `
-    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
 
   showModal('order-modal');
 }
@@ -1849,7 +2182,7 @@ function openEditOrder(id) {
   editingId    = id;
   selectedType = order.type;
 
-  document.getElementById('order-modal-title').textContent = '案件を編集';
+  document.getElementById('order-modal-title').textContent = t('modal_edit_order');
   document.getElementById('f-name').value     = order.name;
   document.getElementById('f-deadline').value = order.deadline;
   document.getElementById('f-phase').value    = String(order.currentPhase || 0);
@@ -1863,19 +2196,20 @@ function openEditOrder(id) {
   renderPhaseFields('f-phases-row', phases);
 
   document.getElementById('order-modal-actions').innerHTML = `
-    <button class="btn-delete" onclick="deleteOrder('${id}')">削除</button>
-    <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
-    <button class="btn-primary" onclick="saveOrder()">保存</button>`;
+    <button class="btn-delete" onclick="deleteOrder('${id}')">${t('btn_delete')}</button>
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
 
   showModal('order-modal');
 }
 
 function renderPhaseFields(containerId, phases) {
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
   const container = document.getElementById(containerId);
   container.innerHTML = phases.map((p, i) => `
     <div class="phase-field">
-      <label>${p.name}</label>
-      <input type="number" min="1" max="60" value="${p.days}" id="pf-${containerId}-${i}">
+      <label>${esc(phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name)}</label>
+      <input type="number" min="0" max="60" value="${p.days}" id="pf-${containerId}-${i}">
     </div>`).join('');
 }
 
@@ -1883,7 +2217,7 @@ function getPhaseDaysFromFields(containerId) {
   return settings.phases.map((p, i) => ({
     id:   p.id,
     name: p.name,
-    days: parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value) || p.days
+    days: (v => isNaN(v) ? p.days : v)(parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value))
   }));
 }
 
@@ -1900,8 +2234,8 @@ function saveOrder() {
   const notes    = document.getElementById('f-notes').value.trim();
   const phaseDays= getPhaseDaysFromFields('f-phases-row');
 
-  if (!name)     { alert('案件名を入力してください'); return; }
-  if (!deadline) { alert('納期を入力してください'); return; }
+  if (!name)     { alert(t('alert_enter_name')); return; }
+  if (!deadline) { alert(t('alert_enter_deadline')); return; }
 
   if (editingId) {
     const idx = orders.findIndex(o => o.id === editingId);
@@ -1916,7 +2250,7 @@ function saveOrder() {
 }
 
 function deleteOrder(id) {
-  if (!confirm('この案件を削除しますか？')) return;
+  if (!confirm(t('confirm_delete_order'))) return;
   orders = orders.filter(o => o.id !== id);
   save();
   closeModal();
@@ -1931,7 +2265,7 @@ let editingTemplateId = null;
 function renderTemplateSelect() {
   const sel = document.getElementById('f-template');
   if (!sel) return;
-  sel.innerHTML = '<option value="">テンプレートなし（手動入力）</option>';
+  sel.innerHTML = `<option value="">${t('no_template')}</option>`;
   (settings.templates || []).forEach(t => {
     const opt = document.createElement('option');
     opt.value = t.id;
@@ -1957,15 +2291,16 @@ function renderTemplateList() {
   if (!list) return;
   const tmpls = settings.templates || [];
 
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
   list.innerHTML = tmpls.length === 0
-    ? '<p style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0;">テンプレートがありません</p>'
-    : tmpls.map(t => `
+    ? `<p style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0;">${t('tpl_empty')}</p>`
+    : tmpls.map(tpl => `
       <div class="template-item">
-        <span class="template-item-name">${esc(t.name)}</span>
-        <span class="template-item-days">${t.phases.map(p => `${p.name}${p.days}日`).join(' · ')}</span>
+        <span class="template-item-name">${esc(tpl.name)}</span>
+        <span class="template-item-days">${tpl.phases.map(p => `${phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name}${p.days}${t('days_unit')}`).join(' · ')}</span>
         <div class="template-item-actions">
-          <button class="btn-tpl-edit" onclick="openEditTemplate('${t.id}')">編集</button>
-          <button class="btn-tpl-del" onclick="deleteTemplate('${t.id}')">削除</button>
+          <button class="btn-tpl-edit" onclick="openEditTemplate('${tpl.id}')">${t('btn_tpl_edit')}</button>
+          <button class="btn-tpl-del" onclick="deleteTemplate('${tpl.id}')">${t('btn_tpl_del')}</button>
         </div>
       </div>`).join('');
 
@@ -1973,33 +2308,35 @@ function renderTemplateList() {
     const locked = tmpls.length >= MAX_FREE_TEMPLATES && !isPremium();
     btn.className = locked ? 'btn-add-tpl locked' : 'btn-add-tpl';
     btn.textContent = locked
-      ? `🔒 テンプレート追加（無料枠：${MAX_FREE_TEMPLATES}件まで）`
-      : '＋ テンプレートを追加';
+      ? t('tpl_locked').replace('{n}', MAX_FREE_TEMPLATES)
+      : t('btn_add_tpl');
     btn.onclick = locked ? null : openAddTemplate;
   }
 }
 
 function openAddTemplate() {
   editingTemplateId = null;
-  document.getElementById('tpl-modal-title').textContent = 'テンプレートを追加';
+  document.getElementById('tpl-modal-title').textContent = t('modal_add_template');
   document.getElementById('tpl-name').value = '';
   renderPhaseFields('tpl-phases-row', settings.phases.map(p => ({ ...p })));
   showModal('template-modal');
+  applyI18n();
 }
 
 function openEditTemplate(id) {
   const tpl = (settings.templates || []).find(t => t.id === id);
   if (!tpl) return;
   editingTemplateId = id;
-  document.getElementById('tpl-modal-title').textContent = 'テンプレートを編集';
+  document.getElementById('tpl-modal-title').textContent = t('modal_edit_template');
   document.getElementById('tpl-name').value = tpl.name;
   renderPhaseFields('tpl-phases-row', tpl.phases.map(p => ({ ...p })));
   showModal('template-modal');
+  applyI18n();
 }
 
 function saveTemplate() {
   const name = document.getElementById('tpl-name').value.trim();
-  if (!name) { alert('テンプレート名を入力してください'); return; }
+  if (!name) { alert(t('alert_enter_tpl_name')); return; }
   const phases = getPhaseDaysFromFields('tpl-phases-row');
   if (!settings.templates) settings.templates = [];
 
@@ -2014,7 +2351,7 @@ function saveTemplate() {
 }
 
 function deleteTemplate(id) {
-  if (!confirm('このテンプレートを削除しますか？')) return;
+  if (!confirm(t('confirm_delete_tpl'))) return;
   settings.templates = (settings.templates || []).filter(t => t.id !== id);
   save();
   renderTemplateList();
@@ -2034,6 +2371,7 @@ function openSettings() {
   renderTemplateList();
   showModal('settings-modal');
   initStampToggle();
+  applyI18n();
 }
 
 function selectTheme(id) {
@@ -2043,6 +2381,7 @@ function selectTheme(id) {
   localStorage.setItem('shimesuke_theme', id);
   updateChartColorDots();
   render();
+  saveToFirestore();
 }
 
 /* ═══════════════════════════════
@@ -2061,6 +2400,7 @@ function applyUISkin(id) {
   currentSkinId = id;
   localStorage.setItem('shimesuke_skin', id);
   updateHeaderThemeDots();
+  saveToFirestore();
 }
 
 function updateHeaderThemeDots() {
@@ -2119,11 +2459,12 @@ function renderSkinList() {
     if (isActive && isCustom) {
       const pickerWrap = document.createElement('div');
       pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const skinLabels = t('skin_labels');
       const fields = [
-        { key:'main',    label:'ヘッダー色' },
-        { key:'bg',      label:'背景色' },
-        { key:'surface', label:'カード色' },
-        { key:'text',    label:'テキスト色' },
+        { key:'main',    label:skinLabels[0] },
+        { key:'bg',      label:skinLabels[1] },
+        { key:'surface', label:skinLabels[2] },
+        { key:'text',    label:skinLabels[3] },
       ];
       fields.forEach(f => {
         const line = document.createElement('div');
@@ -2194,7 +2535,7 @@ function renderChartThemeList() {
     if (isActive && isCustom) {
       const pickerWrap = document.createElement('div');
       pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
-      const labels = ['色①','色②','色③','色④','色⑤'];
+      const labels = t('chart_labels');
       myChartColors[theme.id].forEach((col, idx) => {
         const line = document.createElement('div');
         line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
@@ -2304,6 +2645,10 @@ function exportData() {
     settings,
     theme:         currentThemeId,
     skin:          currentSkinId,
+    myskin1:       mySkinColors.mycolor1,
+    myskin2:       mySkinColors.mycolor2,
+    mychart1:      myChartColors.mycolor1,
+    mychart2:      myChartColors.mycolor2,
     stickers:      placedStickers,
     customStamps,
     exportedAt:    new Date().toISOString()
@@ -2333,21 +2678,25 @@ function importData(input) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.orders) throw new Error('形式が違います');
+      if (!data.orders) throw new Error(t('alert_invalid_format'));
       if (!data.settings) data.settings = settings;
-      if (!confirm(`${data.orders.length}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？`)) return;
+      if (!confirm(t('confirm_restore').replace('{n}', data.orders.length))) return;
       orders   = data.orders;
       settings = data.settings;
-      if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.theme)    { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.myskin1)  { mySkinColors.mycolor1 = data.myskin1;  localStorage.setItem('shimesuke_myskin1',  JSON.stringify(data.myskin1));  Object.assign(UI_SKINS.find(s => s.id === 'mycolor1'), data.myskin1); }
+      if (data.myskin2)  { mySkinColors.mycolor2 = data.myskin2;  localStorage.setItem('shimesuke_myskin2',  JSON.stringify(data.myskin2));  Object.assign(UI_SKINS.find(s => s.id === 'mycolor2'), data.myskin2); }
+      if (data.mychart1) { myChartColors.mycolor1 = data.mychart1; localStorage.setItem('shimesuke_mychart1', JSON.stringify(data.mychart1)); }
+      if (data.mychart2) { myChartColors.mycolor2 = data.mychart2; localStorage.setItem('shimesuke_mychart2', JSON.stringify(data.mychart2)); }
       if (data.skin)         { currentSkinId  = data.skin;   localStorage.setItem('shimesuke_skin',  currentSkinId);  applyUISkin(currentSkinId); }
       if (data.stickers)     { placedStickers = data.stickers;   saveStickerData(); }
       if (data.customStamps) { customStamps   = data.customStamps; saveCustomStamps(); }
       save();
       closeModal();
       render();
-      alert('復元しました！');
+      alert(t('alert_restored'));
     } catch(err) {
-      alert('読み込みに失敗しました。\n' + err.message);
+      alert(t('alert_restore_fail') + err.message);
     }
     input.value = '';
   };
@@ -2358,7 +2707,7 @@ function importData(input) {
    ICS EXPORT
 ═══════════════════════════════ */
 function exportICS() {
-  if (orders.length === 0) { alert('案件がありません'); return; }
+  if (orders.length === 0) { alert(t('alert_no_orders')); return; }
 
   const lines = [
     'BEGIN:VCALENDAR',
@@ -2373,7 +2722,7 @@ function exportICS() {
     const nextDay = new Date(parseDate(order.deadline));
     nextDay.setDate(nextDay.getDate() + 1);
     const dlEnd = dateKey(nextDay).replace(/-/g, '');
-    const label = { illustration:'イラスト', design:'デザイン', video:'動画', other:'その他' }[order.type] || order.type;
+    const label = typeLabel(order.type);
     const desc = [label, order.notes].filter(Boolean).join(' / ').replace(/[\r\n]+/g, '\\n');
 
     lines.push('BEGIN:VEVENT');
@@ -2399,6 +2748,48 @@ function exportICS() {
 
 
 /* ═══════════════════════════════
+   DEMO MODE
+═══════════════════════════════ */
+let demoMode = false;
+let _realOrders = null;
+
+function generateDemoOrders() {
+  const today = new Date();
+  const dl = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return dateKey(d); };
+  const ph = (r,f,fin) => [{id:'rough',name:'ラフ',days:r},{id:'fix',name:'修正',days:f},{id:'final',name:'清書',days:fin}];
+  return [
+    { id:'demo1', name:'いぬさん / キャラデザ',     name_en:'Pochi / Character Design',  type:'illustration', deadline:dl(2),  currentPhase:2, notes:'', phaseDays:ph(7,3,2) },
+    { id:'demo2', name:'ねこさん / 背景イラスト',    name_en:'Tama / Background Art',      type:'illustration', deadline:dl(7),  currentPhase:1, notes:'', phaseDays:ph(10,5,3) },
+    { id:'demo3', name:'うさぎさん / ミニキャラ3体', name_en:'Mochi / Mini Chars ×3',      type:'illustration', deadline:dl(13), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo4', name:'とりさん / Live2D素材',      name_en:'Tori / Live2D Assets',       type:'design',       deadline:dl(20), currentPhase:0, notes:'', phaseDays:ph(7,5,3) },
+    { id:'demo5', name:'くまさん / 動画サムネ',      name_en:'Kuma / Video Thumbnail',     type:'video',        deadline:dl(25), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo6', name:'自分 / 同人誌表紙',          name_en:'Me / Doujin Cover',          type:'illustration', deadline:dl(31), currentPhase:0, notes:'', phaseDays:ph(14,7,5) },
+  ];
+}
+
+function clearDemoAndStart() {
+  orders = [];
+  save();
+  localStorage.removeItem('shimesuke_demo_active');
+  const banner = document.getElementById('demo-banner');
+  if (banner) banner.style.display = 'none';
+  render();
+}
+
+function initDemoIfFirstVisit() {
+  if (!_isFirstVisit) return;
+  orders = generateDemoOrders();
+  save();
+  localStorage.setItem('shimesuke_demo_active', '1');
+}
+
+function updateDemoBanner() {
+  const banner = document.getElementById('demo-banner');
+  if (!banner) return;
+  banner.style.display = localStorage.getItem('shimesuke_demo_active') ? 'flex' : 'none';
+}
+
+/* ═══════════════════════════════
    SERVICE WORKER
 ═══════════════════════════════ */
 if ('serviceWorker' in navigator) {
@@ -2409,11 +2800,11 @@ if ('serviceWorker' in navigator) {
    STICKER SYSTEM
 ═══════════════════════════════ */
 const DEFAULT_STAMPS = [
-  { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', bg: '#FF6B6B', color: '#fff' },
-  { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', bg: '#FFD93D', color: '#333' },
-  { id: 'def_kanryo',    emoji: '✨', label: '完了！',     bg: '#6BCB77', color: '#fff' },
-  { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     bg: '#4D96FF', color: '#fff' },
-  { id: 'def_fix',       emoji: '🔄', label: '修正中',     bg: '#C77DFF', color: '#fff' },
+  { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', label_en: 'DUE!', bg: '#FF6B6B', color: '#fff' },
+  { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', label_en: 'Go!',      bg: '#FFD93D', color: '#333' },
+  { id: 'def_kanryo',    emoji: '✨', label: '完了！',     label_en: 'Done!',    bg: '#6BCB77', color: '#fff' },
+  { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     label_en: 'Draft',    bg: '#4D96FF', color: '#fff' },
+  { id: 'def_fix',       emoji: '🔄', label: '修正中',     label_en: 'Revising', bg: '#C77DFF', color: '#fff' },
 ];
 
 let placedStickers = [];
@@ -2459,7 +2850,7 @@ function renderStickerLayer() {
     const bodyStyle = stamp.dataUrl ? '' : `background:${stamp.bg};color:${stamp.color}`;
     const inner = stamp.dataUrl
       ? `<img src="${stamp.dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-      : `<span class="s-emoji">${stamp.emoji}</span><span class="s-label">${stamp.label}</span>`;
+      : `<span class="s-emoji">${stamp.emoji}</span><span class="s-label">${lang() === 'en' && stamp.label_en ? stamp.label_en : stamp.label}</span>`;
 
     el.innerHTML = `
       <div class="s-body" style="${bodyStyle}">
@@ -2567,7 +2958,7 @@ function renderStampOptions() {
   const defaultHtml = DEFAULT_STAMPS.map(s => `
     <div class="stamp-option" style="background:${s.bg};color:${s.color}" onclick="addSticker('${s.id}')">
       <span class="so-emoji">${s.emoji}</span>
-      <span class="so-label">${s.label}</span>
+      <span class="so-label">${lang() === 'en' && s.label_en ? s.label_en : s.label}</span>
     </div>`).join('');
 
   const customHtml = customStamps.map(s => `
@@ -2646,6 +3037,9 @@ document.addEventListener('keydown', e => {
 /* ═══════════════════════════════
    INIT
 ═══════════════════════════════ */
+// 言語初期化
+try { document.documentElement.lang = localStorage.getItem('shimesuke_lang') || 'ja'; } catch(e) { document.documentElement.lang = 'ja'; }
+
 // default mobile tab
 if (window.innerWidth < 768) {
   switchTab('calendar');
@@ -2653,11 +3047,32 @@ if (window.innerWidth < 768) {
 
 applyUISkin(currentSkinId);
 updateHeaderThemeDots();
+initDemoIfFirstVisit();
 render();
+applyI18n();
+updateDemoBanner();
 updateChartColorDots();
 loadStickerData();
 loadCustomStamps();
 renderStickerLayer();
+
+function showToast(msg, duration = 5000) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function showStorageWarning() {
+  if (localStorage.getItem('shimesuke_storage_warned')) return;
+  setTimeout(() => {
+    showToast(t('storage_warning'), 7000);
+    localStorage.setItem('shimesuke_storage_warned', '1');
+  }, 1500);
+}
+
+showStorageWarning();
 </script>
 </body>
 </html>

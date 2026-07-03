@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX 戦略メモ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'BIZ UDGothic', sans-serif; background: #12152A; color: #E8ECF4; min-height: 100vh; padding: 24px; }
+  h1 { font-size: 20px; font-weight: 900; color: #E1B75B; margin-bottom: 4px; }
+  .subtitle { font-size: 11px; color: #9AA0B8; margin-bottom: 32px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1.5px solid #3A3F60; background: transparent; color: #9AA0B8; transition: all 0.15s; }
+  .tab.active { background: #E1B75B; color: #2A1A00; border-color: #E1B75B; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card { background: #1E2340; border: 1px solid #3A3F60; border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; }
+  .card-title { font-size: 13px; font-weight: 900; color: #E1B75B; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .card-title span { font-size: 15px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; color: #9AA0B8; font-size: 10px; font-weight: 700; padding: 6px 8px; border-bottom: 1px solid #3A3F60; letter-spacing: 0.06em; }
+  td { padding: 8px 8px; border-bottom: 1px solid #2A2F50; vertical-align: top; line-height: 1.6; }
+  tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 1px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+  .tag-pro { background: #E1B75B22; color: #E1B75B; border: 1px solid #E1B75B44; }
+  .tag-free { background: #5EA8E822; color: #5EA8E8; border: 1px solid #5EA8E844; }
+  .tag-sub { background: #7BC67E22; color: #7BC67E; border: 1px solid #7BC67E44; }
+  .tag-tbd { background: #9AA0B822; color: #9AA0B8; border: 1px solid #9AA0B844; }
+
+  .memo-area { width: 100%; min-height: 100px; background: #12152A; border: 1px solid #3A3F60; border-radius: 8px; color: #E8ECF4; font-size: 12px; padding: 10px 12px; resize: vertical; font-family: inherit; line-height: 1.7; }
+  .memo-area:focus { outline: none; border-color: #E1B75B; }
+  .memo-label { font-size: 10px; color: #9AA0B8; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.06em; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } }
+
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { padding: 3px 10px; border-radius: 12px; font-size: 11px; background: #2A2F50; color: #9AA0B8; }
+  .pill.done { background: #7BC67E22; color: #7BC67E; }
+  .pill.todo { background: #E1B75B22; color: #E1B75B; }
+  .pill.lock { background: #9AA0B822; color: #9AA0B8; }
+
+  .brief-box { background: #0A0D1A; border: 1px solid #3A3F60; border-radius: 8px; padding: 14px 16px; font-size: 12px; line-height: 1.8; color: #9AA0B8; white-space: pre-wrap; cursor: pointer; position: relative; }
+  .brief-box:hover { border-color: #E1B75B88; }
+  .copy-hint { position: absolute; top: 8px; right: 10px; font-size: 10px; color: #9AA0B8; }
+  .brief-box.copied .copy-hint { color: #7BC67E; }
+
+  hr { border: none; border-top: 1px solid #3A3F60; margin: 16px 0; }
+  p { font-size: 12px; line-height: 1.8; color: #9AA0B8; }
+  .highlight { color: #E8ECF4; font-weight: 700; }
+  .green { color: #7BC67E; }
+  .yellow { color: #E1B75B; }
+  .blue { color: #5EA8E8; }
+</style>
+</head>
+<body>
+
+<h1>SchedulEX 戦略メモ</h1>
+<p class="subtitle">競合調査・価格設計・販売戦略の記録用ドキュメント</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('product')">プロダクト概要</button>
+  <button class="tab" onclick="switchTab('brief')">AI相談用ブリーフ</button>
+  <button class="tab" onclick="switchTab('brief2')">連携設計ブリーフ</button>
+  <button class="tab" onclick="switchTab('competitors')">競合調査</button>
+  <button class="tab" onclick="switchTab('pricing')">価格設計</button>
+  <button class="tab" onclick="switchTab('channel')">販売チャネル</button>
+  <button class="tab" onclick="switchTab('memo')">メモ・アイデア</button>
+</div>
+
+<!-- ── プロダクト概要 ── -->
+<div class="section active" id="tab-product">
+
+  <div class="card">
+    <div class="card-title"><span>💡</span> 全体思想</div>
+    <p>フリーランスクリエイターの仕事フロー「見せる → やりとりする → こなす」を、3つのシンプルなツールで一気通貫にカバーする。</p>
+    <hr>
+    <p style="margin-top:12px;font-size:13px;line-height:2;color:#E8ECF4;">
+      <span class="yellow">MiteOrder</span>　ポートフォリオ＋見積もり。依頼者が作業内容を選んで送る。<br>
+      <span style="color:#9AA0B8;padding-left:1em;">↓ 依頼が届く</span><br>
+      <span class="yellow">EasyReply</span>　やりとり管理。テンプレで返信・調整・受注確定。<br>
+      <span style="color:#9AA0B8;padding-left:1em;">↓ 確定したら自動追加（任意）</span><br>
+      <span class="yellow">〆スケ</span>　納期・フェーズ管理。締切順に案件を一覧表示。
+    </p>
+    <hr>
+    <p class="highlight" style="margin-top:12px;">〆スケ単体のターゲット：</p>
+    <p>締切のある人なら誰でも。フリーランス・学生・社会人・同人作家など職種問わず。</p>
+    <hr>
+    <p class="highlight" style="margin-top:12px;">3アプリ連携のターゲット：</p>
+    <p>コミッション（受注制作）をこなすフリーランスクリエイター。DM・Skeb・CONNALAE等の複数窓口で依頼を受ける人。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>📌</span> 各アプリの思想</div>
+    <table>
+      <tr><th style="width:120px">アプリ</th><th>思想・コンセプト</th></tr>
+      <tr>
+        <td class="yellow" style="font-weight:700">〆スケ<br><span style="font-size:10px;color:#9AA0B8">SchedulEX</span></td>
+        <td>
+          <span class="highlight">「締切がある人なら誰でも使える」案件・納期管理ツール。</span><br>
+          <span style="font-size:12px;color:#9AA0B8">フリーランス・学生・社会人・同人作家など職種・業種を問わない。TODOアプリでもカレンダーアプリでもなく、「締切順に並ぶガントカレンダー」という独自のポジション。シンプルさを最優先。</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="yellow" style="font-weight:700">MiteOrder<br><span style="font-size:10px;color:#9AA0B8">ミテオーダー</span></td>
+        <td>
+          <span class="highlight">「見て、選んで、見積もり依頼ができる」クリエイターの受付窓口。</span><br>
+          <span style="font-size:12px;color:#9AA0B8">クリエイターが自分のポートフォリオ＋料金表を1ページで公開。依頼者は登録不要で作業内容を選び、合計金額を確認してそのまま送れる。SNSのDMや口頭で値段を聞かせる手間をなくす。</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="yellow" style="font-weight:700">EasyReply<br><span style="font-size:10px;color:#9AA0B8">ラクリプ</span></td>
+        <td>
+          <span class="highlight">「毎回一から書かなくていい」依頼やりとり管理ツール。</span><br>
+          <span style="font-size:12px;color:#9AA0B8">初回返信・見積送付・修正対応・納品など、フェーズごとに返信テンプレを管理。差し込み変数（{{price}}等）で毎回カスタマイズも最小限。将来的にMiteOrderからの依頼を受け取り、受注確定→〆スケ連携のハブになる。</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="yellow" style="font-weight:700">RakuThrough<br><span style="font-size:10px;color:#9AA0B8">ラクスルー</span></td>
+        <td>
+          <span class="highlight">「創作活動するあなたに確定申告ラクスルー！」収支管理ツール。</span><br>
+          <span style="font-size:12px;color:#9AA0B8">青色申告対応。Booth・Skeb等「売った日≠入金日」の売掛管理が特徴。棚卸し・減価償却・申告サマリーまでカバー。3アプリとは別Firebaseプロジェクトのため自動連携はなく、受注確定後の売掛登録は手動。</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>📱</span> 3アプリの位置づけ</div>
+    <table>
+      <tr>
+        <th>アプリ</th>
+        <th>誰が使う</th>
+        <th>状態</th>
+        <th>販売</th>
+      </tr>
+      <tr>
+        <td class="yellow">MiteOrder</td>
+        <td>依頼者が見る・クリエイターが管理</td>
+        <td><span class="tag tag-tbd">デモのみ</span></td>
+        <td>未定</td>
+      </tr>
+      <tr>
+        <td class="yellow">EasyReply</td>
+        <td>クリエイターが使う</td>
+        <td><span class="tag tag-tbd">テンプレUIのみ</span></td>
+        <td>買い切り→サブスク</td>
+      </tr>
+      <tr>
+        <td class="yellow">〆スケ</td>
+        <td>クリエイターが使う</td>
+        <td><span class="tag tag-pro">稼働中</span></td>
+        <td>Free / Pro / サブスク</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>🔗</span> 連携フロー（サブスク版のみ）</div>
+    <table>
+      <tr><th>ステップ</th><th>アプリ</th><th>何が起きるか</th></tr>
+      <tr><td>①</td><td>MiteOrder</td><td>依頼者が作業内容を選んで送信 → Firestoreに見積もり依頼を保存</td></tr>
+      <tr><td>②</td><td>EasyReply</td><td>クリエイターが依頼を確認・テンプレで返信・やりとり</td></tr>
+      <tr><td>③</td><td>EasyReply</td><td>受注確定ボタン → statusを"confirmed"に更新</td></tr>
+      <tr><td>④</td><td>〆スケ</td><td>案件を自動追加（ON/OFFで任意）</td></tr>
+      <tr><td>⑤</td><td>RakuThrough</td><td>売掛を手動入力（別プロジェクトのため自動連携なし）</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>📦</span> 〆スケ プラン構成</div>
+    <table>
+      <tr>
+        <th>機能</th>
+        <th>Free</th>
+        <th>Pro（買い切り）</th>
+        <th>サブスク</th>
+      </tr>
+      <tr><td>アクティブ案件数</td><td>3件</td><td>無制限</td><td>無制限</td></tr>
+      <tr><td>テンプレート</td><td>3件</td><td>無制限</td><td>無制限</td></tr>
+      <tr><td>カスタムカラー</td><td>✗</td><td>✅</td><td>✅</td></tr>
+      <tr><td>カスタムスタンプ</td><td>✗</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Googleログイン</td><td>✗</td><td>✗</td><td>✅</td></tr>
+      <tr><td>マルチデバイス同期</td><td>✗</td><td>✗</td><td>✅</td></tr>
+      <tr><td>EasyReply連携</td><td>✗</td><td>✗</td><td>🔒 予定</td></tr>
+      <tr><td>Googleカレンダー同期</td><td>✗</td><td>✗</td><td>🔒 予定</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>🚀</span> 実装状況（〆スケ）</div>
+    <div class="pill-list">
+      <span class="pill done">ガントカレンダー ✅</span>
+      <span class="pill done">締切順ソート ✅</span>
+      <span class="pill done">テンプレート ✅</span>
+      <span class="pill done">スタンプ ✅</span>
+      <span class="pill done">マイカラー ✅</span>
+      <span class="pill done">Googleログイン ✅</span>
+      <span class="pill done">Firestore同期 ✅</span>
+      <span class="pill done">i18n(JP/EN) ✅</span>
+      <span class="pill todo">Free→Pro誘導UI 要整備</span>
+      <span class="pill lock">EasyReply連携 🔒</span>
+      <span class="pill lock">Googleカレンダー同期 🔒</span>
+      <span class="pill lock">収支確認 🔒</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── AI調査用ブリーフ ── -->
+<div class="section" id="tab-brief">
+  <div class="card">
+    <div class="card-title"><span>📋</span> AIに渡す調査ブリーフ（クリックでコピー）</div>
+    <div class="brief-box" id="brief-text" onclick="copyBrief()">
+      <span class="copy-hint" id="copy-hint">クリックでコピー</span>
+# SchedulEX（〆スケ）販売戦略調査依頼
+
+## プロダクト概要
+フリーランスクリエイター向けの納期・案件管理ツール。登録不要・ブラウザで動作するWebアプリ。
+
+【解決している課題】
+DM・Skeb・CONNALAE等の複数プラットフォームで依頼を受けるクリエイターが、締切順に案件を一覧管理できない問題。TODOアプリは案件管理に特化していない。Googleカレンダーは締切順表示が不便。
+
+【主な機能】
+- 案件登録・締切順自動ソート
+- ガントチャート（ラフ中／修正中／清書中）
+- カレンダービュー（月次・締切マーカー）
+- テンプレート（定型文）管理
+- UIカラーカスタマイズ
+- i18n対応（日英）
+
+## プラン構成
+- Free：アクティブ案件3件・テンプレ3件（GitHub Pages無料公開）
+- Pro：案件・テンプレ無制限・カスタムカラー等（BOOTH HTMLダウンロード販売・完全オフライン）
+- サブスク：Pro機能＋Googleログイン・マルチデバイス同期・EasyReply連携（予定）
+
+## 開発者の状況
+- SNS発信ゼロ・交流なし
+- 既存BOOTHアカウントあり（Vtuber素材・表紙素材・3DCG）
+- 海外展開視野（Gumroad/itch.io）
+- EasyReply（返信テンプレ管理ツール）も同時開発中
+- サブスク版が一番需要あると感じている（マルチデバイスログインのため）
+
+## 調査・検討してほしい内容
+1. サブスク版の適正価格と課金設計（月額 or 年額、Free→Pro→サブスクの誘導設計）
+2. BOOTHでの売り方（タグ・説明文・サムネ戦略、競合との差別化）
+3. Gumroad/itch.ioでの海外展開可能性
+4. SNSなし・発信力ゼロでも売れる導線設計
+5. EasyReplyとのセット販売・バンドル戦略
+6. 同人系しめきりツールとの差別化ポイント
+    </div>
+  </div>
+</div>
+
+<!-- ── 連携設計ブリーフ ── -->
+<div class="section" id="tab-brief2">
+  <div class="card">
+    <div class="card-title"><span>🔗</span> 3アプリ連携設計 — AI相談用ブリーフ（クリックでコピー）</div>
+    <div class="brief-box" id="brief-text2" onclick="copyBrief2()">
+      <span class="copy-hint" id="copy-hint2">クリックでコピー</span>
+# フリーランスクリエイター向け 3アプリ連携設計の相談
+
+## 作っているものの全体像
+
+フリーランスクリエイター（イラストレーター・デザイナー・VTuber素材クリエイターなど）向けに、受注〜納品の仕事フローを丸ごとカバーする3アプリを個人開発しています。
+
+### アプリ一覧
+
+**1. MiteOrder（ミテオーダー）**
+クリエイターが自分のポートフォリオ・料金表を公開し、依頼者がその場で見積もりを選んで送れるページ。
+- 現状：静的HTMLのデモページのみ。Firebaseなし。
+- 依頼者がチェックボックスで作業内容を選ぶと合計金額が出て、フォームで送信できる。
+- 依頼者は登録不要。クリエイターが自分のページを持つイメージ。
+
+**2. EasyReply（ラクリプ）**
+クリエイターが依頼者とのDM・メールのやりとりを管理するツール。返信テンプレートを管理し、フェーズ（初回返信/見積送付/修正対応/納品）ごとに使い分けられる。
+- 現状：テンプレートのUIのみ実装済み。Firebaseなし・localStorage。
+- 将来：依頼ごとにスレッド管理・受注確定ボタンを追加予定。
+- 価格：買い切り（将来サブスクへ）
+
+**3. 〆スケ（SchedulEX）**
+依頼の締切・作業フェーズを一覧管理するガントカレンダーツール。
+- 現状：Firebaseあり（Google認証・Firestore同期済み）。稼働中。
+- 全案件を1ドキュメントにまとめてFirestoreに保存（users/{uid}/schedulex/data）。
+- 価格：Free（3件まで）・Pro買い切り（Booth）・サブスク（Firebase同期）
+
+### 別アプリ（連携非対象）
+
+**RakuThrough（ラクスルー）**
+収支・帳簿管理ツール。売掛・経費・クレカ明細などを管理。
+- 別Firebaseプロジェクトのため、3アプリとの自動連携は難しい。受注確定後は手動入力で割り切り予定。
+
+---
+
+## 共通インフラ
+
+- Firebaseプロジェクト: mimilyapp（東京リージョン）
+- 3アプリすべて同一プロジェクトに入れる予定
+- 認証: Google認証・同じuidを共有
+- Firestore構造: users/{uid}/ 以下にアプリごとのサブコレクション
+
+---
+
+## やりたいこと（連携フロー）
+
+```
+依頼者がMiteOrderで作業内容を選んで送信
+  ↓
+Firestoreに見積もり依頼を保存
+  ↓
+クリエイターがEasyReplyで依頼を確認・やりとり・受注確定
+  ↓（受注確定ボタンを押したとき）
+  ├─ 〆スケ に案件を自動追加（任意ON/OFF）
+  └─ RakuThroughには手動入力（別プロジェクトのため）
+```
+
+---
+
+## 現在検討中のFirestoreスキーマ（案）
+
+```
+users/{uid}/miteorder/requests/{requestId}
+  clientName: string       // 依頼者名
+  items: [{id, name, price}, ...]  // 選んだ作業内容
+  totalMin: number         // 合計金額（最低額）
+  notes: string            // 備考・参考URL等
+  status: ???              // ← ここが相談したい
+  createdAt: timestamp
+```
+
+---
+
+## 相談したいこと
+
+**statusの設計について意見をください。**
+
+現在の案: `"pending" | "negotiating" | "confirmed" | "declined"`
+
+- pending: 依頼が届いた（未対応）
+- negotiating: やりとり中
+- confirmed: 受注確定
+- declined: お断り
+
+### 具体的に聞きたいこと
+1. この4段階で実用上足りるか？追加すべきステータスはあるか？
+2. フリーランスクリエイターの実務でよくある「保留」「一時停止」「キャンセル（確定後）」などは別ステータスにすべきか？
+3. 〆スケへの自動追加は "confirmed" のタイミングでよいか？それとも別のタイミングが適切か？
+4. EasyReplyがMiteOrderのFirestoreドキュメントを更新する設計は適切か？（セキュリティ・設計観点から）
+
+### 前提・制約
+- 個人開発・シンプルさ優先
+- 最初は日本国内のフリーランスクリエイターが対象
+- 将来的に英語対応・海外展開も視野あり
+- 複雑なワークフロー管理ツールにはしたくない。あくまでシンプルに。
+    </div>
+  </div>
+</div>
+
+<!-- ── 競合調査 ── -->
+<div class="section" id="tab-competitors">
+  <div class="card">
+    <div class="card-title"><span>🔍</span> 競合ツール一覧（調査結果を記入）</div>
+    <table>
+      <tr>
+        <th>ツール名</th>
+        <th>価格</th>
+        <th>特徴</th>
+        <th>弱点・差別化</th>
+      </tr>
+      <tr>
+        <td style="color:#E8ECF4;">（未記入）</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+    </table>
+    <hr>
+    <div class="memo-label">調査メモ（AIの回答をここに貼る）</div>
+    <textarea class="memo-area" placeholder="BOOTHで「しめきり管理」「納期管理」「案件管理」で検索した結果を貼り付ける&#10;&#10;・値段帯&#10;・機能の傾向&#10;・売れているものの特徴"></textarea>
+  </div>
+</div>
+
+<!-- ── 価格設計 ── -->
+<div class="section" id="tab-pricing">
+  <div class="card">
+    <div class="card-title"><span>💴</span> 価格候補（検討中）</div>
+    <table>
+      <tr><th>プラン</th><th>価格候補</th><th>根拠・メモ</th></tr>
+      <tr>
+        <td><span class="tag tag-free">Free</span></td>
+        <td class="green">無料</td>
+        <td>集客・認知</td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-pro">Pro</span></td>
+        <td class="yellow">未定</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-sub">サブスク</span></td>
+        <td class="blue">未定</td>
+        <td></td>
+      </tr>
+    </table>
+    <hr>
+    <div class="memo-label">価格検討メモ</div>
+    <textarea class="memo-area" placeholder="AIの提案・競合価格・自分の判断をここに記録"></textarea>
+  </div>
+</div>
+
+<!-- ── 販売チャネル ── -->
+<div class="section" id="tab-channel">
+  <div class="card">
+    <div class="card-title"><span>🏪</span> チャネル検討</div>
+    <table>
+      <tr><th>チャネル</th><th>対象</th><th>優先度</th><th>メモ</th></tr>
+      <tr>
+        <td>BOOTH</td>
+        <td>国内</td>
+        <td class="yellow">高</td>
+        <td>どのアカウントに置くか要検討</td>
+      </tr>
+      <tr>
+        <td>Gumroad</td>
+        <td>海外</td>
+        <td class="tag tag-tbd">未定</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>itch.io</td>
+        <td>海外・インディー</td>
+        <td class="tag tag-tbd">未定</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>GitHub Pages</td>
+        <td>Free版公開</td>
+        <td class="green">✅ 運用中</td>
+        <td></td>
+      </tr>
+    </table>
+    <hr>
+    <div class="memo-label">チャネル検討メモ</div>
+    <textarea class="memo-area" placeholder="どのBOOTHアカウントに置くか&#10;海外向けの説明文はどうするか&#10;など"></textarea>
+  </div>
+</div>
+
+<!-- ── メモ ── -->
+<div class="section" id="tab-memo">
+  <div class="card">
+    <div class="card-title"><span>📝</span> アイデア・気づきメモ</div>
+    <textarea class="memo-area" style="min-height:300px;" placeholder="思いついたことを自由に書く&#10;&#10;例：&#10;・サブスク版の訴求は「スマホとPCで同じデータ」が刺さりそう&#10;・フリーランスコミュニティに無料で配って口コミ狙い&#10;・EasyReplyとセット割引"></textarea>
+  </div>
+  <div class="card">
+    <div class="card-title"><span>✅</span> 決定事項ログ</div>
+    <textarea class="memo-area" style="min-height:200px;" placeholder="確定した内容をここに記録&#10;&#10;例：&#10;2026-05-28: Pro版はBOOTH HTMLダウンロード・完全オフライン確定&#10;2026-05-28: サブスク版の💾ボタンはヘッダーから削除確定"></textarea>
+  </div>
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const ids = ['product','brief','brief2','competitors','pricing','channel','memo'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.toggle('active', s.id === 'tab-' + id);
+  });
+}
+
+function copyBrief2() {
+  const el = document.getElementById('brief-text2');
+  const hint = document.getElementById('copy-hint2');
+  const text = el.innerText.replace('クリックでコピー', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    hint.textContent = 'コピーしました ✅';
+    el.classList.add('copied');
+    setTimeout(() => {
+      hint.textContent = 'クリックでコピー';
+      el.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function copyBrief() {
+  const el = document.getElementById('brief-text');
+  const hint = document.getElementById('copy-hint');
+  const text = el.innerText.replace('クリックでコピー', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    hint.textContent = 'コピーしました ✅';
+    el.classList.add('copied');
+    setTimeout(() => {
+      hint.textContent = 'クリックでコピー';
+      el.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

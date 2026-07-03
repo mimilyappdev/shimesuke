@@ -894,7 +894,7 @@ input, select, textarea { font-family: inherit; }
         <div class="header-theme-dots" id="header-theme-dots"></div>
         <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
       </button>
-      <button class="btn-icon" id="btn-lang" onclick="setLang(lang()==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
+      <button class="btn-icon" id="btn-lang" onclick="setLang(document.documentElement.lang==='ja'?'en':'ja')" style="font-size:10px;font-weight:700;">EN</button>
       <button class="btn-icon" onclick="exportData()" title="データをバックアップ">💾</button>
       <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
     </div>
@@ -1306,11 +1306,11 @@ const I18N = {
     snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
   }
 };
-const lang = () => localStorage.getItem('shimesuke_lang') || 'ja';
+function lang() { return document.documentElement.lang || 'ja'; }
 const t = (key) => (I18N[lang()] || I18N.ja)[key] ?? (I18N.ja[key] ?? key);
 function setLang(l) {
-  localStorage.setItem('shimesuke_lang', l);
   document.documentElement.lang = l;
+  try { localStorage.setItem('shimesuke_lang', l); } catch(e) {}
   render();
   applyI18n();
 }
@@ -1348,7 +1348,7 @@ let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') 
 };
 
 const MAX_FREE_TEMPLATES = 3;
-const MAX_FREE_ORDERS = 3;
+const MAX_FREE_ORDERS = 5;
 function isPremium() { return false; }
 const DEFAULT_TEMPLATES = [
   { id: 'tpl_illust', name: 'イラスト',   phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
@@ -2601,6 +2601,9 @@ document.addEventListener('keydown', e => {
 /* ═══════════════════════════════
    INIT
 ═══════════════════════════════ */
+// 言語初期化（localStorage → document.documentElement.lang）
+try { document.documentElement.lang = localStorage.getItem('shimesuke_lang') || 'ja'; } catch(e) { document.documentElement.lang = 'ja'; }
+
 // default mobile tab
 if (window.innerWidth < 768) {
   switchTab('calendar');

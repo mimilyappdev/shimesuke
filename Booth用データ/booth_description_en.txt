@@ -1,0 +1,92 @@
+See your deadlines. Meet them with SchedulEX.
+
+---
+
+Juggling multiple projects and losing track of which deadline
+is most urgent?
+
+To-do apps don't handle deadlines well.
+Calendar apps weren't built for project phase management.
+
+SchedulEX is a browser-based project & deadline manager
+built for anyone who has deadlines to meet.
+
+---
+
+■ Features
+
+[Deadline Calendar]
+All your projects displayed as color-coded phase bars
+on a monthly calendar. See your busiest weeks at a glance.
+
+[Reverse Scheduling]
+Enter a deadline and SchedulEX automatically calculates
+the start date for each phase. No more guessing when to begin.
+
+[Urgency Colors]
+Cards change color based on days remaining.
+Your priorities jump out at you the moment you open the app.
+
+[Templates]
+Save phase durations by project type.
+Next time, set up a new project in one tap.
+
+[Color Customization ⭐ PRO]
+Customize header, background, and card colors.
+Choose from presets or set your own.
+
+[Stamp Decoration ⭐ PRO]
+Place stamps freely on your calendar.
+Add unlimited custom stamps.
+
+---
+
+■ Who is this for?
+
+✔ Anyone with deadlines — freelancers, students, creators
+✔ Illustrators, designers, handmade artists, and more
+✔ People who always ask "wait, when was that due again?"
+✔ People who hate installing yet another app
+   (no sign-up required, runs in your browser)
+
+---
+
+■ FREE vs PRO
+
+  Feature              FREE    PRO (this product)
+  Active projects      3       Unlimited
+  Templates            3       Unlimited
+  Color customization  ✗       ✅
+  Custom stamps        ✗       Unlimited
+  Data restore (JSON)  ✗       ✅
+
+Try the FREE version before you buy — no sign-up needed.
+→ https://mimilyappdev.github.io/
+
+---
+
+■ Please read before purchasing
+
+・Data is stored in your browser's local storage
+・Clearing cache or switching devices may erase your data
+  (Regular JSON backups are strongly recommended)
+・Multi-device sync is available in the subscription plan
+  (coming in the future)
+・1 license = 1 user
+・No refunds on digital downloads
+
+---
+
+■ How to use
+
+Download the HTML file and open it in your browser.
+No installation needed.
+Full instructions are included in the README inside the download.
+
+---
+
+Contact: https://docs.google.com/forms/d/e/1FAIpQLSfRH7H6j4ILYkjOFriAHmpOzxJwag1VeHU6KYD1pq2kfwvjEA/viewform
+
+All Mimily apps: https://mimilyappdev.github.io/
+
+© 2026 Mimily

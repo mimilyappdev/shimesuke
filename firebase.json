@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".gitignore",
+      "functions/**",
+      "backup/**",
+      "dev/**",
+      "dev_20260529/**",
+      "docs/**",
+      "Booth用データ/**",
+      "fanbox_shimesuke.txt",
+      "**/*.md",
+      ".git/**"
+    ],
+    "rewrites": [
+      { "source": "/pro", "destination": "/current/schedulex_pro.html" }
+    ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git"]
+    }
+  ]
+}
