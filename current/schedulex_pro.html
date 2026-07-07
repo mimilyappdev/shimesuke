@@ -1289,6 +1289,7 @@ const auth = firebase.auth();
 const db   = firebase.firestore();
 let currentUser = null;
 let userIsPro   = false;
+let isSyncing   = false;
 
 function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -1298,9 +1299,8 @@ function signOutUser() {
   auth.signOut();
 }
 function saveToFirestore() {
-  if (!currentUser) return;
+  if (!currentUser || isSyncing) return;
   const now = Date.now();
-  localStorage.setItem('shimesuke_lastSaved', now);
   db.collection('users').doc(currentUser.uid)
     .collection('schedulex').doc('data')
     .set({
@@ -1313,13 +1313,19 @@ function saveToFirestore() {
       myskin2:  mySkinColors.mycolor2,
       updatedAt: now,
     })
-    .catch(e => console.error('Firestore save error:', e));
+    .then(() => { localStorage.setItem('shimesuke_lastSaved', now); })
+    .catch(e => {
+      console.error('Firestore save error:', e);
+      showToast(lang() === 'ja' ? '保存に失敗しました。通信環境をご確認ください。' : 'Failed to save. Please check your connection.');
+    });
 }
 function loadFromFirestore() {
+  isSyncing = true;
   db.collection('users').doc(currentUser.uid)
     .collection('schedulex').doc('data')
     .get()
     .then(doc => {
+      isSyncing = false;
       if (doc.exists && doc.data().orders) {
         const d = doc.data();
         const localTs    = parseInt(localStorage.getItem('shimesuke_lastSaved') || '0');
@@ -1347,7 +1353,7 @@ function loadFromFirestore() {
         render(); // 初回ログイン：Firestoreにデータなし → 空の状態から始める
       }
     })
-    .catch(e => console.error('Firestore load error:', e));
+    .catch(e => { isSyncing = false; console.error('Firestore load error:', e); });
 }
 /* ═══════════════════════════════
    CHECKOUT RESULT
@@ -1372,12 +1378,14 @@ auth.onAuthStateChanged(user => {
     if (userArea)  userArea.style.display  = 'flex';
     if (userNameEl) userNameEl.textContent = user.displayName || user.email;
     if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
+    isSyncing = true;
     db.collection('users').doc(user.uid).get().then(doc => {
       userIsPro = doc.exists && doc.data().isPro === true;
       loadFromFirestore();
       if (!userIsPro) setTimeout(() => openUpgradeModal(), 600);
     }).catch(() => { loadFromFirestore(); });
   } else {
+    isSyncing = false;
     userIsPro = false;
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';

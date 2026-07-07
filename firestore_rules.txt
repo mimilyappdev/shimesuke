@@ -14,7 +14,14 @@ service cloud.firestore {
     function isValidSchedulEXData() {
       return request.resource.data.keys().hasOnly([
         "orders",
-        "settings"
+        "settings",
+        "theme",
+        "skin",
+        "mychart1",
+        "mychart2",
+        "myskin1",
+        "myskin2",
+        "updatedAt"
       ]);
     }
 
