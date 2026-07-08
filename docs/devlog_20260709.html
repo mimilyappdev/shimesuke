@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.7 — 2026.07.09</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  .highlight-box { background:var(--me-bg);border-left:3px solid var(--main);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7;margin-bottom:12px; }
+  .highlight-box .label { font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--main);margin-bottom:4px; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.7 サブスク版データ消失バグの真因特定・Firestoreルール2件修正</h1>
+    <div class="date">2026年7月6日〜9日</div>
+    <a class="prev-link" href="devlog_20260703.html">← Vol.6（2026.07.03）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- ── 今日の出来事 ── -->
+  <div class="section">
+    <div class="section-title">今日の出来事</div>
+    <div class="chat">
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">〆スケのサブスク版、違うブラウザでログインすると前のデータがでてきちゃう。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">初期描画のタイミング問題と、保存タイムスタンプの誤更新を疑って2回修正・デプロイ。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">まてまてまてまて。まず確認しない？勝手に実装するなや</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">申し訳ない、確認前に実装してしまった。スクリーンショット3枚をもとに状況を再整理。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">（コンソールログを貼付）Firestore save error: Missing or insufficient permissions.</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">git履歴を遡ったところ、7/3のコミットで保存フィールドにtheme/skin等を追加した際、Firestoreルールの許可フィールドリストが更新されておらず、その日以降ずっと保存が全滅していたと判明。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">Firebaseの設定を確認したら？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">firebase.jsonにfirestoreセクション自体が存在せず、ルールファイルは一度もデプロイ対象になっていなかったことも発覚。設定追加の上でルール修正・デプロイ完了。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">これ、友人にクレカ決済させる予定。一回使ってみ。って</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">実決済の前に念のため確認したところ、isPro判定の読み取り（/users/{uid}）とメンテナンスバナー（/config/maintenance）も同じルール不一致で読み取り拒否されている別バグを発見。Codexにセカンドオピニオンを求めた上でルールを追加修正・デプロイ。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 完了したこと ── -->
+  <div class="section">
+    <div class="section-title">完了したこと</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🔍</div>
+        <div class="done-text">
+          <strong>データ消失バグの真因特定</strong>
+          <div class="sub">git履歴調査により、7/3のコミットで保存フィールド(theme/skin/mychart等)を追加した際にFirestoreルールの許可リストを更新し忘れ、以降の保存が全滅していたことを確定。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🛠️</div>
+        <div class="done-text">
+          <strong>firestore_rules.txtの許可フィールド修正・デプロイ</strong>
+          <div class="sub">theme/skin/mychart1/mychart2/myskin1/myskin2/updatedAtを追加。firebase.jsonにfirestoreセクションが無くルールが一度もデプロイされていなかった問題も発見・設定追加。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🔔</div>
+        <div class="done-text">
+          <strong>保存失敗のユーザー通知を追加</strong>
+          <div class="sub">current/schedulex_pro.htmlのsaveToFirestore()失敗時にshowToast()でエラー表示するよう追加。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">✅</div>
+        <div class="done-text">
+          <strong>実機動作確認</strong>
+          <div class="sub">更新後は正しく最新データになることを確認。開きっぱなしタブはF5が必要な点は仕様として容認。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🐛</div>
+        <div class="done-text">
+          <strong>isPro読み取り不能バグを追加発見・修正</strong>
+          <div class="sub">/users/{uid}と/config/maintenanceがルールのcatch-allで読み取り拒否されていた。友人の実決済前に発見できた。Codexにセカンドオピニオンを求めネスト構造ルールで解決・デプロイ済み。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 検討・決定事項 ── -->
+  <div class="section">
+    <div class="section-title">検討・決定事項</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🚫</div>
+        <div class="done-text">
+          <strong>リアルタイム同期（onSnapshot全面移行）は正式に却下</strong>
+          <div class="sub">工数の割に効果が小さいと判断。「他端末の変更を見るにはF5更新」という運用でカバーする方針に決定。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🤝</div>
+        <div class="done-text">
+          <strong>Codexへのセカンドオピニオン依頼が有効に機能</strong>
+          <div class="sub">本番影響のあるルール変更について、現状コード・エラー文言・修正案をまとめて渡し、実装前に妥当性を検証してもらうフローを今後も継続する。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 却下したこと ── -->
+  <div class="section">
+    <div class="section-title">検討してやめたこと</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          Firestoreの onSnapshot リアルタイム同期への全面移行
+          <div class="reason">複数タブ・複数デバイスの競合を根治できるが工数大。F5運用でカバーする方針に決定し見送り。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 残タスク ── -->
+  <div class="section">
+    <div class="section-title">残タスク</div>
+    <div class="next-list">
+      <span class="next-tag warn">実機で最終確認（アップグレードモーダル・permission error）</span>
+      <span class="next-tag pending">友人によるテスト決済</span>
+      <span class="next-tag">Stripeテストモードでの決済確認</span>
+      <span class="next-tag">フォントbase64埋め込み</span>
+      <span class="next-tag">GitHubリポジトリPrivate化</span>
+      <span class="next-tag">スタンプ・スティッカーのFirestore同期</span>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="highlight-box">
+        <div class="label">最優先 — 次回セッションの最初にやること</div>
+        https://mimilyapp.web.app/pro を開いて、ログイン後に不要なアップグレードモーダルが出ないか・コンソールにpermission errorが出ないかを確認する。OKなら友人にテスト決済してもらう。
+      </div>
+      <div class="highlight-box">
+        <div class="label">F5運用の案内</div>
+        「他端末で編集した内容を見るには更新(F5)してください」という案内をアプリ内のどこに置くか、文言含め未確定。
+      </div>
+    </div>
+  </div>
+
+  <footer>SchedulEX Devlog — mimilyappdev</footer>
+</div>
+</body>
+</html>
