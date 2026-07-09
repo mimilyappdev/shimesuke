@@ -25,10 +25,20 @@ service cloud.firestore {
       ]);
     }
 
-    match /users/{uid}/schedulex/data {
+    match /users/{uid} {
       allow read: if isOwner(uid);
-      allow create, update: if isOwner(uid) && isValidSchedulEXData();
-      allow delete: if false;
+      allow write: if false;
+
+      match /schedulex/{docId} {
+        allow read: if isOwner(uid);
+        allow create, update: if isOwner(uid) && isValidSchedulEXData();
+        allow delete: if false;
+      }
+    }
+
+    match /config/maintenance {
+      allow read: if true;
+      allow write: if false;
     }
 
     match /{document=**} {
