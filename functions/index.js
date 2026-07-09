@@ -8,7 +8,6 @@ admin.initializeApp();
 const STRIPE_SECRET_KEY     = defineSecret('STRIPE_SECRET_KEY');
 const STRIPE_WEBHOOK_SECRET = defineSecret('STRIPE_WEBHOOK_SECRET');
 
-// TODO: Stripeダッシュボード → 商品 → 価格ID（price_xxxxx）を設定
 const PRICE_IDS = {
   monthly: 'price_1Tnu64RXW1evPVMUvua7DIeK', // ¥380/月
   annual:  'price_1Tnu7mRXW1evPVMUYnS0vJu1', // ¥2,480/年
