@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.9 — 2026.07.10</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  .highlight-box { background:var(--me-bg);border-left:3px solid var(--main);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7;margin-bottom:12px; }
+  .highlight-box .label { font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--main);margin-bottom:4px; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.9 コンバージョン導線の総点検・OGP画像・フォルダ整理</h1>
+    <div class="date">2026年7月10日</div>
+    <a class="prev-link" href="devlog_20260709b.html">← Vol.8（2026.07.09）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- ── 今日の出来事 ── -->
+  <div class="section">
+    <div class="section-title">今日の出来事</div>
+    <div class="chat">
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">フォント埋め込みっていいのかも含めて確認して。他実装にエラーがおきそうな部分ない？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">サブスク版はそもそも常時オンライン前提でオフライン対応が不要なことに気づいた。Chrome DevTools Protocolでdocument.fontsを直接調べ、壊れたbase64埋め込みがあってもCDN側フォントが正常ロードされ実害ゼロと実測確認。タスクをクローズ。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">サブスク版でもスタンプ使えるの、草です。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">LPが無料版だから有料版にする導線がログインになってるので…一生課金されないんじゃない？</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">実際に調べたところLPの無料系CTA(nav・ヒーロー・フッター計3箇所)が全部無料版単体に飛び、サブスク導線は料金表の中の1箇所だけだった。ヘッダーのログインボタンも購入に繋がると分からない文言。3箇所を/proに向け先変更し、常時表示の「サブスクを始める」ボタンを追加。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">ぽすとをしたい。お金がないと生活ができないので。</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">投稿文案を3つ用意。ただしOGP画像(og:image)が指すogp.pngが実在せず404だったことが判明。デモ画面のスクショを1200x630で撮って設置。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">自分のやつがほとんどみえない</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">サイドバーが締切の近い順ソートのため、私生活系デモデータが下部で見切れていた。締切日数を早めて上位表示させ撮り直し。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">フォルダ内で何のファイルがわかんないと私が混乱してしまう。もう無理</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">一旦作業を止めて休息を促した後、本人の意思で再開。ルート直下の過去ファイル(backup/, backups/, dev_20260529/, STAMP_INTEGRATION*.md等)を削除せず「アーカイブ（古いファイル・見なくてOK）」フォルダにまとめて移動。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 完了したこと ── -->
+  <div class="section">
+    <div class="section-title">完了したこと</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🔍</div>
+        <div class="done-text">
+          <strong>フォント埋め込みタスクをクローズ</strong>
+          <div class="sub">サブスク版はオンライン前提でオフライン対応不要と判明。Chrome DevTools Protocolでdocument.fontsを直接検証し、壊れたbase64埋め込みがあってもCDNフォールバックで表示に実害ないことを実測確認。Booth版も同様の判断で対応不要に。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🛠️</div>
+        <div class="done-text">
+          <strong>LPのコンバージョン導線を修正</strong>
+          <div class="sub">「無料版を使う」系CTA(nav・ヒーロー・フッター)を/proへ向け先変更。/proヘッダーに常時表示の「⭐ サブスクを始める」ボタンを新設し、ログイン前でも購入導線が明確になるようにした。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🎨</div>
+        <div class="done-text">
+          <strong>デモデータに私生活・オタク活動の予定を追加</strong>
+          <div class="sub">「自分/健康診断の予約」「自分/同人イベント サークル申込」(type:'other')を追加。原稿・仕事の締切だけでなく日常の予定も一元管理できることを訴求。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🖼️</div>
+        <div class="done-text">
+          <strong>OGP画像の404バグ発見・作成</strong>
+          <div class="sub">index.htmlのog:imageが指すogp.pngが存在せず404だったことが判明。デモ画面のスクリーンショット(1200x630)を作成し設置。私生活系デモが見切れていた問題も締切日数調整で解消し撮り直し。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🗂️</div>
+        <div class="done-text">
+          <strong>フォルダ整理</strong>
+          <div class="sub">ルート直下に散らばっていた過去の下書き・控え(backup/, backups/, dev_20260529/, STAMP_INTEGRATION*.md等)を削除せず「アーカイブ（古いファイル・見なくてOK）」フォルダに集約。今動いているものだけがルートに残る状態に。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 検討・決定事項 ── -->
+  <div class="section">
+    <div class="section-title">検討・決定事項</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">💡</div>
+        <div class="done-text">
+          <strong>無料版(app/)からサブスク導線を作らず、LPのリンク先を/proに寄せる方針</strong>
+          <div class="sub">/proは無料版と同じ無料体験(5件制限)を内包しつつログイン・課金導線もあるため、app/への二重メンテを避けてLPのCTAを/pro側に統一する判断。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 残タスク ── -->
+  <div class="section">
+    <div class="section-title">残タスク</div>
+    <div class="next-list">
+      <span class="next-tag pending">友人による本番テスト決済（DM送信済み・返事待ち）</span>
+      <span class="next-tag">宣伝投稿（文案3つ作成済み、OGP画像も設置済みで投稿可能な状態）</span>
+      <span class="next-tag">GitHubリポジトリPrivate化</span>
+      <span class="next-tag">スタンプ・スティッカーのFirestore同期</span>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="highlight-box">
+        <div class="label">最優先 — 次回セッションの最初にやること</div>
+        特になし。実装・デプロイ・コミットともに完了済み。宣伝投稿は本人のタイミングで進めればOK。
+      </div>
+    </div>
+  </div>
+
+  <footer>SchedulEX Devlog — mimilyappdev</footer>
+</div>
+</body>
+</html>
