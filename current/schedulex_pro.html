@@ -138,6 +138,15 @@ input, select, textarea { font-family: inherit; }
   transition: background 0.15s;
 }
 .btn-login:hover { background: rgba(255,255,255,0.22); }
+.btn-header-upgrade {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 8px;
+  background: #E1B75B; color: #5A3A00;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+.btn-header-upgrade:hover { background: #ECC978; }
 .user-area { display: flex; align-items: center; gap: 6px; }
 .user-avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); }
 .user-display-name { font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 700; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -725,6 +734,7 @@ input, select, textarea { font-family: inherit; }
   .header-theme-label { display: none; }
   .user-display-name { display: none; }
   .btn-login { padding: 5px 8px; font-size: 11px; }
+  .btn-header-upgrade { padding: 5px 8px; font-size: 10px; }
   .logo { flex-direction: column; align-items: flex-start; gap: 1px; }
 }
 
@@ -941,6 +951,9 @@ input, select, textarea { font-family: inherit; }
           <span class="user-display-name" id="user-display-name"></span>
           <button class="btn-signout" data-i18n="btn_logout" onclick="signOutUser()">ログアウト</button>
         </div>
+        <button class="btn-header-upgrade" id="btn-header-upgrade" onclick="openUpgradeModal()">
+          <span data-i18n="btn_header_upgrade">⭐ サブスクを始める</span>
+        </button>
       </div>
       <button class="header-theme-btn" id="header-theme-btn" onclick="toggleSkinPopup(event)" title="テーマカラー">
         <div class="header-theme-dots" id="header-theme-dots"></div>
@@ -1367,6 +1380,11 @@ function loadFromFirestore() {
   }
 })();
 
+function updateHeaderUpgradeButton() {
+  const btn = document.getElementById('btn-header-upgrade');
+  if (btn) btn.style.display = userIsPro ? 'none' : 'flex';
+}
+
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const btnLogin   = document.getElementById('btn-login');
@@ -1382,6 +1400,7 @@ auth.onAuthStateChanged(user => {
     db.collection('users').doc(user.uid).get().then(doc => {
       userIsPro = doc.exists && doc.data().isPro === true;
       loadFromFirestore();
+      updateHeaderUpgradeButton();
       if (!userIsPro) setTimeout(() => openUpgradeModal(), 600);
     }).catch(() => { loadFromFirestore(); });
   } else {
@@ -1389,6 +1408,7 @@ auth.onAuthStateChanged(user => {
     userIsPro = false;
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';
+    updateHeaderUpgradeButton();
   }
   applyI18n();
 });
@@ -1451,6 +1471,7 @@ const I18N = {
     logo_sub:'〆スケ', tagline:'締め切りが、見える。〆スケで、守ろう。',
     theme_label:'テーマ｜カラー変更', color_change:'カラー変更',
     btn_login:'ログイン', btn_logout:'ログアウト',
+    btn_header_upgrade:'⭐ サブスクを始める',
     orders_title:'案件一覧', filter_active:'進行中', filter_done:'完了', filter_unit:'件',
     btn_add:'＋ 追加', btn_stamp:'🎨 スタンプ', btn_close:'閉じる', btn_cancel:'キャンセル', btn_save:'保存',
     nav_calendar:'カレンダー', nav_orders:'案件', nav_settings:'設定',
@@ -1510,6 +1531,7 @@ const I18N = {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
     theme_label:'Theme | Color', color_change:'Colors',
     btn_login:'Sign in', btn_logout:'Sign out',
+    btn_header_upgrade:'⭐ Start subscription',
     orders_title:'Projects', filter_active:'Active', filter_done:'Done', filter_unit:'',
     btn_add:'+ Add', btn_stamp:'🎨 Stamps', btn_close:'Close', btn_cancel:'Cancel', btn_save:'Save',
     nav_calendar:'Calendar', nav_orders:'Projects', nav_settings:'Settings',
