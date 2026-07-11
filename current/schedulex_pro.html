@@ -1019,7 +1019,7 @@ input, select, textarea { font-family: inherit; }
     <div id="sidebar">
       <div id="demo-banner" style="display:none;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:8px 12px;display:none;align-items:center;justify-content:space-between;gap:8px;">
         <span>📸 <span data-i18n="demo_banner_text">サンプルデータを表示中</span></span>
-        <button onclick="clearDemoAndStart()" style="background:#5A3A00;color:#E1B75B;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;" data-i18n="demo_banner_btn">クリアして始める</button>
+        <button onclick="handleClearDemoClick()" style="background:#5A3A00;color:#E1B75B;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;" data-i18n="demo_banner_btn">クリアして始める</button>
       </div>
       <div class="sidebar-header">
         <span class="sidebar-title" data-i18n="orders_title">案件一覧</span>
@@ -1396,6 +1396,10 @@ auth.onAuthStateChanged(user => {
     if (userArea)  userArea.style.display  = 'flex';
     if (userNameEl) userNameEl.textContent = user.displayName || user.email;
     if (avatarEl && user.photoURL) avatarEl.src = user.photoURL;
+    // ログイン確定時点で「サンプル表示中」バナーを即座に消す。
+    // クラウドの実データ読み込みが終わる前にユーザーが誤って「クリアして始める」を押すと
+    // ローカル/クラウド双方のデータを消してしまう事故になるため、危険な時間窓自体をなくす。
+    dismissDemoBanner();
     isSyncing = true;
     db.collection('users').doc(user.uid).get().then(doc => {
       userIsPro = doc.exists && doc.data().isPro === true;
@@ -1519,6 +1523,7 @@ const I18N = {
     chart_labels:['色①','色②','色③','色④','色⑤'],
     phase_fallback:['準備','作業','仕上げ'],
     demo_banner_text:'サンプルデータを表示中', demo_banner_btn:'クリアして始める',
+    confirm_clear_demo:'サンプルデータを消して始めますか？\nこの案件データは削除され、元に戻せません。\n（「キャンセル」を選ぶと、データは消さずにこの表示だけ消えます）',
     upgrade_limit:'アクティブ案件は{n}件まで（期間限定）', upgrade_hint:'案件を「完了」にすると枠が空きます\nPROで無制限に追加できます',
     btn_upgrade:'PRO にアップグレード',
     upgrade_desc:'手帳1冊分で、どの端末からでもずっと使える。',
@@ -1579,6 +1584,7 @@ const I18N = {
     chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
     phase_fallback:['Prep','Work','Final'],
     demo_banner_text:'Showing sample data', demo_banner_btn:'Clear & Start',
+    confirm_clear_demo:'Clear the sample data and start fresh?\nThis project data will be deleted and cannot be undone.\n(Choosing "Cancel" just hides this banner — your data stays as is)',
     upgrade_limit:'Up to {n} active projects (limited time)', upgrade_hint:'Mark projects as Done to free up slots\nUnlimited with PRO',
     btn_upgrade:'Upgrade to PRO',
     upgrade_desc:'One planner\'s price. Access from any device, anytime.',
@@ -2799,12 +2805,24 @@ function generateDemoOrders() {
   ];
 }
 
-function clearDemoAndStart() {
-  orders = [];
-  save();
+function dismissDemoBanner() {
   localStorage.removeItem('shimesuke_demo_active');
   const banner = document.getElementById('demo-banner');
   if (banner) banner.style.display = 'none';
+}
+
+function handleClearDemoClick() {
+  if (confirm(t('confirm_clear_demo'))) {
+    clearDemoAndStart();
+  } else {
+    dismissDemoBanner();
+  }
+}
+
+function clearDemoAndStart() {
+  orders = [];
+  save();
+  dismissDemoBanner();
   render();
 }
 
