@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>EasyReply — 商品説明文</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0f0f0f;
+  color: #d0d0d0;
+  font-family: 'Helvetica Neue', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-size: 14px;
+  line-height: 1.9;
+  padding: 40px 0 80px;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.lang-block {
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 40px 44px;
+  margin-bottom: 40px;
+}
+.lang-label {
+  display: inline-block;
+  background: #4A5C6A;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+.lang-label.en { background: #3a5a4a; }
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.95;
+  color: #ccc;
+}
+
+/* copy button */
+.copy-btn {
+  display: block;
+  margin: 20px 0 0 auto;
+  padding: 8px 20px;
+  background: #222;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: #aaa;
+  font-size: 12px;
+  cursor: pointer;
+  transition: .15s;
+}
+.copy-btn:hover { background: #2a2a2a; color: #fff; }
+.copy-btn.copied { border-color: #4c4; color: #4c4; }
+
+h1 {
+  font-size: 18px;
+  color: #fff;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 32px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>EasyReply（ラクリプ）— 商品説明文</h1>
+  <div class="subtitle">Booth 掲載用 · JP / EN</div>
+
+  <!-- ── Japanese ── -->
+  <div class="lang-block">
+    <div class="lang-label">日本語 · JP</div>
+    <pre id="jp-text">==========================================
+EasyReply（ラクリプ）— 商品説明文
+==========================================
+
+
+「なんて返そう…」が、なくなる。
+依頼の受諾・確認・お断りをワンクリックで送れる、返信テンプレ管理ツール ─ ローカル版
+
+━━━━━━━━━━━━━━━━━━━━
+
+返信文を考えるとき、こんなことありませんか？
+
+✔ 「ご依頼ありがとうございます」の一文に30分かかる
+✔ お断りの文章が書けなくて、つい引き受けすぎてしまう
+✔ 受諾・確認・振込連絡、毎回ほぼ同じ文をゼロから書き直す
+
+EasyReplyは、クリエイターの「返信疲れ」をまるごと解決する
+シンプルな返信テンプレ管理ツールです。
+
+━━━━━━━━━━━━━━━━━━━━
+
+【使い方はたった3ステップ】
+
+1. 状況に合ったカテゴリを選ぶ（受諾・確認・お断り・振込連絡など）
+2. テンプレを選んで、名前や金額だけ差し替える
+3. コピーして送るだけ ── 30分が、30秒になる
+
+「なんて返そう」と悩む時間が、ゼロになります。
+
+━━━━━━━━━━━━━━━━━━━━
+
+【主な機能】
+
+📋 テンプレが最初から充実 ─ 受諾・確認・お断り・保留・振込連絡がすべて入った状態でスタート
+⚡ ワンクリックコピー ─ 選んでコピー、貼り付けて送信
+✏️ 自由にカスタマイズ・保存 ─ 自分の口調に合わせて編集できる
+📂 カテゴリ別で整理 ─ 状況別に並んでいるから、すぐ見つかる
+
+━━━━━━━━━━━━━━━━━━━━
+
+【クリエイター以外にも使えます】
+
+お礼メール、問い合わせ返信、スタッフへの連絡──
+「毎回書いている定型文」がある人なら、誰でも使えます。
+
+カテゴリを自分用にカスタマイズすれば、
+あらゆる「返信シーン」に対応できます。
+
+━━━━━━━━━━━━━━━━━━━━
+
+【ローカル版だからできること】
+
+🚫 広告なし ─ テンプレを探す途中に邪魔されません
+📴 完全オフライン ─ ネット不要でどこでも使える
+🔒 データはあなたのPCに ─ カスタム文面はクラウドに送信しない
+💾 買い切り ─ 月額なし、ずっと使える
+
+HTMLファイルをダブルクリックするだけ。
+インストールもアカウント登録も不要です。
+
+━━━━━━━━━━━━━━━━━━━━
+
+⏰ 期間限定価格：¥980（税込）
+無料Web版も引き続きご利用いただけます。</pre>
+    <button class="copy-btn" onclick="copyText('jp-text', this)">コピー</button>
+  </div>
+
+  <!-- ── English ── -->
+  <div class="lang-block">
+    <div class="lang-label en">English · EN</div>
+    <pre id="en-text">==========================================
+EasyReply — Product Description
+==========================================
+
+
+"What should I reply?" — never again.
+A reply template manager for freelance creators — local version
+
+━━━━━━━━━━━━━━━━━━━━
+
+If you take commissions, you know the feeling:
+
+→ Spending 30 minutes writing a single "thank you for your inquiry" email
+→ Struggling to say no, so you end up overcommitting
+→ Writing the same acceptance, confirmation, and invoice messages
+   from scratch — every single time
+
+EasyReply fixes all of that.
+Pick a template. Swap in the details. Copy and send.
+What used to take 30 minutes takes 30 seconds.
+
+━━━━━━━━━━━━━━━━━━━━
+
+HOW IT WORKS
+
+1. Choose the situation — Accept, Confirm, Decline, Invoice, and more
+2. Select a template and swap in the name, amount, or details
+3. Copy and paste — done
+
+No more staring at a blank message box wondering what to write.
+
+━━━━━━━━━━━━━━━━━━━━
+
+FEATURES
+
+📋 Templates included from day one — acceptance, confirmation, decline,
+   hold, and invoice messages, all ready to use
+⚡ One-click copy — select, copy, paste, send
+✏️ Fully customizable — edit any template to match your voice and save it
+📂 Organized by category — find what you need instantly
+
+━━━━━━━━━━━━━━━━━━━━
+
+NOT JUST FOR COMMISSIONS
+
+Thank-you emails. Inquiry replies. Team messages.
+Anyone who writes the same kinds of messages repeatedly can use this.
+
+Customize the categories to fit your workflow,
+and EasyReply covers every reply situation you face.
+
+━━━━━━━━━━━━━━━━━━━━
+
+LOCAL VERSION PERKS
+
+🚫 Zero ads — no interruptions while you work
+📴 Fully offline — works anywhere, no internet needed
+🔒 Your data stays on your device — nothing uploaded
+💾 One-time purchase — no subscription, yours forever
+
+Just open the HTML file. No installation. No account.
+
+━━━━━━━━━━━━━━━━━━━━
+
+⏰ Launch price: $6.99 USD (limited time)
+The free web version remains available at no cost.</pre>
+    <button class="copy-btn" onclick="copyText('en-text', this)">Copy</button>
+  </div>
+
+</div>
+<script>
+function copyText(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    btn.textContent = btn.classList.contains('en') ? 'Copied!' : 'コピーしました！';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = id === 'en-text' ? 'Copy' : 'コピー';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

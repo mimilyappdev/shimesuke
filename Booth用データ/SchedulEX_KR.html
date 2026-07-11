@@ -1,0 +1,2979 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>SchedulEX — 시메스케</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2E3460">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="〆スケ">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=BIZ+UDGothic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Tilt Warp';
+  font-style: normal;
+  font-weight: 400;
+  src: url('data:font/woff2;base64,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') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+/* ── VARIABLES ── */
+:root {
+  --main:    #2E3460;
+  --mid:     #3E4880;
+  --light:   #8A90CC;
+  --light2:  #B0B6E8;
+  --bg:      #F5F1EB;
+  --surface: #FFFFFF;
+  --border:  #DDD8D0;
+  --text:    #2A2A2A;
+  --muted:   #7A8090;
+  --gold-line: linear-gradient(90deg, #8A90CC, #B0B6E8, #8A90CC);
+
+  --safe:       #3A9A88;
+  --safe-bg:    #E8F5F3;
+  --caution:    #E3CF57;
+  --caution-bg: #FDFBE8;
+  --danger:     #E07820;
+  --danger-bg:  #FFF2E0;
+  --crisis:     #C83030;
+  --crisis-bg:  #FFECEC;
+  --overdue:    #7A1010;
+  --overdue-bg: #F5E0E0;
+
+  --sidebar-w: 280px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Meiryo', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+button { cursor: pointer; font-family: inherit; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100dvh; }
+
+/* ── HEADER ── */
+#header {
+  background: var(--main);
+  height: calc(50px + env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+  z-index: 10;
+}
+.logo {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.logo-sub { font-family: 'Meiryo', 'Hiragino Sans', 'Yu Gothic', sans-serif; font-size: 10px; color: rgba(255,255,255,0.4); }
+.logo-tagline {
+  font-family: 'Meiryo', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.06em;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255,255,255,0.18);
+  margin-left: 4px;
+  align-self: center;
+}
+.btn-top {
+  font-family: 'Meiryo', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  text-decoration: none;
+  white-space: nowrap;
+  align-self: center;
+  margin-left: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-top:hover { background: rgba(255,255,255,0.18); color: #fff; }
+@media (max-width: 767px) { .logo-tagline { display: none; } .btn-top { display: none; } }
+.header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.btn-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.btn-icon:hover { background: rgba(255,255,255,0.22); }
+.auth-area { display: flex; align-items: center; }
+.btn-login {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 8px;
+  background: rgba(255,255,255,0.12); color: #fff;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: background 0.15s;
+}
+.btn-login:hover { background: rgba(255,255,255,0.22); }
+.user-area { display: flex; align-items: center; gap: 6px; }
+.user-avatar { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.4); }
+.user-display-name { font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 700; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-signout { font-size: 10px; color: rgba(255,255,255,0.45); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0; }
+
+/* gold line */
+.gold-line { height: 3px; background: var(--gold-line); flex-shrink: 0; }
+
+/* ── MAIN LAYOUT ── */
+#main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); white-space: nowrap; }
+.filter-tabs { display: flex; gap: 4px; flex: 1; margin: 0 6px; }
+.ftab {
+  font-size: 10px; font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.ftab.active { background: var(--main); color: #fff; border-color: var(--main); }
+.btn-add {
+  background: var(--main);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.btn-add:hover { background: var(--mid); }
+
+#order-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#order-list::-webkit-scrollbar { width: 4px; }
+#order-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--muted);
+  text-align: center;
+}
+.empty-state-icon { font-size: 36px; opacity: 0.4; }
+.empty-state-text { font-size: 12px; line-height: 1.8; }
+
+/* ── ORDER CARD ── */
+.order-card {
+  position: relative;
+  border-radius: 10px;
+  padding: 11px 48px 11px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.order-card:hover { box-shadow: 0 3px 12px rgba(46,52,96,0.12); transform: translateX(-1px); }
+.order-card.selected { box-shadow: 0 0 0 2px var(--main); }
+
+/* post-it tab */
+.card-tab {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 52px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  z-index: 1;
+}
+.tab-ato   { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num   { font-size: 18px; color: #fff; font-weight: 700; line-height: 1.1; }
+.tab-nichi { font-size: 8px;  color: rgba(255,255,255,0.8); font-weight: 700; line-height: 1.3; }
+.tab-num.dark   { color: #3A3000; }
+.tab-ato.dark   { color: rgba(60,50,0,0.65); }
+.tab-nichi.dark { color: rgba(60,50,0,0.65); }
+
+.card-row1 { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+.card-name { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; flex: 1; }
+.card-phase-badge {
+  font-size: 8px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.card-type-row { display: flex; align-items: center; gap: 5px; }
+.card-type-label { font-size: 10px; }
+.card-deadline-row { font-size: 10px; font-weight: 700; }
+.phase-bar-row { display: flex; gap: 2px; height: 4px; }
+.phase-seg { flex: 1; border-radius: 2px; }
+
+/* urgency themes */
+.card-safe    { background: var(--safe-bg); }
+.card-caution { background: var(--caution-bg); }
+.card-danger  { background: var(--danger-bg); }
+.card-crisis  { background: var(--crisis-bg); outline: 1.5px solid var(--crisis); }
+.card-overdue { background: var(--overdue-bg); outline: 1.5px solid var(--overdue); }
+
+/* ── CALENDAR PANEL ── */
+#calendar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  min-width: 0;
+}
+.cal-header {
+  padding: 14px 16px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.cal-month-label {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: var(--main);
+}
+.cal-nav-btn {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.cal-nav-btn:hover { background: var(--border); }
+.cal-nav-group { display: flex; gap: 6px; align-items: center; }
+.cal-today-btn {
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+.cal-today-btn:hover { background: var(--border); }
+
+/* legend */
+.cal-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 6px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; color: var(--muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+
+/* grid */
+.cal-grid-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+.cal-grid-wrap::-webkit-scrollbar { width: 4px; }
+.cal-grid-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 3px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 4px 0;
+}
+.cal-dow.sun { color: #C05050; }
+.cal-dow.sat { color: #5070C0; }
+
+/* Weekly Gantt */
+.cal-grid { display: flex; flex-direction: column; }
+.cal-week-block { padding: 2px 0; }
+.cal-week-sep { border: none; border-top: 0.5px solid var(--border); margin: 6px 0 8px; }
+.cal-week-head { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+.cal-week-day-col {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 1px 0; cursor: pointer;
+}
+.cal-week-day-col.sun .cal-gantt-dow { color: #C05050; }
+.cal-week-day-col.sat .cal-gantt-dow { color: #5070C0; }
+.cal-gantt-dow-row {
+  position: relative; display: flex;
+  align-items: center; justify-content: center;
+  width: 100%; height: 13px;
+}
+.cal-gantt-dow { font-size: 9px; font-weight: 700; color: var(--muted); line-height: 1; }
+.cal-gantt-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--text);
+}
+.cal-gantt-num.today { background: var(--main); color: #fff; }
+.shimekiri-stamp {
+  position: absolute; left: calc(50% + 5px); top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+  border: 1.8px solid #E03030; border-radius: 2px;
+  padding: 0 3px; font-size: 7.5px; font-weight: 900;
+  color: #E03030; opacity: 0.85; white-space: nowrap;
+  line-height: 1.5; pointer-events: none; z-index: 1;
+}
+.cal-gantt-bars {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  row-gap: 3px; margin-top: 3px;
+}
+.cal-gantt-bar {
+  height: 17px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.cal-gantt-bar span {
+  font-size: 9px; font-weight: 700; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+  color: #fff; padding: 0 5px; opacity: 0.93;
+}
+.cal-gantt-bar.faded { opacity: 0.28; }
+.setting-row {
+  display: flex; align-items: center;
+  justify-content: space-between; padding: 6px 0;
+}
+.setting-row-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.toggle-switch {
+  width: 36px; height: 20px; border-radius: 10px;
+  background: var(--border); border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--main); }
+.toggle-switch::after {
+  content: ''; position: absolute;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; top: 2px; left: 2px; transition: left 0.2s;
+}
+.toggle-switch.on::after { left: 18px; }
+
+/* ── BOTTOM NAV (mobile) ── */
+#bottom-nav {
+  display: none;
+  background: var(--main);
+  height: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  flex-shrink: 0;
+}
+.bnav-inner {
+  display: flex;
+  height: 100%;
+}
+.bnav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: rgba(255,255,255,0.5);
+  transition: color 0.15s;
+}
+.bnav-item.active { color: #fff; }
+.bnav-icon { font-size: 20px; line-height: 1; }
+.bnav-label { font-size: 9px; font-weight: 700; letter-spacing: 0.05em; }
+
+/* ── MODAL ── */
+#modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+.modal-header {
+  background: var(--main);
+  padding: 16px 20px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-family: 'Tilt Warp', cursive;
+  font-size: 16px;
+  color: #fff;
+}
+.modal-close {
+  color: rgba(255,255,255,0.6);
+  font-size: 20px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+/* form fields */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; }
+.field input,
+.field select,
+.field textarea {
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.15s;
+  outline: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus { border-color: var(--light); }
+.field textarea { resize: vertical; min-height: 72px; }
+
+/* type selector */
+.type-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+}
+.type-btn {
+  padding: 10px 8px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--bg);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.type-btn.selected {
+  border-color: var(--main);
+  color: var(--main);
+  background: #ECEEF8;
+}
+
+/* phase fields */
+.phases-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.phase-field { display: flex; flex-direction: column; gap: 4px; }
+.phase-field label { font-size: 10px; font-weight: 700; color: var(--muted); }
+.phase-field input {
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  background: var(--bg);
+  outline: none;
+}
+.phase-field input:focus { border-color: var(--light); }
+.phase-hint { font-size: 10px; color: var(--muted); text-align: center; margin-top: 2px; }
+
+/* modal actions */
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 20px;
+}
+.btn-primary {
+  flex: 1;
+  background: var(--main);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: var(--mid); }
+.btn-secondary {
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--bg);
+}
+.btn-secondary:hover { background: var(--border); }
+.btn-delete {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--crisis);
+  background: var(--crisis-bg);
+  border: 1.5px solid var(--crisis);
+}
+
+/* settings modal */
+.settings-section { display: flex; flex-direction: column; gap: 10px; }
+.settings-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 2px; }
+
+/* ── ヘッダー テーマボタン ── */
+.header-theme-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: 20px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.22);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.header-theme-btn:hover { background: rgba(255,255,255,0.22); }
+.header-theme-dots { display: flex; gap: 3px; align-items: center; }
+.header-theme-dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3); flex-shrink: 0; }
+.header-theme-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; }
+
+/* ── カラーポップアップ共通 ── */
+.color-popup {
+  position: fixed;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 700;
+  display: none;
+  min-width: 230px;
+}
+.color-popup.open { display: block; }
+.popup-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 10px; }
+.popup-close-row { text-align: right; margin-top: 10px; }
+.popup-close-btn { font-size: 10px; color: var(--muted); cursor: pointer; text-decoration: underline; }
+
+/* UIスキン */
+.skin-list { display: flex; flex-direction: column; gap: 6px; }
+.skin-opt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; transition: all 0.15s;
+}
+.skin-opt:hover { background: #ECEEF8; border-color: var(--light2); }
+.skin-opt.active { border-color: var(--main); background: #ECEEF8; }
+.skin-preview { width: 30px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+.skin-name { font-size: 11px; font-weight: 700; flex: 1; }
+
+/* 月ラベル横 チャートカラーボタン */
+.chart-color-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  margin-left: 6px; transition: background 0.12s;
+}
+.chart-color-btn:hover { background: var(--border); }
+.chart-color-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.chart-color-label { font-size: 9px; font-weight: 700; color: var(--muted); white-space: nowrap; margin-left: 2px; }
+
+/* チャートカラーポップアップ */
+.chart-theme-list { display: flex; flex-direction: column; gap: 6px; }
+.chart-theme-opt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--bg);
+  cursor: pointer; transition: all 0.15s;
+}
+.chart-theme-opt:hover { background: #ECEEF8; border-color: var(--light2); }
+.chart-theme-opt.active { border-color: var(--main); background: #ECEEF8; }
+.chart-theme-dots { display: flex; gap: 3px; }
+.chart-theme-dot { width: 13px; height: 13px; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+.chart-theme-name { font-size: 11px; font-weight: 700; flex: 1; }
+
+/* template list */
+.template-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+.template-item-name { font-size: 12px; font-weight: 700; flex: 1; }
+.template-item-days { font-size: 10px; color: var(--muted); flex: 2; }
+.template-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-tpl-edit {
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px; border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--muted);
+}
+.btn-tpl-edit:hover { background: var(--border); }
+.btn-tpl-del {
+  font-size: 10px; font-weight: 700;
+  padding: 4px 10px; border-radius: 6px;
+  border: 1.5px solid var(--crisis);
+  background: var(--crisis-bg); color: var(--crisis);
+}
+.btn-add-tpl {
+  width: 100%; padding: 10px;
+  border-radius: 10px;
+  border: 1.5px dashed var(--border);
+  background: var(--bg);
+  font-size: 12px; font-weight: 700; color: var(--main);
+}
+.btn-add-tpl:hover { background: #ECEEF8; border-color: var(--light); }
+.btn-add-tpl.locked { color: var(--muted); cursor: default; }
+.btn-add-tpl.locked:hover { background: var(--bg); border-color: var(--border); }
+
+/* ── MOBILE ── */
+@media (max-width: 767px) {
+  body { overflow: hidden; }
+  #sub-nav { display: none !important; }
+  #sidebar { width: 100%; border-right: none; display: none; }
+  #sidebar.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; overflow-y: auto; }
+  #calendar-panel { display: none; }
+  #calendar-panel.mobile-active { display: flex; position: fixed; inset: 0; top: calc(53px + env(safe-area-inset-top)); bottom: calc(56px + env(safe-area-inset-bottom)); z-index: 5; }
+  #bottom-nav { display: block; position: relative; z-index: 10; }
+  .cal-cell { min-height: 54px; }
+  .logo { font-size: 16px; }
+  .header-theme-label { display: none; }
+  .user-display-name { display: none; }
+  .btn-login { padding: 5px 8px; font-size: 11px; }
+  .logo { flex-direction: column; align-items: flex-start; gap: 1px; }
+}
+
+/* ── STICKER LAYER ── */
+#sticker-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  overflow: hidden;
+}
+.placed-sticker {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: clamp(60px, 10vw, 88px);
+  transform-origin: center;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+@keyframes stickerPop {
+  0%   { transform: scale(0.2) rotate(var(--s-rot)); opacity:0.6; }
+  60%  { transform: scale(1.18) rotate(var(--s-rot)); }
+  80%  { transform: scale(0.94) rotate(var(--s-rot)); }
+  100% { transform: scale(1) rotate(var(--s-rot)); opacity:1; }
+}
+.placed-sticker.pop { animation: stickerPop 0.28s cubic-bezier(.34,1.56,.64,1) forwards; }
+.placed-sticker:active { cursor: grabbing; }
+.placed-sticker .s-body {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 3px 8px rgba(0,0,0,0.18);
+  border: 2.5px solid rgba(255,255,255,0.6);
+  gap: 2px;
+  position: relative;
+}
+.placed-sticker .s-emoji { font-size: clamp(18px, 3.5vw, 28px); line-height: 1; }
+.placed-sticker .s-label { font-size: clamp(7px, 1.2vw, 10px); font-weight: 900; letter-spacing: 0.04em; text-align: center; line-height: 1.2; padding: 0 4px; }
+.placed-sticker .s-del {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #333;
+  color: #fff;
+  font-size: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1.5px solid #fff;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.placed-sticker.selected .s-del { display: flex; }
+
+/* スタンプパネル */
+#stamp-panel {
+  position: fixed;
+  top: 94px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 12px 16px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 70;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  min-width: 280px;
+}
+#stamp-panel.open { display: flex; }
+.stamp-panel-title { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; }
+.stamp-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; max-height: 108px; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none; }
+.stamp-options::-webkit-scrollbar { display: none; }
+.stamp-option {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.15);
+  gap: 1px;
+  transition: transform 0.1s;
+  flex-shrink: 0;
+}
+.stamp-option:hover { transform: scale(1.12); }
+.stamp-option .so-emoji { font-size: 20px; line-height: 1; }
+.stamp-option .so-label { font-size: 7px; font-weight: 900; color: inherit; text-align: center; line-height: 1.1; }
+.stamp-option-img { position: relative; overflow: visible; background: #eee !important; padding: 0; }
+.stamp-option-img img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.stamp-option-img .so-del {
+  position: absolute; top: -5px; right: -5px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #333; color: #fff; font-size: 9px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; border: 1.5px solid #fff; z-index: 2;
+}
+.stamp-option-add {
+  background: var(--bg) !important;
+  border: 2px dashed var(--border) !important;
+  color: var(--muted) !important;
+  font-size: 22px; font-weight: 300;
+  display: flex; align-items: center; justify-content: center;
+}
+.stamp-panel-hint { font-size: 10px; color: var(--muted); text-align: center; }
+.stamp-panel-close { font-size: 10px; color: var(--muted); text-align: center; cursor: pointer; text-decoration: underline; }
+@media (min-width: 768px) {
+  #sidebar { display: flex; }
+  #calendar-panel { display: flex; }
+}
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: #2A2A2A; color: #fff;
+  padding: 11px 18px; border-radius: 10px;
+  font-size: 12px; line-height: 1.6; text-align: center;
+  max-width: 320px; width: calc(100% - 48px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; pointer-events: auto; }
+
+/* ── SUB NAV ── */
+#sub-nav {
+  position: relative;
+  z-index: 60;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 12px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#sub-nav::-webkit-scrollbar { display: none; }
+.snav-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s;
+  text-decoration: none;
+}
+.snav-btn:hover { background: var(--border); }
+.snav-btn.locked {
+  color: var(--muted);
+  border-color: var(--border);
+  cursor: default;
+}
+.snav-btn.locked:hover { background: var(--bg); }
+.snav-lock { font-size: 10px; opacity: 0.7; }
+.snav-note { font-size: 10px; color: var(--muted); white-space: nowrap; flex-shrink: 0; opacity: 0.75; }
+.snav-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo">
+      SchedulEX
+      <span class="logo-sub" data-i18n="logo_sub">〆スケ</span>
+      <span class="logo-tagline" data-i18n="tagline">締め切りが、見える。〆スケで、守ろう。</span>
+      
+    </div>
+    <div class="header-actions">
+      <button class="header-theme-btn" id="header-theme-btn" onclick="toggleSkinPopup(event)" title="テーマカラー">
+        <div class="header-theme-dots" id="header-theme-dots"></div>
+        <span class="header-theme-label" data-i18n="theme_label">テーマ｜カラー変更</span>
+      </button>
+      
+
+      <button class="btn-icon" onclick="openSettings()" title="設定">⚙️</button>
+    </div>
+  </header>
+  <div class="gold-line"></div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+    <!-- テーマカラー（UIスキン）ポップアップ -->
+  <div class="color-popup" id="skin-popup">
+    <p class="popup-label">🎨 テーマカラー</p>
+    <div class="skin-list" id="skin-list"></div>
+    <div class="popup-close-row"><span class="popup-close-btn" onclick="closeSkinPopup()">閉じる</span></div>
+  </div>
+
+  <!-- チャートカラーポップアップ -->
+  <div class="color-popup" id="chart-color-popup">
+    <p class="popup-label">📊 チャートカラー</p>
+    <div class="chart-theme-list" id="chart-theme-list"></div>
+    <div class="popup-close-row"><span class="popup-close-btn" onclick="closeChartColorPopup()">閉じる</span></div>
+  </div>
+
+  <!-- STICKER LAYER -->
+  <div id="sticker-layer"></div>
+
+  <!-- hidden file input for custom stamps -->
+  <input type="file" id="stamp-upload" accept="image/*" style="display:none" onchange="handleStampUpload(this)">
+
+  <!-- STAMP PANEL -->
+  <div id="stamp-panel">
+    <p class="stamp-panel-title" data-i18n="stamp_title">🎨 スタンプを選んで画面に貼ろう</p>
+    <div class="stamp-options" id="stamp-options"></div>
+    <p class="stamp-panel-hint" data-i18n="stamp_hint">貼った後はドラッグで移動・タップで削除</p>
+    <p class="stamp-panel-close" data-i18n="btn_close" onclick="closeStampPanel()">閉じる</p>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <div id="demo-banner" style="display:none;background:#E1B75B;color:#5A3A00;font-size:11px;font-weight:700;padding:8px 12px;display:none;align-items:center;justify-content:space-between;gap:8px;">
+        <span>📸 <span data-i18n="demo_banner_text">サンプルデータを表示中</span></span>
+        <button onclick="clearDemoAndStart()" style="background:#5A3A00;color:#E1B75B;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;" data-i18n="demo_banner_btn">クリアして始める</button>
+      </div>
+      <div class="sidebar-header">
+        <span class="sidebar-title" data-i18n="orders_title">案件一覧</span>
+        <div class="filter-tabs">
+          <button class="ftab active" id="ftab-active" onclick="setOrderFilter('active')">進行中 <span id="ftab-active-count">0</span><span id="ftab-unit">件</span></button>
+          <button class="ftab" id="ftab-done" data-i18n="filter_done" onclick="setOrderFilter('done')">完了</button>
+        </div>
+        <button class="btn-add" id="btn-add-order" data-i18n="btn_add" onclick="openAddOrder()">＋ 追加</button>
+      </div>
+      <div id="order-list"></div>
+      <!-- AD SLOT START
+      <div id="ad-slot" style="padding:10px;text-align:center;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+        広告エリア
+      </div>
+      AD SLOT END -->
+    </div>
+
+    <!-- CALENDAR -->
+    <div id="calendar-panel">
+      <div class="cal-header">
+        <div class="cal-nav-group">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          <span class="cal-month-label" id="cal-month-label">2026年5月</span>
+          <button class="chart-color-btn" id="chart-color-btn" onclick="toggleChartColorPopup(event)" title="チャートカラー">
+            <div id="chart-color-dots" style="display:flex;gap:2px;"></div>
+            <span class="chart-color-label" data-i18n="color_change">カラー変更</span>
+          </button>
+        </div>
+        <button class="cal-today-btn" data-i18n="btn_stamp" onclick="toggleStampPanel()">🎨 スタンプ</button>
+      </div>
+      <div class="cal-legend" id="cal-legend"></div>
+      <div class="cal-grid-wrap">
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav">
+    <div class="bnav-inner">
+      <button class="bnav-item active" id="bnav-calendar" onclick="switchTab('calendar')">
+        <span class="bnav-icon">🗓</span>
+        <span class="bnav-label" data-i18n="nav_calendar">カレンダー</span>
+      </button>
+      <button class="bnav-item" id="bnav-orders" onclick="switchTab('orders')">
+        <span class="bnav-icon">📋</span>
+        <span class="bnav-label" data-i18n="nav_orders">案件</span>
+      </button>
+      <button class="bnav-item" id="bnav-settings" onclick="openSettings()">
+        <span class="bnav-icon">⚙️</span>
+        <span class="bnav-label" data-i18n="nav_settings">設定</span>
+      </button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- MODAL OVERLAY -->
+<div id="modal-overlay" onclick="handleOverlayClick(event)">
+
+  <!-- ADD / EDIT ORDER MODAL -->
+  <div class="modal" id="order-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="order-modal-title">案件を追加</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="field">
+        <label data-i18n="label_order_name">案件名 / クライアント名</label>
+        <input type="text" id="f-name" placeholder="例：いぬさん / キャラデザ" data-i18n-placeholder="placeholder_order_name">
+      </div>
+
+      <div class="field">
+        <label data-i18n="label_type">依頼の種類</label>
+        <div class="type-grid" id="type-grid">
+          <button class="type-btn selected" data-type="illustration" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="8" y="8" width="26" height="32" rx="4"/>
+              <circle cx="21" cy="19" r="5"/>
+              <path d="M13 36 Q21 27 29 36"/>
+              <path d="M31 28 L41 18"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="currentColor"/>
+            </svg>
+            <span data-i18n="type_illustration">イラスト</span>
+          </button>
+          <button class="type-btn" data-type="design" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="6" width="26" height="34" rx="4"/>
+              <line x1="12" y1="17" x2="28" y2="17"/>
+              <line x1="12" y1="23" x2="23" y2="23"/>
+              <path d="M27 30 L39 18 L43 22 L31 34 Z" fill="currentColor" stroke="currentColor"/>
+              <circle cx="27" cy="38" r="3" fill="currentColor"/>
+            </svg>
+            <span data-i18n="type_design">デザイン</span>
+          </button>
+          <button class="type-btn" data-type="video" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="38" height="26" rx="5"/>
+              <line x1="22" y1="34" x2="22" y2="42"/>
+              <line x1="14" y1="42" x2="30" y2="42"/>
+              <path d="M17 16 L17 28 L30 22 Z" fill="currentColor" stroke="currentColor"/>
+            </svg>
+            <span data-i18n="type_video">動画</span>
+          </button>
+          <button class="type-btn" data-type="other" onclick="selectType(this)">
+            <svg width="28" height="28" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/>
+              <line x1="5" y1="26" x2="43" y2="26"/>
+            </svg>
+            <span data-i18n="type_other">その他</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="label_deadline">納期（締め切り）</label>
+        <input type="date" id="f-deadline">
+      </div>
+
+      <div class="field">
+        <label data-i18n="label_phase">現在のフェーズ</label>
+        <select id="f-phase">
+          <option value="0" data-i18n="phase_rough">ラフ中</option>
+          <option value="1" data-i18n="phase_fix">修正中</option>
+          <option value="2" data-i18n="phase_final">清書中</option>
+          <option value="3" data-i18n="phase_done">完了</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label data-i18n="label_schedule">スケジュール設定（日数）</label>
+        <select id="f-template" onchange="applyTemplate()" style="margin-bottom:8px;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);outline:none;">
+          <option value="" data-i18n="no_template">テンプレートなし（手動入力）</option>
+        </select>
+        <div class="phases-row" id="f-phases-row"></div>
+        <p class="phase-hint" data-i18n="template_hint">※ テンプレートを選ぶと日数が自動で入ります</p>
+      </div>
+
+      <div class="field">
+        <label data-i18n="label_notes">メモ</label>
+        <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など" data-i18n-placeholder="placeholder_notes"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-actions" id="order-modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveOrder()">保存</button>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title" data-i18n="modal_settings">設定</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_calendar">カレンダー表示</p>
+        <div class="setting-row">
+          <span class="setting-row-label" data-i18n="settings_stamp_toggle">〆切！スタンプを表示する</span>
+          <button class="toggle-switch" id="stamp-toggle" onclick="toggleShimekiriStamp()"></button>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_default_phases">デフォルトのフェーズ日数</p>
+        <div class="phases-row" id="s-phases-row"></div>
+        <p class="phase-hint" data-i18n="settings_phase_hint">案件追加時の手動入力デフォルト値になります</p>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_templates">フェーズテンプレート</p>
+        <div id="template-list"></div>
+        <button class="btn-add-tpl" id="btn-add-tpl" data-i18n="btn_add_tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_backup">バックアップ / 復元</p>
+        <button class="btn-primary" data-i18n="btn_export" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
+        <button class="btn-primary" data-i18n="btn_import" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_ics">カレンダー連携 (.ics)</p>
+        <button class="btn-primary" data-i18n="btn_export_ics" onclick="exportICS()" style="width:100%;margin-bottom:8px;">📅 .icsに書き出す</button>
+      </div>
+    </div>
+    <div style="padding: 0 20px 12px; font-size: 10px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 12px;" data-i18n-html="settings_footer">
+      <strong>フォント・動作環境について</strong><br>
+      日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br>
+      <strong>データについて</strong><br>
+      入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+
+  <!-- TEMPLATE EDIT MODAL -->
+  <div class="modal" id="template-modal" style="display:none;">
+    <div class="modal-header">
+      <span class="modal-title" id="tpl-modal-title">テンプレートを追加</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label data-i18n="label_template_name">テンプレート名</label>
+        <input type="text" id="tpl-name" placeholder="例：立ち絵、ミニキャラ、キービジュアル">
+      </div>
+      <div class="field">
+        <label data-i18n="label_phase_days">フェーズ日数</label>
+        <div class="phases-row" id="tpl-phases-row"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" data-i18n="btn_cancel" onclick="backToSettings()">キャンセル</button>
+      <button class="btn-primary" data-i18n="btn_save" onclick="saveTemplate()">保存</button>
+    </div>
+  </div>
+
+</div><!-- /modal-overlay -->
+
+<!-- Firebase SDK -->
+<script>
+/* ═══════════════════════════════
+   FIREBASE
+═══════════════════════════════ */
+
+
+/* ═══════════════════════════════
+   I18N
+═══════════════════════════════ */
+const I18N = {
+  ja: {
+    logo_sub:'〆スケ', tagline:'締め切りが、見える。〆スケで、守ろう。',
+    theme_label:'テーマ｜カラー変更', color_change:'カラー変更',
+    btn_login:'ログイン', btn_logout:'ログアウト',
+    orders_title:'案件一覧', filter_active:'進行中', filter_done:'完了', filter_unit:'件',
+    btn_add:'＋ 追加', btn_stamp:'🎨 スタンプ', btn_close:'閉じる', btn_cancel:'キャンセル', btn_save:'保存',
+    nav_calendar:'カレンダー', nav_orders:'案件', nav_settings:'設定',
+    modal_add_order:'案件を追加', modal_edit_order:'案件を編集',
+    label_order_name:'案件名 / クライアント名', placeholder_order_name:'例：いぬさん / キャラデザ',
+    label_type:'依頼の種類', type_illustration:'イラスト', type_design:'デザイン', type_video:'動画', type_other:'その他',
+    label_deadline:'納期（締め切り）', label_phase:'現在のフェーズ',
+    phase_rough:'準備中', phase_fix:'作業中', phase_final:'仕上げ中', phase_done:'完了',
+    label_schedule:'スケジュール設定（日数）', no_template:'テンプレートなし（手動入力）', template_hint:'※ テンプレートを選ぶと日数が自動で入ります',
+    label_notes:'メモ', placeholder_notes:'キャラデザ：青系・猫耳・前金入金済 など',
+    modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する',
+    settings_default_phases:'デフォルトのフェーズ日数', settings_phase_hint:'案件追加時の手動入力デフォルト値になります',
+    settings_templates:'フェーズテンプレート', btn_add_tpl:'＋ テンプレートを追加',
+    settings_backup:'バックアップ / 復元', btn_export:'💾 JSONに書き出す', btn_import:'📂 JSONから復元',
+    settings_ics:'カレンダー連携 (.ics)', btn_export_ics:'📅 .icsに書き出す',
+    modal_add_template:'テンプレートを追加', modal_edit_template:'テンプレートを編集',
+    label_template_name:'テンプレート名', label_phase_days:'フェーズ日数',
+    stamp_title:'🎨 スタンプを選んで画面に貼ろう', stamp_hint:'貼った後はドラッグで移動・タップで削除',
+    days_left:'あと', days_unit:'日', days_suffix:'', overdue:'超過', today_deadline:'今日が締め切り！',
+    phase_badge:['準備中','作業中','仕上げ中'], phase_badge_done:'完了',
+    empty_orders:'案件がまだありません', empty_orders_hint:'「＋ 追加」から登録してください',
+    empty_done:'完了済みの案件はありません',
+    snav_easyreply:'EasyReply連携', snav_gcal:'Googleカレンダー同期', snav_finance:'収支確認',
+    snav_note:'※ サブスク版（開発中）の機能です',
+    months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+    dow:['日','月','火','水','木','金','土'],
+    empty_cal:'案件を追加するとカレンダーに表示されます',
+    phase_label_rough:'準備', phase_label_fix:'作業', phase_label_final:'仕上げ',
+    settings_footer:'<strong>フォント・動作環境について</strong><br>日本語フォントはOSのシステムフォントで表示されます。ご利用環境によって見た目が異なる場合があります。<br><strong>データについて</strong><br>入力データはブラウザのローカルストレージに保存されます。外部サーバーへの送信は行いません。',
+    tpl_empty:'テンプレートがありません',
+    btn_tpl_edit:'編集', btn_tpl_del:'削除', btn_delete:'削除',
+    tpl_locked:'🔒 テンプレート追加（無料枠：{n}件まで）',
+    alert_enter_name:'案件名を入力してください',
+    alert_enter_deadline:'納期を入力してください',
+    confirm_delete_order:'この案件を削除しますか？',
+    alert_enter_tpl_name:'テンプレート名を入力してください',
+    confirm_delete_tpl:'このテンプレートを削除しますか？',
+    storage_warning:'データはブラウザに保存されます。キャッシュ削除で消える場合があります。💾 定期的にJSONバックアップをおすすめします。',
+    alert_invalid_format:'形式が違います',
+    confirm_restore:'{n}件の案件データを復元します。現在のデータは上書きされます。よろしいですか？',
+    alert_restored:'復元しました！',
+    alert_restore_fail:'読み込みに失敗しました。\n',
+    alert_no_orders:'案件がありません',
+    skin_labels:['ヘッダー色','背景色','カード色','テキスト色'],
+    chart_labels:['色①','色②','色③','色④','色⑤'],
+    phase_fallback:['準備','作業','仕上げ'],
+    demo_banner_text:'サンプルデータを表示中', demo_banner_btn:'クリアして始める',
+    upgrade_limit:'アクティブ案件は{n}件まで', upgrade_hint:'案件を「完了」にすると枠が空きます\nPROで無制限に追加できます',
+  },
+  en: {
+    logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
+    theme_label:'Theme | Color', color_change:'Colors',
+    btn_login:'Sign in', btn_logout:'Sign out',
+    orders_title:'Projects', filter_active:'Active', filter_done:'Done', filter_unit:'',
+    btn_add:'+ Add', btn_stamp:'🎨 Stamps', btn_close:'Close', btn_cancel:'Cancel', btn_save:'Save',
+    nav_calendar:'Calendar', nav_orders:'Projects', nav_settings:'Settings',
+    modal_add_order:'Add Project', modal_edit_order:'Edit Project',
+    label_order_name:'Project / Client Name', placeholder_order_name:'e.g. John / Character Design',
+    label_type:'Project Type', type_illustration:'Illustration', type_design:'Design', type_video:'Video', type_other:'Other',
+    label_deadline:'Deadline', label_phase:'Current Phase',
+    phase_rough:'Preparing', phase_fix:'Working', phase_final:'Finishing', phase_done:'Done',
+    label_schedule:'Schedule (days)', no_template:'No template (manual)', template_hint:'* Select a template to auto-fill days',
+    label_notes:'Notes', placeholder_notes:'e.g. Blue palette, advance payment received',
+    modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp',
+    settings_default_phases:'Default Phase Days', settings_phase_hint:'Used as default values when adding a project',
+    settings_templates:'Phase Templates', btn_add_tpl:'+ Add Template',
+    settings_backup:'Backup / Restore', btn_export:'💾 Export as JSON', btn_import:'📂 Restore from JSON',
+    settings_ics:'Calendar Export (.ics)', btn_export_ics:'📅 Export as .ics',
+    modal_add_template:'Add Template', modal_edit_template:'Edit Template',
+    label_template_name:'Template Name', label_phase_days:'Phase Days',
+    stamp_title:'🎨 Pick a stamp and place it on screen', stamp_hint:'Drag to move · Tap to delete',
+    days_left:'', days_unit:'d', days_suffix:' left', overdue:'Overdue', today_deadline:'Due today!',
+    phase_badge:['Preparing','Working','Finishing'], phase_badge_done:'Done',
+    empty_orders:'No projects yet', empty_orders_hint:'Tap "+ Add" to get started',
+    empty_done:'No completed projects',
+    snav_easyreply:'EasyReply', snav_gcal:'Google Calendar', snav_finance:'Revenue',
+    snav_note:'* Features in development (subscription)',
+    months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+    dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    empty_cal:'Add projects to see them on the calendar',
+    phase_label_rough:'Prep', phase_label_fix:'Work', phase_label_final:'Final',
+    settings_footer:'<strong>Fonts &amp; Compatibility</strong><br>Japanese fonts use your OS system fonts. Appearance may vary by environment.<br><strong>About Your Data</strong><br>Data is stored in your browser\'s local storage. No data is sent to external servers.',
+    tpl_empty:'No templates yet',
+    btn_tpl_edit:'Edit', btn_tpl_del:'Delete', btn_delete:'Delete',
+    tpl_locked:'🔒 Add Template (free limit: {n})',
+    alert_enter_name:'Please enter a project name',
+    alert_enter_deadline:'Please enter a deadline',
+    confirm_delete_order:'Delete this project?',
+    alert_enter_tpl_name:'Please enter a template name',
+    confirm_delete_tpl:'Delete this template?',
+    storage_warning:'Data is stored in your browser and may be lost if cache is cleared. 💾 Regular JSON backups are recommended.',
+    alert_invalid_format:'Invalid file format',
+    confirm_restore:'Restore {n} projects? This will overwrite your current data.',
+    alert_restored:'Restored!',
+    alert_restore_fail:'Failed to restore.\n',
+    alert_no_orders:'No projects to export',
+    skin_labels:['Header','Background','Card','Text'],
+    chart_labels:['Color 1','Color 2','Color 3','Color 4','Color 5'],
+    phase_fallback:['Prep','Work','Final'],
+    demo_banner_text:'Showing sample data', demo_banner_btn:'Clear & Start',
+    upgrade_limit:'Up to {n} active projects', upgrade_hint:'Mark projects as Done to free up slots\nUnlimited with PRO',
+  },
+  ko: {
+    logo_sub: '시메스케!',
+    tagline: '마감일을 한눈에. 늦지 않도록.',
+
+    theme_label: '테마 | 색상',
+    color_change: '색상 변경',
+
+    btn_login: '로그인',
+    btn_logout: '로그아웃',
+
+    orders_title: '작업 목록',
+    filter_active: '진행 중',
+    filter_done: '완료',
+    filter_unit: '건',
+
+    btn_add: '+ 추가',
+    btn_stamp: '🎨 스탬프',
+    btn_close: '닫기',
+    btn_cancel: '취소',
+    btn_save: '저장',
+
+    nav_calendar: '캘린더',
+    nav_orders: '작업',
+    nav_settings: '설정',
+
+    modal_add_order: '작업 추가',
+    modal_edit_order: '작업 수정',
+
+    label_order_name: '작업명 / 클라이언트',
+    placeholder_order_name: '예: 이누님 / 캐릭터 디자인',
+
+    label_type: '작업 종류',
+    type_illustration: '일러스트',
+    type_design: '디자인',
+    type_video: '영상',
+    type_other: '기타',
+
+    label_deadline: '마감일',
+    label_phase: '현재 단계',
+
+    phase_rough: '준비',
+    phase_fix: '작업 중',
+    phase_final: '마무리',
+    phase_done: '완료',
+
+    label_schedule: '스케줄 설정 (작업 기간)',
+    no_template: '템플릿 없음 (직접 입력)',
+    template_hint: '※ 템플릿을 선택하면 일수가 자동으로 입력됩니다',
+
+    label_notes: '메모',
+    placeholder_notes: '예: 파란색 계열, 선금 입금 완료 등',
+
+    modal_settings: '설정',
+    settings_calendar: '캘린더 보기',
+    settings_stamp_toggle: '마감 스탬프 표시',
+
+    settings_default_phases: '기본 단계별 소요 일수',
+    settings_phase_hint: '작업 추가 시 기본값으로 사용됩니다',
+
+    settings_templates: '단계 템플릿',
+    btn_add_tpl: '+ 템플릿 추가',
+
+    settings_backup: '백업 / 복원',
+    btn_export: '💾 JSON으로 내보내기',
+    btn_import: '📂 JSON에서 복원',
+
+    settings_ics: '캘린더 연동 (.ics)',
+    btn_export_ics: '📅 .ics로 내보내기',
+
+    modal_add_template: '템플릿 추가',
+    modal_edit_template: '템플릿 수정',
+
+    label_template_name: '템플릿 이름',
+    label_phase_days: '단계별 소요 일수',
+
+    stamp_title: '🎨 스탬프를 선택해 화면에 붙여보세요',
+    stamp_hint: '드래그로 이동 · 탭하면 제거',
+
+    days_left: '',
+    days_unit: '일',
+    days_suffix: ' 남음',
+    overdue: '마감 지남',
+    today_deadline: '오늘 마감!',
+
+    phase_badge: ['준비', '작업 중', '마무리'],
+    phase_badge_done: '완료',
+
+    empty_orders: '아직 등록된 작업이 없습니다',
+    empty_orders_hint: '"+ 추가"를 눌러 등록해 주세요',
+    empty_done: '완료된 작업이 없습니다',
+
+    snav_easyreply: 'EasyReply 연동',
+    snav_gcal: 'Google 캘린더 동기화',
+    snav_finance: '수입 확인',
+    snav_note: '※ 구독 버전 기능입니다 (개발 중)',
+
+    months: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+    dow: ['일','월','화','수','목','금','토'],
+
+    empty_cal: '작업을 추가하면 캘린더에 표시됩니다',
+
+    phase_label_rough: '준비',
+    phase_label_fix: '작업',
+    phase_label_final: '마무리',
+
+    settings_footer:
+      '<strong>글꼴 및 동작 환경 안내</strong><br>' +
+      '글꼴은 OS 시스템 글꼴로 표시됩니다. 사용 환경에 따라 표시가 다를 수 있습니다.<br>' +
+      '<strong>데이터 안내</strong><br>' +
+      '입력한 데이터는 브라우저의 로컬 스토리지에 저장됩니다. 외부 서버로 전송되지 않습니다.',
+
+    tpl_empty: '템플릿이 없습니다',
+    btn_tpl_edit: '수정',
+    btn_tpl_del: '삭제',
+    btn_delete: '삭제',
+
+    tpl_locked: '🔒 템플릿 추가 (무료 한도: {n}개)',
+
+    alert_enter_name: '작업명을 입력해 주세요',
+    alert_enter_deadline: '마감일을 입력해 주세요',
+    confirm_delete_order: '이 작업을 삭제하시겠습니까?',
+
+    alert_enter_tpl_name: '템플릿 이름을 입력해 주세요',
+    confirm_delete_tpl: '이 템플릿을 삭제하시겠습니까?',
+
+    storage_warning: '데이터는 브라우저에 저장됩니다. 캐시를 삭제하면 사라질 수 있습니다. 💾 정기적인 JSON 백업을 권장합니다.',
+
+    alert_invalid_format: '형식이 올바르지 않습니다',
+    confirm_restore: '작업 데이터 {n}건을 복원합니다. 현재 데이터를 덮어씁니다. 진행하시겠습니까?',
+    alert_restored: '복원이 완료되었습니다!',
+    alert_restore_fail: '복원에 실패했습니다.',
+    alert_no_orders: '내보낼 작업이 없습니다',
+
+    skin_labels: ['헤더 색상', '배경 색상', '카드 색상', '텍스트 색상'],
+    chart_labels: ['색상①', '색상②', '색상③', '색상④', '색상⑤'],
+
+    phase_fallback: ['준비', '작업', '마무리'],
+
+    demo_banner_text: '샘플 데이터를 표시 중',
+    demo_banner_btn: '지우고 시작하기',
+
+    upgrade_limit: '활성 작업은 {n}건까지 등록할 수 있습니다',
+    upgrade_hint: '작업을 완료로 설정하면 슬롯이 비워집니다\nPRO에서는 무제한으로 추가할 수 있습니다',
+  }
+};
+
+const t = (key) => (I18N[lang()] || I18N.ja)[key] ?? (I18N.ja[key] ?? key);
+function setLang(l) {
+  document.documentElement.lang = l;
+  try { localStorage.setItem('shimesuke_lang', l); } catch(e) {}
+  render();
+  applyI18n();
+}
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n); if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = t(el.dataset.i18nHtml); if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = t(el.dataset.i18nPlaceholder); if (v) el.placeholder = v;
+  });
+  const btn = document.getElementById('btn-lang');
+  if (btn) btn.textContent = lang() === 'ja' ? 'EN' : 'JP';
+  const countEl = document.getElementById('ftab-active-count');
+  const ftabActive = document.getElementById('ftab-active');
+  if (ftabActive && countEl) {
+    const n = countEl.textContent;
+    ftabActive.childNodes[0].textContent = t('filter_active') + ' ';
+    countEl.textContent = n;
+    const unit = document.getElementById('ftab-unit');
+    if (unit) unit.textContent = t('filter_unit');
+  }
+}
+
+/* ═══════════════════════════════
+   STATE
+═══════════════════════════════ */
+const _isFirstVisit = localStorage.getItem('shimesuke_orders') === null;
+function lang() { return 'ko'; }
+let orders   = JSON.parse(localStorage.getItem('shimesuke_orders')   || '[]');
+let settings = JSON.parse(localStorage.getItem('shimesuke_settings') || 'null') || {
+  phases: [
+    { id: 'rough', name: '準備',   days: 7 },
+    { id: 'fix',   name: '作業',   days: 3 },
+    { id: 'final', name: '仕上げ', days: 3 }
+  ]
+};
+
+const MAX_FREE_TEMPLATES = 3;
+const MAX_FREE_ORDERS = 3;
+function isPremium() { return true; }
+const DEFAULT_TEMPLATES = [
+  { id: 'tpl_illust', name: 'イラスト',     phases: [{id:'rough',name:'ラフ',days:7},{id:'fix',name:'修正',days:3},{id:'final',name:'清書',days:2}] },
+  { id: 'tpl_mini',   name: 'ミニキャラ',   phases: [{id:'rough',name:'ラフ',days:3},{id:'fix',name:'修正',days:2},{id:'final',name:'清書',days:1}] },
+  { id: 'tpl_ichi',   name: '一枚絵',       phases: [{id:'rough',name:'ラフ',days:10},{id:'fix',name:'修正',days:5},{id:'final',name:'清書',days:3}] },
+  { id: 'tpl_bg',     name: '背景イラスト', phases: [{id:'rough',name:'ラフ',days:14},{id:'fix',name:'修正',days:7},{id:'final',name:'清書',days:5}] },
+  { id: 'tpl_manga',  name: '漫画・コミック',phases: [{id:'rough',name:'ネーム',days:7},{id:'fix',name:'ペン入れ',days:14},{id:'final',name:'仕上げ',days:5}] },
+  { id: 'tpl_goods',  name: 'グッズデザイン',phases: [{id:'rough',name:'デザイン',days:5},{id:'fix',name:'確認',days:3},{id:'final',name:'入稿',days:2}] },
+];
+
+// 既存ユーザー向けマイグレーション
+// phases に id がない古いデータを補完
+const _phaseNameToId = { 'ラフ':'rough', '修正':'fix', '清書':'final' };
+if (settings.phases) {
+  settings.phases = settings.phases.map(p =>
+    p.id ? p : { ...p, id: _phaseNameToId[p.name] || p.name }
+  );
+}
+if (!settings.templates || settings.templates.length === 0) {
+  settings.templates = DEFAULT_TEMPLATES.map(t => ({ ...t, phases: t.phases.map(p => ({ ...p })) }));
+  save();
+}
+if (settings.showShimekiriStamp === undefined) {
+  settings.showShimekiriStamp = true;
+  save();
+}
+
+let currentMonth = new Date();
+currentMonth.setDate(1);
+currentMonth.setHours(0,0,0,0);
+
+let editingId = null;
+let selectedType = 'illustration';
+let activeTab = 'calendar'; // mobile tab
+let ordersFilter = 'active'; // 'active' | 'done'
+
+// チャートカラーテーマ
+const COLOR_THEMES = [
+  { id: 'midnight', name: 'ミッドナイト',     colors: ['#161e92','#3841b7','#5c91d6','#7f63bf','#e1b75b'] },
+  { id: 'macaron',  name: 'ふんわりマカロン', colors: ['#ff5274','#febb5d','#7cdab7','#8b8ef9','#ae6dd9'] },
+  { id: 'pop',      name: 'イラストポップ',   colors: ['#bb0c0c','#e3aa0d','#46c3aa','#3c92c8','#445dc1'] },
+  { id: 'mycolor1', name: 'マイカラー①',     colors: ['#E8604C','#F0A03C','#7BC67E','#5EA8E8','#B785DE'] },
+  { id: 'mycolor2', name: 'マイカラー②',     colors: ['#FF9FB2','#FFCB6B','#A8D8A8','#8EC8E8','#D4A5E8'] },
+];
+let currentThemeId = localStorage.getItem('shimesuke_theme') || 'midnight';
+let ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
+
+// UIスキン（ヘッダー・背景カラー）
+const UI_SKINS = [
+  { id: 'default',  name: 'デフォルト',  main: '#2E3460', mid: '#3E4880', bg: '#F5F1EB', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A8090', border: '#DDD8D0' },
+  { id: 'dark',     name: 'ダーク',      main: '#1E2340', mid: '#2A3060', bg: '#12152A', surface: '#1E2340', text: '#E8ECF4', muted: '#9AA0B8', border: '#3A3F60' },
+  { id: 'forest',   name: 'フォレスト',  main: '#2D5A27', mid: '#3D6A37', bg: '#F0F5EC', surface: '#FFFFFF', text: '#2A2A2A', muted: '#6A7A68', border: '#C8D8C4' },
+  { id: 'mycolor1', name: 'マイカラー①', main: '#7B3FA0', mid: '#9B5FBF', bg: '#F5EEFF', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A7468', border: '#DDD5C8' },
+  { id: 'mycolor2', name: 'マイカラー②', main: '#0A6E7A', mid: '#1A8E9A', bg: '#E8FAFA', surface: '#FFFFFF', text: '#2A2A2A', muted: '#7A7468', border: '#C8E0E0' },
+];
+let currentSkinId = localStorage.getItem('shimesuke_skin') || 'default';
+
+// PRO: マイカラー保存値（UI_SKINS / COLOR_THEMES の後に配置）
+const myChartColors = {
+  mycolor1: JSON.parse(localStorage.getItem('shimesuke_mychart1') || 'null') || ['#E8604C','#F0A03C','#7BC67E','#5EA8E8','#B785DE'],
+  mycolor2: JSON.parse(localStorage.getItem('shimesuke_mychart2') || 'null') || ['#FF9FB2','#FFCB6B','#A8D8A8','#8EC8E8','#D4A5E8'],
+};
+const mySkinColors = {
+  mycolor1: JSON.parse(localStorage.getItem('shimesuke_myskin1') || 'null') || { main:'#7B3FA0', mid:'#9B5FBF', bg:'#F5EEFF', surface:'#FFFFFF', text:'#2A2A2A', muted:'#7A7468', border:'#DDD5C8' },
+  mycolor2: JSON.parse(localStorage.getItem('shimesuke_myskin2') || 'null') || { main:'#0A6E7A', mid:'#1A8E9A', bg:'#E8FAFA', surface:'#FFFFFF', text:'#2A2A2A', muted:'#7A7468', border:'#C8E0E0' },
+};
+// 保存済みカスタム値をCOLOR_THEMES/UI_SKINSに反映
+['mycolor1','mycolor2'].forEach(id => {
+  const ct = COLOR_THEMES.find(t => t.id === id);
+  if (ct) ct.colors = myChartColors[id].slice();
+  const sk = UI_SKINS.find(s => s.id === id);
+  if (sk) Object.assign(sk, mySkinColors[id]);
+});
+// ORDER_COLORS はカスタム色反映後に初期化する
+ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice();
+
+/* ═══════════════════════════════
+   UTILS
+═══════════════════════════════ */
+function today() {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function parseDate(s) {
+  if (!s) return null;
+  const d = new Date(s + 'T00:00:00');
+  return d;
+}
+
+function dateKey(d) {
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function getDaysUntil(deadlineStr) {
+  const dl = parseDate(deadlineStr);
+  const t  = today();
+  return Math.ceil((dl - t) / 86400000);
+}
+
+function getUrgency(days) {
+  if (days < 0)  return 'overdue';
+  if (days <= 2) return 'crisis';
+  if (days <= 6) return 'danger';
+  if (days <= 13)return 'caution';
+  return 'safe';
+}
+
+function urgencyColor(u) {
+  return { safe:'#3A9A88', caution:'#E3CF57', danger:'#E07820', crisis:'#C83030', overdue:'#7A1010' }[u];
+}
+function urgencyBg(u) {
+  return { safe:'var(--safe-bg)', caution:'var(--caution-bg)', danger:'var(--danger-bg)', crisis:'var(--crisis-bg)', overdue:'var(--overdue-bg)' }[u];
+}
+function urgencyText(u) {
+  return { safe:'var(--safe)', caution:'#8A7A10', danger:'var(--danger)', crisis:'var(--crisis)', overdue:'var(--overdue)' }[u];
+}
+
+function getPhaseSchedule(order) {
+  const dl     = parseDate(order.deadline);
+  const phases = order.phaseDays || settings.phases.map(p => ({ ...p }));
+  const result = [];
+  let end = new Date(dl);
+  for (let i = phases.length - 1; i >= 0; i--) {
+    const start = new Date(end);
+    start.setDate(start.getDate() - phases[i].days);
+    result.unshift({ id: phases[i].id, name: phases[i].name, start, end: new Date(end) });
+    end = new Date(start);
+  }
+  return result;
+}
+
+function orderColor(idx) {
+  return ORDER_COLORS[idx % ORDER_COLORS.length];
+}
+
+function fmtDate(d) {
+  return lang() === 'ja'
+    ? `${d.getMonth()+1}月${d.getDate()}日`
+    : `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+}
+
+function save() {
+  localStorage.setItem('shimesuke_orders',   JSON.stringify(orders));
+  localStorage.setItem('shimesuke_settings', JSON.stringify(settings));
+}
+
+/* ═══════════════════════════════
+   PICTOGRAMS
+═══════════════════════════════ */
+function pict(type, color, size=20) {
+  const s = `stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"`;
+  const svgs = {
+    illustration: `<rect x="8" y="8" width="26" height="32" rx="4"/><circle cx="21" cy="19" r="5"/><path d="M13 36 Q21 27 29 36"/><path d="M31 28 L41 18" stroke-width="2.5"/><path d="M39 16 L43 20 L41 22 L37 18 Z" fill="${color}" stroke="${color}"/>`,
+    design:       `<rect x="7" y="6" width="26" height="34" rx="4"/><line x1="12" y1="17" x2="28" y2="17"/><line x1="12" y1="23" x2="23" y2="23"/><path d="M27 30 L39 18 L43 22 L31 34 Z" fill="${color}" stroke="${color}"/><circle cx="27" cy="38" r="3" fill="${color}"/>`,
+    video:        `<rect x="3" y="8" width="38" height="26" rx="5"/><line x1="22" y1="34" x2="22" y2="42"/><line x1="14" y1="42" x2="30" y2="42"/><path d="M17 16 L17 28 L30 22 Z" fill="${color}" stroke="${color}"/>`,
+    other:        `<path d="M5 18 Q5 14 9 14 L19 14 L23 20 L39 20 Q43 20 43 24 L43 38 Q43 42 39 42 L9 42 Q5 42 5 38 Z"/><line x1="5" y1="26" x2="43" y2="26"/>`,
+  };
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" ${s}>${svgs[type]||svgs.other}</svg>`;
+}
+
+function typeLabel(type) {
+  return t('type_' + type) || type;
+}
+
+function phaseName(idx) {
+  const phaseKeyMap = ['phase_label_rough','phase_label_fix','phase_label_final'];
+  return (phaseKeyMap[idx] ? t(phaseKeyMap[idx]) : settings.phases[idx]?.name) || '';
+}
+
+/* ═══════════════════════════════
+   RENDER ORDERS
+═══════════════════════════════ */
+function setOrderFilter(filter) {
+  ordersFilter = filter;
+  document.getElementById('ftab-active').classList.toggle('active', filter === 'active');
+  document.getElementById('ftab-done').classList.toggle('active', filter === 'done');
+  renderOrders();
+}
+
+function renderOrders() {
+  const list = document.getElementById('order-list');
+
+  const activeCount = orders.filter(o => (o.currentPhase || 0) < 3).length;
+  const countEl = document.getElementById('ftab-active-count');
+  if (countEl) countEl.textContent = activeCount;
+
+  // 完了タブでは＋追加ボタンを非表示
+  const addBtn = document.getElementById('btn-add-order');
+  if (addBtn) addBtn.style.display = ordersFilter === 'done' ? 'none' : '';
+
+  // フィルタ適用
+  const filtered = orders.filter(o => ordersFilter === 'done'
+    ? (o.currentPhase || 0) >= 3
+    : (o.currentPhase || 0) < 3
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML = ordersFilter === 'done'
+      ? `<div class="empty-state"><div class="empty-state-icon">✨</div><div class="empty-state-text">${t('empty_done')}</div></div>`
+      : `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">${t('empty_orders')}<br>${t('empty_orders_hint')}</div></div>`;
+    return;
+  }
+
+  // 緊急度順（日数が少ない順）にソート。元配列は変えない
+  const sorted = [...filtered].sort((a, b) => getDaysUntil(a.deadline) - getDaysUntil(b.deadline));
+
+  list.innerHTML = '';
+  sorted.forEach((order, idx) => {
+    const days    = getDaysUntil(order.deadline);
+    const urgency = getUrgency(days);
+    const color   = orderColor(idx);
+    const uc      = urgencyColor(urgency);
+    const ubg     = urgencyBg(urgency);
+    const utxt    = urgencyText(urgency);
+    const isDark  = urgency === 'caution';
+
+    const schedule    = getPhaseSchedule(order);
+    const curPhase    = order.currentPhase || 0;
+    const isCompleted = curPhase >= 3;
+    const phasesBadge = isCompleted ? t('phase_badge_done') : (t('phase_badge')[curPhase] || '');
+
+    // phase bar
+    let barHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const bg      = isCompleted ? 'var(--muted)' : (i <= curPhase ? uc : 'var(--border)');
+      const opacity = isCompleted ? '0.4'          : (i <= curPhase ? '1' : '0.25');
+      barHTML += `<div class="phase-seg" style="background:${bg};opacity:${opacity};"></div>`;
+    }
+
+    // deadline label
+    const dl      = parseDate(order.deadline);
+    const dlLabel = days < 0
+      ? `${t('overdue')} ${Math.abs(days)}${t('days_unit')}`
+      : days === 0 ? t('today_deadline')
+      : `${t('days_left')}${days}${t('days_unit')}${t('days_suffix')}`;
+
+    const card = document.createElement('div');
+    card.className = `order-card card-${urgency}`;
+    card.id = `card-${order.id}`;
+    card.onclick = () => openEditOrder(order.id);
+    card.innerHTML = `
+      <div class="card-tab" style="background:${uc};">
+        <span class="tab-ato${isDark?' dark':''}">${t('days_left')}</span>
+        <span class="tab-num${isDark?' dark':''}">
+          ${days < 0 ? '!' : days > 99 ? '∞' : days}
+        </span>
+        <span class="tab-nichi${isDark?' dark':''}">${t('days_unit')}</span>
+      </div>
+      <div class="card-row1">
+        <div class="card-name" style="font-size:${lang()==='en'&&order.name_en?'11px':'12px'}">${esc(lang()==='en'&&order.name_en?order.name_en:order.name)}</div>
+        <div class="card-phase-badge" style="background:${isCompleted?'var(--border)':''+uc+'22'};color:${isCompleted?'var(--muted)':utxt};">${phasesBadge}</div>
+      </div>
+      <div class="card-type-row">
+        ${pict(order.type, utxt, 18)}
+        <span class="card-type-label" style="color:${utxt};">${typeLabel(order.type)}</span>
+      </div>
+      <div class="phase-bar-row">${barHTML}</div>
+      <div class="card-deadline-row" style="color:${utxt};">
+        🗓 〆 ${fmtDate(dl)} — ${dlLabel}
+      </div>`;
+    if (isCompleted) card.style.opacity = '0.7';
+    list.appendChild(card);
+  });
+
+  // アクティブ案件数チェック → ＋追加ボタン制御（進行中タブのみ）
+  if (ordersFilter === 'active') {
+    if (addBtn) {
+      if (activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+        addBtn.disabled = true;
+        addBtn.style.opacity = '0.35';
+        addBtn.style.cursor = 'default';
+        addBtn.onclick = null;
+      } else {
+        addBtn.disabled = false;
+        addBtn.style.opacity = '';
+        addBtn.style.cursor = '';
+        addBtn.onclick = openAddOrder;
+      }
+    }
+  }
+
+  // アクティブ3件上限時 UNLOCK カード表示（進行中タブのみ）
+  if (ordersFilter === 'active' && activeCount >= MAX_FREE_ORDERS && !isPremium()) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `
+      <div style="border:1.5px dashed #E1B75B;border-radius:10px;padding:12px 10px;margin:8px 4px 4px;text-align:center;">
+        <div style="font-size:18px;margin-bottom:4px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px;">${t('upgrade_limit').replace('{n}', MAX_FREE_ORDERS)}</div>
+        <div style="font-size:9px;color:var(--muted);line-height:1.6;margin-bottom:8px;">${t('upgrade_hint').replace(/\n/g,'<br>')}</div>
+        <button style="background:#E1B75B;color:#5A3A00;border:none;border-radius:8px;padding:6px 16px;font-size:10px;font-weight:700;cursor:pointer;">${t('btn_upgrade')}</button>
+      </div>`;
+    list.appendChild(wrap);
+  }
+}
+
+/* ═══════════════════════════════
+   RENDER CALENDAR
+═══════════════════════════════ */
+function renderCalendar() {
+  const grid  = document.getElementById('cal-grid');
+  const label = document.getElementById('cal-month-label');
+  const legend= document.getElementById('cal-legend');
+
+  const y = currentMonth.getFullYear();
+  const m = currentMonth.getMonth();
+  label.textContent = lang() === 'ja' ? `${y}年${m+1}月` : `${t('months')[m]} ${y}`;
+
+  // アクティブ案件のみで色番号を割り当てる
+  const activeOrderIds = orders
+    .filter(o => (o.currentPhase || 0) < 3)
+    .map(o => o.id);
+  const activeColorIdx = (id) => activeOrderIds.indexOf(id);
+
+  // legend
+  legend.innerHTML = '';
+  orders.forEach((order) => {
+    if ((order.currentPhase || 0) >= 3) return;
+    const col = orderColor(activeColorIdx(order.id));
+    legend.innerHTML += `
+      <div class="legend-item">
+        <div class="legend-dot" style="background:${col};"></div>
+        <span>${esc(order.name.split('/')[0].trim())}</span>
+      </div>`;
+  });
+  if (orders.length === 0) {
+    legend.innerHTML = `<span style="font-size:10px;color:var(--muted);">${t('empty_cal')}</span>`;
+  }
+
+  const todayKey  = dateKey(today());
+  const showStamp = settings.showShimekiriStamp !== false;
+  const DOW_LABELS = t('dow');
+
+  const orderPhases = orders.map(order => ({
+    id:       order.id,
+    schedule: getPhaseSchedule(order),
+    deadline: dateKey(parseDate(order.deadline)),
+    currentPhase: order.currentPhase || 0,
+  }));
+
+  // Build weeks array: each entry = [Date|null] × 7
+  const firstDay    = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const weeks = [];
+  let wd = [];
+  for (let i = 0; i < firstDay; i++) wd.push(null);
+  for (let d = 1; d <= daysInMonth; d++) {
+    wd.push(new Date(y, m, d));
+    if (wd.length === 7) { weeks.push(wd); wd = []; }
+  }
+  if (wd.length) { while (wd.length < 7) wd.push(null); weeks.push(wd); }
+
+  grid.innerHTML = '';
+
+  weeks.forEach((weekDays, wi) => {
+    const validDates = weekDays.filter(Boolean);
+    if (!validDates.length) return;
+
+    const block = document.createElement('div');
+    block.className = 'cal-week-block';
+
+    // ── Day header row ──
+    const headRow = document.createElement('div');
+    headRow.className = 'cal-week-head';
+
+    weekDays.forEach((date, di) => {
+      const col = document.createElement('div');
+      col.className = 'cal-week-day-col' + (di===0?' sun':di===6?' sat':'');
+
+      if (date) {
+        const dKey    = dateKey(date);
+        const isToday = dKey === todayKey;
+        const dls     = orderPhases.filter(op => op.deadline === dKey && op.currentPhase < 3);
+
+        // dow + stamp
+        const dowRow = document.createElement('div');
+        dowRow.className = 'cal-gantt-dow-row';
+        const dowSpan = document.createElement('span');
+        dowSpan.className = 'cal-gantt-dow';
+        dowSpan.textContent = DOW_LABELS[di];
+        dowRow.appendChild(dowSpan);
+        if (showStamp && dls.length > 0) {
+          const stamp = document.createElement('span');
+          stamp.className = 'shimekiri-stamp';
+          stamp.textContent = '〆切！';
+          dowRow.appendChild(stamp);
+        }
+        col.appendChild(dowRow);
+
+        // date number
+        const numEl = document.createElement('div');
+        numEl.className = 'cal-gantt-num' + (isToday ? ' today' : '');
+        if (dls.length > 0 && !isToday) {
+          const idx = activeColorIdx(dls[0].id);
+          numEl.style.border  = `2px solid ${orderColor(idx)}`;
+          numEl.style.color   = orderColor(idx);
+        }
+        numEl.textContent = date.getDate();
+        col.appendChild(numEl);
+
+        col.addEventListener('click', () => scrollToOrdersForDate(dKey));
+      }
+      headRow.appendChild(col);
+    });
+    block.appendChild(headRow);
+
+    // ── Gantt bars ──
+    const wStart = validDates[0];
+    const wEnd   = validDates[validDates.length - 1];
+    const wEndInclusive = new Date(wEnd); wEndInclusive.setHours(23,59,59,999);
+
+    const activeOrders = orders
+      .map((order, orderIdx) => ({ order, idx: activeColorIdx(order.id), op: orderPhases[orderIdx] }))
+      .filter(({ op }) =>
+        op.currentPhase < 3 &&
+        op.schedule.some(ph => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          return s <= wEndInclusive && e > wStart;
+        })
+      )
+      .sort((a, b) => a.op.deadline.localeCompare(b.op.deadline));
+
+    if (activeOrders.length) {
+      const barsGrid = document.createElement('div');
+      barsGrid.className = 'cal-gantt-bars';
+
+      activeOrders.forEach(({ order, idx, op }) => {
+        // Determine bar span within this week
+        let barStart = null, barEnd = null;
+        op.schedule.forEach(ph => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          if (s <= wEndInclusive && e > wStart) {
+            const cs = s < wStart ? wStart : s;
+            const ce = e > wEndInclusive ? new Date(wEnd.getTime() + 86400000) : e;
+            if (!barStart || cs < barStart) barStart = cs;
+            if (!barEnd   || ce > barEnd)   barEnd   = ce;
+          }
+        });
+        if (!barStart) return;
+
+        // Map to grid columns (1–7)
+        let colS = -1, colE = -1;
+        weekDays.forEach((d, di) => {
+          if (!d) return;
+          if (d >= barStart && colS === -1) colS = di;
+          if (barEnd && d < barEnd) colE = di;
+        });
+        if (colS === -1) return;
+        if (colE === -1) colE = colS;
+
+        // Faded = this week only overlaps completed phases
+        const activePhases = op.schedule.slice(op.currentPhase);
+        const inActive = activePhases.some(ph => {
+          const s = new Date(ph.start); s.setHours(0,0,0,0);
+          const e = new Date(ph.end);   e.setHours(0,0,0,0);
+          return s <= wEndInclusive && e > wStart;
+        });
+
+        const bar = document.createElement('div');
+        bar.className = 'cal-gantt-bar' + (inActive ? '' : ' faded');
+        bar.style.background  = orderColor(idx);
+        bar.style.gridColumn  = `${colS+1} / ${colE+2}`;
+        bar.innerHTML = `<span>${esc(order.name.split('/')[0].trim())}</span>`;
+        barsGrid.appendChild(bar);
+      });
+
+      block.appendChild(barsGrid);
+    }
+
+    if (wi < weeks.length - 1) {
+      const sep = document.createElement('hr');
+      sep.className = 'cal-week-sep';
+      block.appendChild(sep);
+    }
+
+    grid.appendChild(block);
+  });
+}
+
+/* scroll to nearest order for clicked date */
+function scrollToOrdersForDate(dKey) {
+  // find order that is active on this day
+  let targetId = null;
+  orders.forEach((order, idx) => {
+    const op = { schedule: getPhaseSchedule(order), deadline: dateKey(parseDate(order.deadline)) };
+    const clickedDate = parseDate(dKey);
+    op.schedule.forEach(ph => {
+      const s = new Date(ph.start); s.setHours(0,0,0,0);
+      const e = new Date(ph.end);   e.setHours(0,0,0,0);
+      if (clickedDate >= s && clickedDate < e) targetId = order.id;
+    });
+    if (op.deadline === dKey) targetId = order.id;
+  });
+
+  if (!targetId && orders.length > 0) return;
+  if (!targetId) return;
+
+  // on mobile, switch to orders tab first
+  if (window.innerWidth < 768) switchTab('orders');
+
+  setTimeout(() => {
+    const card = document.getElementById(`card-${targetId}`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+/* ═══════════════════════════════
+   CALENDAR NAVIGATION
+═══════════════════════════════ */
+function toggleShimekiriStamp() {
+  settings.showShimekiriStamp = !settings.showShimekiriStamp;
+  save();
+  const btn = document.getElementById('stamp-toggle');
+  if (btn) btn.classList.toggle('on', settings.showShimekiriStamp);
+  renderCalendar();
+}
+
+function initStampToggle() {
+  const btn = document.getElementById('stamp-toggle');
+  if (btn) btn.classList.toggle('on', settings.showShimekiriStamp !== false);
+}
+
+function changeMonth(dir) {
+  currentMonth.setMonth(currentMonth.getMonth() + dir);
+  renderCalendar();
+}
+function goToday() {
+  currentMonth = new Date();
+  currentMonth.setDate(1);
+  currentMonth.setHours(0,0,0,0);
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   ADD / EDIT ORDER
+═══════════════════════════════ */
+function openAddOrder() {
+  editingId    = null;
+  selectedType = 'illustration';
+  document.getElementById('order-modal-title').textContent = t('modal_add_order');
+  document.getElementById('f-name').value     = '';
+  document.getElementById('f-deadline').value = '';
+  document.getElementById('f-phase').value    = '0';
+  document.getElementById('f-notes').value    = '';
+
+  // reset type selection
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === 'illustration');
+  });
+
+  // phase fields
+  renderPhaseFields('f-phases-row', settings.phases.map(p=>({...p})));
+  renderTemplateSelect();
+
+  // actions
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
+
+  showModal('order-modal');
+}
+
+function openEditOrder(id) {
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  editingId    = id;
+  selectedType = order.type;
+
+  document.getElementById('order-modal-title').textContent = t('modal_edit_order');
+  document.getElementById('f-name').value     = order.name;
+  document.getElementById('f-deadline').value = order.deadline;
+  document.getElementById('f-phase').value    = String(order.currentPhase || 0);
+  document.getElementById('f-notes').value    = order.notes || '';
+
+  document.querySelectorAll('.type-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.type === order.type);
+  });
+
+  const phases = order.phaseDays || settings.phases.map(p=>({...p}));
+  renderPhaseFields('f-phases-row', phases);
+
+  document.getElementById('order-modal-actions').innerHTML = `
+    <button class="btn-delete" onclick="deleteOrder('${id}')">${t('btn_delete')}</button>
+    <button class="btn-secondary" onclick="closeModal()">${t('btn_cancel')}</button>
+    <button class="btn-primary" onclick="saveOrder()">${t('btn_save')}</button>`;
+
+  showModal('order-modal');
+}
+
+function renderPhaseFields(containerId, phases) {
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
+  const container = document.getElementById(containerId);
+  container.innerHTML = phases.map((p, i) => `
+    <div class="phase-field">
+      <label>${esc(phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name)}</label>
+      <input type="number" min="0" max="60" value="${p.days}" id="pf-${containerId}-${i}">
+    </div>`).join('');
+}
+
+function getPhaseDaysFromFields(containerId) {
+  return settings.phases.map((p, i) => ({
+    id:   p.id,
+    name: p.name,
+    days: (v => isNaN(v) ? p.days : v)(parseInt(document.getElementById(`pf-${containerId}-${i}`)?.value))
+  }));
+}
+
+function selectType(btn) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedType = btn.dataset.type;
+}
+
+function saveOrder() {
+  const name     = document.getElementById('f-name').value.trim();
+  const deadline = document.getElementById('f-deadline').value;
+  const phase    = parseInt(document.getElementById('f-phase').value);
+  const notes    = document.getElementById('f-notes').value.trim();
+  const phaseDays= getPhaseDaysFromFields('f-phases-row');
+
+  if (!name)     { alert(t('alert_enter_name')); return; }
+  if (!deadline) { alert(t('alert_enter_deadline')); return; }
+
+  if (editingId) {
+    const idx = orders.findIndex(o => o.id === editingId);
+    if (idx > -1) orders[idx] = { ...orders[idx], name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays };
+  } else {
+    orders.push({ id: uid(), name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays });
+  }
+
+  save();
+  closeModal();
+  render();
+}
+
+function deleteOrder(id) {
+  if (!confirm(t('confirm_delete_order'))) return;
+  orders = orders.filter(o => o.id !== id);
+  save();
+  closeModal();
+  render();
+}
+
+/* ═══════════════════════════════
+   TEMPLATES
+═══════════════════════════════ */
+let editingTemplateId = null;
+
+function renderTemplateSelect() {
+  const sel = document.getElementById('f-template');
+  if (!sel) return;
+  sel.innerHTML = `<option value="">${t('no_template')}</option>`;
+  (settings.templates || []).forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+  sel.value = '';
+}
+
+function applyTemplate() {
+  const id = document.getElementById('f-template').value;
+  if (!id) {
+    renderPhaseFields('f-phases-row', settings.phases.map(p => ({ ...p })));
+    return;
+  }
+  const tpl = (settings.templates || []).find(t => t.id === id);
+  if (tpl) renderPhaseFields('f-phases-row', tpl.phases.map(p => ({ ...p })));
+}
+
+function renderTemplateList() {
+  const list = document.getElementById('template-list');
+  const btn  = document.getElementById('btn-add-tpl');
+  if (!list) return;
+  const tmpls = settings.templates || [];
+
+  const phaseKeyMap = { rough:'phase_label_rough', fix:'phase_label_fix', final:'phase_label_final' };
+  list.innerHTML = tmpls.length === 0
+    ? `<p style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0;">${t('tpl_empty')}</p>`
+    : tmpls.map(tpl => `
+      <div class="template-item">
+        <span class="template-item-name">${esc(tpl.name)}</span>
+        <span class="template-item-days">${tpl.phases.map(p => `${phaseKeyMap[p.id] ? t(phaseKeyMap[p.id]) : p.name}${p.days}${t('days_unit')}`).join(' · ')}</span>
+        <div class="template-item-actions">
+          <button class="btn-tpl-edit" onclick="openEditTemplate('${tpl.id}')">${t('btn_tpl_edit')}</button>
+          <button class="btn-tpl-del" onclick="deleteTemplate('${tpl.id}')">${t('btn_tpl_del')}</button>
+        </div>
+      </div>`).join('');
+
+  if (btn) {
+    const locked = tmpls.length >= MAX_FREE_TEMPLATES && !isPremium();
+    btn.className = locked ? 'btn-add-tpl locked' : 'btn-add-tpl';
+    btn.textContent = locked
+      ? t('tpl_locked').replace('{n}', MAX_FREE_TEMPLATES)
+      : t('btn_add_tpl');
+    btn.onclick = locked ? null : openAddTemplate;
+  }
+}
+
+function openAddTemplate() {
+  editingTemplateId = null;
+  document.getElementById('tpl-modal-title').textContent = t('modal_add_template');
+  document.getElementById('tpl-name').value = '';
+  renderPhaseFields('tpl-phases-row', settings.phases.map(p => ({ ...p })));
+  showModal('template-modal');
+  applyI18n();
+}
+
+function openEditTemplate(id) {
+  const tpl = (settings.templates || []).find(t => t.id === id);
+  if (!tpl) return;
+  editingTemplateId = id;
+  document.getElementById('tpl-modal-title').textContent = t('modal_edit_template');
+  document.getElementById('tpl-name').value = tpl.name;
+  renderPhaseFields('tpl-phases-row', tpl.phases.map(p => ({ ...p })));
+  showModal('template-modal');
+  applyI18n();
+}
+
+function saveTemplate() {
+  const name = document.getElementById('tpl-name').value.trim();
+  if (!name) { alert(t('alert_enter_tpl_name')); return; }
+  const phases = getPhaseDaysFromFields('tpl-phases-row');
+  if (!settings.templates) settings.templates = [];
+
+  if (editingTemplateId) {
+    const idx = settings.templates.findIndex(t => t.id === editingTemplateId);
+    if (idx > -1) settings.templates[idx] = { ...settings.templates[idx], name, phases };
+  } else {
+    settings.templates.push({ id: uid(), name, phases });
+  }
+  save();
+  backToSettings();
+}
+
+function deleteTemplate(id) {
+  if (!confirm(t('confirm_delete_tpl'))) return;
+  settings.templates = (settings.templates || []).filter(t => t.id !== id);
+  save();
+  renderTemplateList();
+}
+
+function backToSettings() {
+  editingTemplateId = null;
+  openSettings();
+}
+
+/* ═══════════════════════════════
+   SETTINGS
+═══════════════════════════════ */
+function openSettings() {
+  closeStampPanel();
+  renderPhaseFields('s-phases-row', settings.phases);
+  renderTemplateList();
+  showModal('settings-modal');
+  initStampToggle();
+  applyI18n();
+}
+
+function selectTheme(id) {
+  currentThemeId = id;
+  const theme = COLOR_THEMES.find(t => t.id === id) || COLOR_THEMES[0];
+  ORDER_COLORS = theme.colors.slice();
+  localStorage.setItem('shimesuke_theme', id);
+  updateChartColorDots();
+  render();
+}
+
+/* ═══════════════════════════════
+   UIスキン
+═══════════════════════════════ */
+function applyUISkin(id) {
+  const skin = UI_SKINS.find(s => s.id === id) || UI_SKINS[0];
+  const r = document.documentElement;
+  r.style.setProperty('--main',    skin.main);
+  r.style.setProperty('--mid',     skin.mid);
+  r.style.setProperty('--bg',      skin.bg);
+  r.style.setProperty('--surface', skin.surface);
+  r.style.setProperty('--text',    skin.text);
+  r.style.setProperty('--muted',   skin.muted);
+  r.style.setProperty('--border',  skin.border);
+  currentSkinId = id;
+  localStorage.setItem('shimesuke_skin', id);
+  updateHeaderThemeDots();
+}
+
+function updateHeaderThemeDots() {
+  const wrap = document.getElementById('header-theme-dots');
+  if (!wrap) return;
+  const skin = UI_SKINS.find(s => s.id === currentSkinId) || UI_SKINS[0];
+  wrap.innerHTML = [skin.main, skin.mid, skin.bg].map(c =>
+    `<div class="header-theme-dot" style="background:${c};"></div>`
+  ).join('');
+}
+
+function updateChartColorDots() {
+  const wrap = document.getElementById('chart-color-dots');
+  if (!wrap) return;
+  const theme = COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0];
+  wrap.innerHTML = theme.colors.map(c =>
+    `<div class="chart-color-dot" style="background:${c};"></div>`
+  ).join('');
+}
+
+/* ─ スキンポップアップ ─ */
+function toggleSkinPopup(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('skin-popup');
+  const isOpen = popup.classList.contains('open');
+  closeAllColorPopups();
+  if (!isOpen) {
+    renderSkinList();
+    popup.classList.add('open');
+    const btn = document.getElementById('header-theme-btn');
+    const rect = btn.getBoundingClientRect();
+    popup.style.top   = (rect.bottom + 6) + 'px';
+    popup.style.right = '10px';
+    popup.style.left  = 'auto';
+  }
+}
+function closeSkinPopup() {
+  document.getElementById('skin-popup')?.classList.remove('open');
+}
+function renderSkinList() {
+  const wrap = document.getElementById('skin-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  UI_SKINS.forEach(skin => {
+    const isActive = skin.id === currentSkinId;
+    const isCustom = skin.id === 'mycolor1' || skin.id === 'mycolor2';
+    const row = document.createElement('div');
+    row.className = 'skin-opt' + (isActive ? ' active' : '');
+    row.onclick = () => { applyUISkin(skin.id); renderSkinList(); };
+    row.innerHTML = `
+      <div class="skin-preview" style="background:linear-gradient(90deg,${skin.main} 45%,${skin.bg} 45%);border:1px solid var(--border);"></div>
+      <span class="skin-name">${skin.name}</span>
+      ${isActive ? '<span style="font-size:12px;">✓</span>' : ''}`;
+    wrap.appendChild(row);
+    // アクティブなマイカラーはカラーピッカーを展開
+    if (isActive && isCustom) {
+      const pickerWrap = document.createElement('div');
+      pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const skinLabels = t('skin_labels');
+      const fields = [
+        { key:'main',    label:skinLabels[0] },
+        { key:'bg',      label:skinLabels[1] },
+        { key:'surface', label:skinLabels[2] },
+        { key:'text',    label:skinLabels[3] },
+      ];
+      fields.forEach(f => {
+        const line = document.createElement('div');
+        line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+        line.innerHTML = `<span style="font-size:11px;color:var(--muted);">${f.label}</span>`;
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = mySkinColors[skin.id][f.key] || '#000000';
+        inp.style.cssText = 'width:36px;height:24px;border:none;cursor:pointer;border-radius:4px;';
+        inp.oninput = () => {
+          mySkinColors[skin.id][f.key] = inp.value;
+          // midはmainから自動生成
+          if (f.key === 'main') mySkinColors[skin.id].mid = inp.value;
+          // muted/borderはtext/bgから自動生成
+          if (f.key === 'text') mySkinColors[skin.id].muted = inp.value + '99';
+          if (f.key === 'bg')   mySkinColors[skin.id].border = inp.value;
+          Object.assign(UI_SKINS.find(s => s.id === skin.id), mySkinColors[skin.id]);
+          localStorage.setItem('shimesuke_myskin' + skin.id.slice(-1), JSON.stringify(mySkinColors[skin.id]));
+          applyUISkin(skin.id);
+          // プレビュー更新
+          row.querySelector('.skin-preview').style.background =
+            `linear-gradient(90deg,${mySkinColors[skin.id].main} 45%,${mySkinColors[skin.id].bg} 45%)`;
+        };
+        line.appendChild(inp);
+        pickerWrap.appendChild(line);
+      });
+      wrap.appendChild(pickerWrap);
+    }
+  });
+}
+
+/* ─ チャートカラーポップアップ ─ */
+function toggleChartColorPopup(e) {
+  e.stopPropagation();
+  const popup = document.getElementById('chart-color-popup');
+  const isOpen = popup.classList.contains('open');
+  closeAllColorPopups();
+  if (!isOpen) {
+    renderChartThemeList();
+    popup.classList.add('open');
+    const btn = document.getElementById('chart-color-btn');
+    const rect = btn.getBoundingClientRect();
+    popup.style.top  = (rect.bottom + 6) + 'px';
+    popup.style.left = Math.min(rect.left, window.innerWidth - 250) + 'px';
+    popup.style.right = 'auto';
+  }
+}
+function closeChartColorPopup() {
+  document.getElementById('chart-color-popup')?.classList.remove('open');
+}
+function renderChartThemeList() {
+  const wrap = document.getElementById('chart-theme-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  COLOR_THEMES.forEach(theme => {
+    const isActive = theme.id === currentThemeId;
+    const isCustom = theme.id === 'mycolor1' || theme.id === 'mycolor2';
+    const div = document.createElement('div');
+    div.className = 'chart-theme-opt' + (isActive ? ' active' : '');
+    div.onclick = () => { selectTheme(theme.id); renderChartThemeList(); };
+    div.innerHTML = `
+      <div class="chart-theme-dots">
+        ${theme.colors.map(c => `<div class="chart-theme-dot" style="background:${c};"></div>`).join('')}
+      </div>
+      <span class="chart-theme-name">${theme.name}</span>
+      ${isActive ? '<span style="font-size:12px;">✓</span>' : ''}`;
+    wrap.appendChild(div);
+    if (isActive && isCustom) {
+      const pickerWrap = document.createElement('div');
+      pickerWrap.style.cssText = 'padding:8px 4px 4px;display:flex;flex-direction:column;gap:6px;';
+      const labels = t('chart_labels');
+      myChartColors[theme.id].forEach((col, idx) => {
+        const line = document.createElement('div');
+        line.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+        line.innerHTML = `<span style="font-size:11px;color:var(--muted);">${labels[idx]}</span>`;
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = col;
+        inp.style.cssText = 'width:36px;height:24px;border:none;cursor:pointer;border-radius:4px;';
+        inp.oninput = () => {
+          myChartColors[theme.id][idx] = inp.value;
+          const ct = COLOR_THEMES.find(t => t.id === theme.id);
+          if (ct) ct.colors[idx] = inp.value;
+          localStorage.setItem('shimesuke_mychart' + theme.id.slice(-1), JSON.stringify(myChartColors[theme.id]));
+          if (currentThemeId === theme.id) {
+            ORDER_COLORS = myChartColors[theme.id].slice();
+            renderCalendar();
+          }
+          div.querySelector('.chart-theme-dots').innerHTML =
+            myChartColors[theme.id].map(c => `<div class="chart-theme-dot" style="background:${c};"></div>`).join('');
+        };
+        line.appendChild(inp);
+        pickerWrap.appendChild(line);
+      });
+      wrap.appendChild(pickerWrap);
+    }
+  });
+}
+
+function closeAllColorPopups() {
+  closeSkinPopup();
+  closeChartColorPopup();
+}
+
+function saveSettings() {
+  settings.phases = getPhaseDaysFromFields('s-phases-row');
+  save();
+  closeModal();
+  render();
+}
+
+/* ═══════════════════════════════
+   MODAL HELPERS
+═══════════════════════════════ */
+function showModal(id) {
+  document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+/* ═══════════════════════════════
+   MOBILE TABS
+═══════════════════════════════ */
+function switchTab(tab) {
+  activeTab = tab;
+  const stickerLayer = document.getElementById('sticker-layer');
+  if (tab === 'calendar') {
+    if (stickerLayer) stickerLayer.style.display = '';
+  } else {
+    closeStampPanel();
+    if (stickerLayer) stickerLayer.style.display = 'none';
+  }
+  const sidebar  = document.getElementById('sidebar');
+  const calendar = document.getElementById('calendar-panel');
+
+  sidebar.classList.remove('mobile-active');
+  calendar.classList.remove('mobile-active');
+
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+
+  if (tab === 'calendar') {
+    calendar.classList.add('mobile-active');
+    document.getElementById('bnav-calendar').classList.add('active');
+  } else if (tab === 'orders') {
+    sidebar.classList.add('mobile-active');
+    document.getElementById('bnav-orders').classList.add('active');
+  }
+}
+
+/* ═══════════════════════════════
+   ESCAPE
+═══════════════════════════════ */
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════
+   RENDER ALL
+═══════════════════════════════ */
+function render() {
+  renderOrders();
+  renderCalendar();
+}
+
+/* ═══════════════════════════════
+   BACKUP / RESTORE
+═══════════════════════════════ */
+function exportData() {
+  const data = JSON.stringify({
+    orders,
+    settings,
+    theme:         currentThemeId,
+    skin:          currentSkinId,
+    stickers:      placedStickers,
+    customStamps,
+    exportedAt:    new Date().toISOString()
+  }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  a.href     = url;
+  a.download = `shimesuke_backup_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport() {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = '.json';
+  inp.onchange = () => importData(inp);
+  inp.click();
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.orders) throw new Error(t('alert_invalid_format'));
+      if (!data.settings) data.settings = settings;
+      if (!confirm(t('confirm_restore').replace('{n}', data.orders.length))) return;
+      orders   = data.orders;
+      settings = data.settings;
+      if (data.theme)        { currentThemeId = data.theme;  localStorage.setItem('shimesuke_theme', currentThemeId); ORDER_COLORS = (COLOR_THEMES.find(t => t.id === currentThemeId) || COLOR_THEMES[0]).colors.slice(); }
+      if (data.skin)         { currentSkinId  = data.skin;   localStorage.setItem('shimesuke_skin',  currentSkinId);  applyUISkin(currentSkinId); }
+      if (data.stickers)     { placedStickers = data.stickers;   saveStickerData(); }
+      if (data.customStamps) { customStamps   = data.customStamps; saveCustomStamps(); }
+      save();
+      closeModal();
+      render();
+      alert(t('alert_restored'));
+    } catch(err) {
+      alert(t('alert_restore_fail') + err.message);
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════
+   ICS EXPORT
+═══════════════════════════════ */
+function exportICS() {
+  if (orders.length === 0) { alert(t('alert_no_orders')); return; }
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//〆スケ//shimesuke//JA',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH'
+  ];
+
+  orders.forEach(order => {
+    const dl = order.deadline.replace(/-/g, '');
+    const nextDay = new Date(parseDate(order.deadline));
+    nextDay.setDate(nextDay.getDate() + 1);
+    const dlEnd = dateKey(nextDay).replace(/-/g, '');
+    const label = typeLabel(order.type);
+    const desc = [label, order.notes].filter(Boolean).join(' / ').replace(/[\r\n]+/g, '\\n');
+
+    lines.push('BEGIN:VEVENT');
+    lines.push(`UID:${order.id}@shimesuke`);
+    lines.push(`SUMMARY:【〆】${order.name}`);
+    lines.push(`DTSTART;VALUE=DATE:${dl}`);
+    lines.push(`DTEND;VALUE=DATE:${dlEnd}`);
+    if (desc) lines.push(`DESCRIPTION:${desc}`);
+    lines.push(`CATEGORIES:${label}`);
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `shimesuke_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+/* ═══════════════════════════════
+   DEMO MODE
+═══════════════════════════════ */
+let demoMode = false;
+let _realOrders = null;
+
+function generateDemoOrders() {
+  const today = new Date();
+  const dl = (days) => { const d = new Date(today); d.setDate(d.getDate() + days); return dateKey(d); };
+  const ph = (r,f,fin) => [{id:'rough',name:'ラフ',days:r},{id:'fix',name:'修正',days:f},{id:'final',name:'清書',days:fin}];
+  return [
+    { id:'demo1', name:'いぬさん / キャラデザ',     name_en:'Pochi / Character Design',  type:'illustration', deadline:dl(2),  currentPhase:2, notes:'', phaseDays:ph(7,3,2) },
+    { id:'demo2', name:'ねこさん / 背景イラスト',    name_en:'Tama / Background Art',      type:'illustration', deadline:dl(7),  currentPhase:1, notes:'', phaseDays:ph(10,5,3) },
+    { id:'demo3', name:'うさぎさん / ミニキャラ3体', name_en:'Mochi / Mini Chars ×3',      type:'illustration', deadline:dl(13), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo4', name:'とりさん / Live2D素材',      name_en:'Tori / Live2D Assets',       type:'design',       deadline:dl(20), currentPhase:0, notes:'', phaseDays:ph(7,5,3) },
+    { id:'demo5', name:'くまさん / 動画サムネ',      name_en:'Kuma / Video Thumbnail',     type:'video',        deadline:dl(25), currentPhase:0, notes:'', phaseDays:ph(5,3,2) },
+    { id:'demo6', name:'自分 / 同人誌表紙',          name_en:'Me / Doujin Cover',          type:'illustration', deadline:dl(31), currentPhase:0, notes:'', phaseDays:ph(14,7,5) },
+  ];
+}
+
+function clearDemoAndStart() {
+  orders = [];
+  save();
+  localStorage.removeItem('shimesuke_demo_active');
+  const banner = document.getElementById('demo-banner');
+  if (banner) banner.style.display = 'none';
+  render();
+}
+
+function initDemoIfFirstVisit() {
+  if (!_isFirstVisit) return;
+  orders = generateDemoOrders();
+  save();
+  localStorage.setItem('shimesuke_demo_active', '1');
+}
+
+function updateDemoBanner() {
+  const banner = document.getElementById('demo-banner');
+  if (!banner) return;
+  banner.style.display = localStorage.getItem('shimesuke_demo_active') ? 'flex' : 'none';
+}
+
+/* ═══════════════════════════════
+   SERVICE WORKER
+═══════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+/* ═══════════════════════════════
+   STICKER SYSTEM
+═══════════════════════════════ */
+const DEFAULT_STAMPS = [
+  { id: 'def_shimekiri', emoji: '⚡', label: 'しめきり！', label_en: 'DUE!', bg: '#FF6B6B', color: '#fff' },
+  { id: 'def_ganbaru',   emoji: '💪', label: '頑張るぞ！', label_en: 'Go!',      bg: '#FFD93D', color: '#333' },
+  { id: 'def_kanryo',    emoji: '✨', label: '完了！',     label_en: 'Done!',    bg: '#6BCB77', color: '#fff' },
+  { id: 'def_rough',     emoji: '✏️', label: 'ラフ中',     label_en: 'Draft',    bg: '#4D96FF', color: '#fff' },
+  { id: 'def_fix',       emoji: '🔄', label: '修正中',     label_en: 'Revising', bg: '#C77DFF', color: '#fff' },
+];
+
+let placedStickers = [];
+let customStamps   = [];
+let selectedStickerId = null;
+
+function loadStickerData() {
+  try { placedStickers = JSON.parse(localStorage.getItem('shimesuke_stickers') || '[]'); }
+  catch { placedStickers = []; }
+}
+function saveStickerData() {
+  try { localStorage.setItem('shimesuke_stickers', JSON.stringify(placedStickers)); }
+  catch {}
+}
+function loadCustomStamps() {
+  try { customStamps = JSON.parse(localStorage.getItem('shimesuke_custom_stamps') || '[]'); }
+  catch { customStamps = []; }
+}
+function saveCustomStamps() {
+  try { localStorage.setItem('shimesuke_custom_stamps', JSON.stringify(customStamps)); }
+  catch {}
+}
+
+function findStamp(stampId) {
+  return DEFAULT_STAMPS.find(d => d.id === stampId) || customStamps.find(d => d.id === stampId);
+}
+
+function renderStickerLayer() {
+  const layer = document.getElementById('sticker-layer');
+  if (!layer) return;
+  layer.innerHTML = '';
+  placedStickers.forEach(s => {
+    const stamp = findStamp(s.stampId);
+    if (!stamp) return;
+    const el = document.createElement('div');
+    el.className = 'placed-sticker' + (selectedStickerId === s.id ? ' selected' : '');
+    el.dataset.id = s.id;
+    el.style.left = s.x + '%';
+    el.style.top  = s.y + '%';
+    el.style.setProperty('--s-rot', s.rot + 'deg');
+    el.style.transform = `rotate(${s.rot}deg)`;
+
+    const bodyStyle = stamp.dataUrl ? '' : `background:${stamp.bg};color:${stamp.color}`;
+    const inner = stamp.dataUrl
+      ? `<img src="${stamp.dataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+      : `<span class="s-emoji">${stamp.emoji}</span><span class="s-label">${lang() === 'en' && stamp.label_en ? stamp.label_en : stamp.label}</span>`;
+
+    el.innerHTML = `
+      <div class="s-body" style="${bodyStyle}">
+        ${inner}
+        <div class="s-del" data-del="${s.id}">✕</div>
+      </div>`;
+
+    el.querySelector('.s-del').addEventListener('pointerdown', e => {
+      e.stopPropagation();
+      deleteSticker(s.id);
+    });
+    setupStickerDrag(el, s.id);
+    layer.appendChild(el);
+  });
+}
+
+function setupStickerDrag(el, id) {
+  let startX, startY, moved;
+
+  el.addEventListener('pointerdown', e => {
+    if (e.target.dataset.del) return;
+    e.preventDefault();
+    el.setPointerCapture(e.pointerId);
+    startX = e.clientX;
+    startY = e.clientY;
+    moved = false;
+
+    const onMove = e2 => {
+      const dx = e2.clientX - startX;
+      const dy = e2.clientY - startY;
+      if (!moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) moved = true;
+      if (!moved) return;
+      const s = placedStickers.find(p => p.id === id);
+      if (!s) return;
+      el.style.transform = `translate(${dx}px,${dy}px) rotate(${s.rot}deg)`;
+    };
+
+    const onUp = e2 => {
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerup', onUp);
+      if (moved) {
+        const dx = e2.clientX - startX;
+        const dy = e2.clientY - startY;
+        const s = placedStickers.find(p => p.id === id);
+        if (s) {
+          s.x = Math.max(0, Math.min(92, s.x + dx / window.innerWidth  * 100));
+          s.y = Math.max(0, Math.min(90, s.y + dy / window.innerHeight * 100));
+          el.style.left = s.x + '%';
+          el.style.top  = s.y + '%';
+          el.style.transform = `rotate(${s.rot}deg)`;
+          saveStickerData();
+        }
+      } else {
+        const wasSelected = el.classList.contains('selected');
+        document.querySelectorAll('.placed-sticker.selected').forEach(e => e.classList.remove('selected'));
+        selectedStickerId = null;
+        if (!wasSelected) {
+          el.classList.add('selected');
+          selectedStickerId = id;
+        }
+      }
+    };
+
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+  });
+}
+
+function addSticker(stampId) {
+  const s = {
+    id: uid(),
+    stampId,
+    x: 15 + Math.random() * 60,
+    y: 10 + Math.random() * 55,
+    rot: Math.round((Math.random() - 0.5) * 30),
+  };
+  placedStickers.push(s);
+  saveStickerData();
+  renderStickerLayer();
+  const el = document.querySelector(`.placed-sticker[data-id="${s.id}"]`);
+  if (el) {
+    el.classList.add('pop');
+    el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+  }
+  closeStampPanel();
+}
+
+function deleteSticker(id) {
+  placedStickers = placedStickers.filter(s => s.id !== id);
+  selectedStickerId = null;
+  saveStickerData();
+  renderStickerLayer();
+}
+
+function deleteCustomStamp(id) {
+  customStamps = customStamps.filter(s => s.id !== id);
+  saveCustomStamps();
+  renderStampOptions();
+}
+
+function renderStampOptions() {
+  const wrap = document.getElementById('stamp-options');
+  if (!wrap) return;
+
+  const defaultHtml = DEFAULT_STAMPS.map(s => `
+    <div class="stamp-option" style="background:${s.bg};color:${s.color}" onclick="addSticker('${s.id}')">
+      <span class="so-emoji">${s.emoji}</span>
+      <span class="so-label">${lang() === 'en' && s.label_en ? s.label_en : s.label}</span>
+    </div>`).join('');
+
+  const customHtml = customStamps.map(s => `
+    <div class="stamp-option stamp-option-img" onclick="addSticker('${s.id}')">
+      <img src="${s.dataUrl}" alt="">
+      <div class="so-del" onclick="event.stopPropagation();deleteCustomStamp('${s.id}')">✕</div>
+    </div>`).join('');
+
+  const uploadBtn = `<div class="stamp-option stamp-option-add" onclick="document.getElementById('stamp-upload').click()">＋</div>
+    <p style="width:100%;font-size:9px;color:var(--muted);text-align:center;margin-top:2px;">正方形120pxにトリミングされます</p>`;
+
+  wrap.innerHTML = defaultHtml + customHtml + uploadBtn;
+}
+
+function handleStampUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const size = 120;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      const min = Math.min(img.width, img.height);
+      const sx = (img.width  - min) / 2;
+      const sy = (img.height - min) / 2;
+      ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      customStamps.push({ id: 'cus_' + uid(), dataUrl });
+      saveCustomStamps();
+      renderStampOptions();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function toggleStampPanel() {
+  const panel = document.getElementById('stamp-panel');
+  if (!panel) return;
+  const isOpen = panel.classList.contains('open');
+  if (isOpen) { closeStampPanel(); } else { renderStampOptions(); panel.classList.add('open'); }
+}
+
+function closeStampPanel() {
+  const panel = document.getElementById('stamp-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+// 画面の他の場所タップで選択解除 & ポップアップ閉じる
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('#skin-popup') && !e.target.closest('#header-theme-btn')) {
+    closeSkinPopup();
+  }
+  if (!e.target.closest('#chart-color-popup') && !e.target.closest('#chart-color-btn')) {
+    closeChartColorPopup();
+  }
+  if (!e.target.closest('.placed-sticker') && !e.target.closest('#stamp-panel') && !e.target.closest('[onclick="toggleStampPanel()"]')) {
+    if (selectedStickerId) {
+      document.querySelectorAll('.placed-sticker.selected').forEach(el => el.classList.remove('selected'));
+      selectedStickerId = null;
+    }
+  }
+});
+
+/* ═══════════════════════════════
+   KEYBOARD
+═══════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+// 言語初期化
+try { document.documentElement.lang = localStorage.getItem('shimesuke_lang') || 'ja'; } catch(e) { document.documentElement.lang = 'ja'; }
+
+// default mobile tab
+if (window.innerWidth < 768) {
+  switchTab('calendar');
+}
+
+applyUISkin(currentSkinId);
+updateHeaderThemeDots();
+initDemoIfFirstVisit();
+render();
+applyI18n();
+updateDemoBanner();
+updateChartColorDots();
+loadStickerData();
+loadCustomStamps();
+renderStickerLayer();
+
+function showToast(msg, duration = 5000) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+function showStorageWarning() {
+  if (localStorage.getItem('shimesuke_storage_warned')) return;
+  setTimeout(() => {
+    showToast(t('storage_warning'), 7000);
+    localStorage.setItem('shimesuke_storage_warned', '1');
+  }, 1500);
+}
+
+showStorageWarning();
+</script>
+</body>
+</html>
