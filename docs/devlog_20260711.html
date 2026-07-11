@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchedulEX Devlog Vol.10 — 2026.07.11</title>
+<style>
+  :root {
+    --main: #2E3460; --gold: #E1B75B; --bg: #F5F1EB; --surface: #fff;
+    --ink: #2A2A2A; --muted: #7A8090; --border: #DDD8D0;
+    --me-bg: #ECEEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Kaku Gothic ProN','BIZ UDGothic',sans-serif; background: var(--bg); color: var(--ink); line-height: 1.8; padding: 48px 24px 80px; }
+  .container { max-width: 720px; margin: 0 auto; }
+  .log-header { margin-bottom: 48px; }
+  .log-header .tag { font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--main);background:var(--me-bg);display:inline-block;padding:3px 10px;border-radius:20px;margin-bottom:12px; }
+  .log-header h1 { font-size:28px;font-weight:700;color:var(--main);line-height:1.3;margin-bottom:8px; }
+  .log-header .date { font-size:13px;color:var(--muted); }
+  .log-header .gold-bar { height:3px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:20px;border-radius:2px; }
+  .section { margin-bottom:40px; }
+  .section-title { font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border); }
+  .chat { display:flex;flex-direction:column;gap:12px; }
+  .bubble { display:flex;gap:10px;align-items:flex-start; }
+  .bubble.me { flex-direction:row-reverse; }
+  .avatar { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px; }
+  .avatar.me { background:var(--main);color:#fff; }
+  .avatar.claude { background:var(--gold);color:#fff; }
+  .msg { max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.7; }
+  .bubble.me .msg { background:var(--me-bg);color:var(--main);border-radius:12px 2px 12px 12px; }
+  .bubble.claude .msg { background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:2px 12px 12px 12px; }
+  .msg strong { color:var(--main); }
+  .done-list,.nope-list,.bug-list { display:flex;flex-direction:column;gap:8px; }
+  .done-item { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start; }
+  .done-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .done-text { font-size:13px;line-height:1.6; }
+  .done-text .sub { font-size:11px;color:var(--muted);margin-top:2px; }
+  .nope-item { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;line-height:1.6;display:flex;gap:8px;align-items:flex-start; }
+  .nope-item .x { color:var(--muted);flex-shrink:0;font-size:12px;margin-top:2px; }
+  .nope-item .reason { font-size:11px;color:var(--muted);margin-top:2px; }
+  .next-list { display:flex;flex-wrap:wrap;gap:8px; }
+  .next-tag { background:var(--main);color:#fff;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px; }
+  .next-tag.warn { background:#C83030; }
+  .next-tag.pending { background:var(--gold);color:#2A2A2A; }
+  .highlight-box { background:var(--me-bg);border-left:3px solid var(--main);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;line-height:1.7;margin-bottom:12px; }
+  .highlight-box.warn { background:#FBECEC;border-left-color:#C83030; }
+  .highlight-box .label { font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--main);margin-bottom:4px; }
+  .highlight-box.warn .label { color:#C83030; }
+  footer { margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);text-align:center; }
+  .prev-link { display:inline-block;font-size:12px;color:var(--muted);margin-bottom:24px; }
+  .prev-link:hover { color:var(--main); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="log-header">
+    <div class="tag">SchedulEX — Devlog</div>
+    <h1>Vol.10 サンプルクリアで実データ14件消失 → Firestore 1時間履歴で復旧</h1>
+    <div class="date">2026年7月11日</div>
+    <a class="prev-link" href="devlog_20260710.html">← Vol.9（2026.07.10）</a>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- ── 今日の出来事 ── -->
+  <div class="section">
+    <div class="section-title">今日の出来事</div>
+    <div class="chat">
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">ログインすると課金トーストと、初回に表示されるサンプルデータがログイン前だと出ちゃう。あとサンプル消しますか？ボタンも出ており…チェックしよっか。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">サンプル消しますかボタン押したら自分のデータも消えちゃって…</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">Firestoreを直接確認し「3件のデータは無事」と報告。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">いいえ、自分のデータ吹っ飛ばしました。3件はあたらしくいれたやつ・・・</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">誤報告だったと判明、訂正して謝罪。gcloudでFirestoreのバージョン保持設定を確認したところPITR/バックアップは無効だったが、デフォルトの1時間バージョン履歴(versionRetentionPeriod)が生きていた。readTimeパラメータで過去の状態を遡って読み、ウィペ直前の14件フルデータを発見・保存。</div>
+      </div>
+      <div class="bubble me">
+        <div class="avatar me">me</div>
+        <div class="msg">丸ごと上書きでいいです。あと課金モーダルがPro版のはずなのにでてるので調べてほしい（管理者＝pro版）の認識</div>
+      </div>
+      <div class="bubble claude">
+        <div class="avatar claude">C</div>
+        <div class="msg">14件を本番Firestoreに復元。課金モーダルの件はコード内に管理者バイパスの仕組みが存在しないことが原因と判明(仕様通りの動作)。users/{uid}にisPro:trueを手動設定して解決。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 完了したこと ── -->
+  <div class="section">
+    <div class="section-title">完了したこと</div>
+    <div class="done-list">
+
+      <div class="done-item">
+        <div class="done-icon">🔍</div>
+        <div class="done-text">
+          <strong>データ消失の根本原因を特定</strong>
+          <div class="sub">「初回訪問かどうか」の判定がブラウザのlocalStorageのみを見ており、ログイン状態と無関係だった。新しい端末でログインすると実データ読み込み前にサンプルバナー＋クリアボタンが表示され、確認なしでクリックすると全データが即座にローカル・クラウド両方で上書きされる設計だった。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🆘</div>
+        <div class="done-text">
+          <strong>実データ14件をFirestoreの1時間バージョン履歴から復旧</strong>
+          <div class="sub">PITR・スケジュールバックアップは無効だったが、Firestoreがデフォルトで持つ1時間のバージョン保持を利用。REST APIのreadTimeパラメータで複数時刻を試し、ウィペ直前(更新時刻01:42:54Z)の全フィールド(orders/settings/myskin/mychart/theme/skin)を発見・ローカル保存後、本番ドキュメントに復元。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">🛠️</div>
+        <div class="done-text">
+          <strong>再発防止の実装(コミット94cb168)</strong>
+          <div class="sub">「クリアして始める」ボタンに確認ダイアログを追加。キャンセル時はデータを消さずバナー表示だけ消す。またログイン検知時点で即座にサンプルバナーを消し、実データ読み込み完了までの危険な時間窓を縮小。</div>
+        </div>
+      </div>
+
+      <div class="done-item">
+        <div class="done-icon">👑</div>
+        <div class="done-text">
+          <strong>管理者アカウントの手動Pro化</strong>
+          <div class="sub">コード内に管理者バイパスの仕組みが存在しないと判明。users/{uid}にisPro:trueを手動設定し、Stripe決済なしでPro表示になるよう対応。</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 検討・決定事項 ── -->
+  <div class="section">
+    <div class="section-title">検討・決定事項</div>
+    <div class="done-list">
+      <div class="done-item">
+        <div class="done-icon">💡</div>
+        <div class="done-text">
+          <strong>データ消失報告への対応フロー</strong>
+          <div class="sub">「今のデータは無事」と報告する前に、それが本当に元のデータか確認する必要があると痛感。今後は消失報告を受けたら必ずgcloud firestore databases describeでversionRetentionPeriodを確認し、readTimeで過去状態を試す運用にする。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 却下したこと ── -->
+  <div class="section">
+    <div class="section-title">検討してやめたこと</div>
+    <div class="nope-list">
+      <div class="nope-item">
+        <div class="x">✕</div>
+        <div>
+          復元データと消失後に入れ直した3件のマージ
+          <div class="reason">ユーザーの判断で「丸ごと上書きでいい」と決定し、入れ直し分は破棄。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box warn">
+    <div class="label">重要な教訓</div>
+    最初「Firestoreの3件のデータは無事」と報告したが、これは消失後にユーザーが入れ直したものを元データと誤認した誤報告だった。データ復旧作業では、見えているデータが本当に「元のもの」か、それとも「事故後に作られたもの」かを必ず確認すること。
+  </div>
+
+  <!-- ── 残タスク ── -->
+  <div class="section">
+    <div class="section-title">残タスク</div>
+    <div class="next-list">
+      <span class="next-tag pending">友人による本番テスト決済（返事待ち）</span>
+      <span class="next-tag">宣伝投稿（準備済み、本人のタイミングで）</span>
+      <span class="next-tag">GitHubリポジトリPrivate化</span>
+      <span class="next-tag">スタンプ・スティッカーのFirestore同期</span>
+    </div>
+    <div style="margin-top:20px">
+      <div class="highlight-box">
+        <div class="label">最優先 — 次回セッションの最初にやること</div>
+        特になし。データ復旧・再発防止・管理者Pro化まで実装・デプロイ・コミット・本人による目視確認まで完了済み。
+      </div>
+    </div>
+  </div>
+
+  <footer>SchedulEX Devlog — mimilyappdev</footer>
+</div>
+</body>
+</html>
