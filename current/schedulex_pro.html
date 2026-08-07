@@ -949,6 +949,7 @@ input, select, textarea { font-family: inherit; }
         <div class="user-area" id="user-area" style="display:none;">
           <img class="user-avatar" id="user-avatar" src="" alt="">
           <span class="user-display-name" id="user-display-name"></span>
+          <button class="btn-signout" id="btn-billing-portal" data-i18n="btn_billing_portal" onclick="openCustomerPortal()" style="display:none;">サブスク管理</button>
           <button class="btn-signout" data-i18n="btn_logout" onclick="signOutUser()">ログアウト</button>
         </div>
         <button class="btn-header-upgrade" id="btn-header-upgrade" onclick="openUpgradeModal()">
@@ -1303,6 +1304,7 @@ const db   = firebase.firestore();
 let currentUser = null;
 let userIsPro   = false;
 let isSyncing   = false;
+let currentStripeCustomerId = null;
 
 function signInWithGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
@@ -1385,6 +1387,32 @@ function updateHeaderUpgradeButton() {
   if (btn) btn.style.display = userIsPro ? 'none' : 'flex';
 }
 
+function updateBillingPortalButton() {
+  const btn = document.getElementById('btn-billing-portal');
+  if (btn) btn.style.display = userIsPro && currentStripeCustomerId ? '' : 'none';
+}
+
+async function openCustomerPortal() {
+  if (!currentUser) { signInWithGoogle(); return; }
+  const btn = document.getElementById('btn-billing-portal');
+  if (btn) {
+    btn.style.opacity = '0.6';
+    btn.style.pointerEvents = 'none';
+  }
+  try {
+    const fn = firebase.app().functions('asia-northeast1').httpsCallable('createCustomerPortalSession');
+    const result = await fn();
+    window.location.href = result.data.url;
+  } catch (e) {
+    console.error(e);
+    if (btn) {
+      btn.style.opacity = '';
+      btn.style.pointerEvents = '';
+    }
+    showToast(lang() === 'ja' ? 'サブスク管理画面を開けませんでした。' : 'Could not open subscription management.');
+  }
+}
+
 auth.onAuthStateChanged(user => {
   currentUser = user;
   const btnLogin   = document.getElementById('btn-login');
@@ -1402,17 +1430,26 @@ auth.onAuthStateChanged(user => {
     dismissDemoBanner();
     isSyncing = true;
     db.collection('users').doc(user.uid).get().then(doc => {
-      userIsPro = doc.exists && doc.data().isPro === true;
+      const userData = doc.exists ? doc.data() : {};
+      userIsPro = userData.isPro === true;
+      currentStripeCustomerId = userData.stripeCustomerId || null;
       loadFromFirestore();
       updateHeaderUpgradeButton();
+      updateBillingPortalButton();
       if (!userIsPro) setTimeout(() => openUpgradeModal(), 600);
-    }).catch(() => { loadFromFirestore(); });
+    }).catch(() => {
+      currentStripeCustomerId = null;
+      loadFromFirestore();
+      updateBillingPortalButton();
+    });
   } else {
     isSyncing = false;
     userIsPro = false;
+    currentStripeCustomerId = null;
     if (btnLogin)  btnLogin.style.display  = '';
     if (userArea)  userArea.style.display  = 'none';
     updateHeaderUpgradeButton();
+    updateBillingPortalButton();
   }
   applyI18n();
 });
@@ -1474,7 +1511,7 @@ const I18N = {
   ja: {
     logo_sub:'〆スケ', tagline:'締め切りが、見える。〆スケで、守ろう。',
     theme_label:'テーマ｜カラー変更', color_change:'カラー変更',
-    btn_login:'ログイン', btn_logout:'ログアウト',
+    btn_login:'ログイン', btn_logout:'ログアウト', btn_billing_portal:'サブスク管理',
     btn_header_upgrade:'⭐ サブスクを始める',
     orders_title:'案件一覧', filter_active:'進行中', filter_done:'完了', filter_unit:'件',
     btn_add:'＋ 追加', btn_stamp:'🎨 スタンプ', btn_close:'閉じる', btn_cancel:'キャンセル', btn_save:'保存',
@@ -1535,7 +1572,7 @@ const I18N = {
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
     theme_label:'Theme | Color', color_change:'Colors',
-    btn_login:'Sign in', btn_logout:'Sign out',
+    btn_login:'Sign in', btn_logout:'Sign out', btn_billing_portal:'Manage subscription',
     btn_header_upgrade:'⭐ Start subscription',
     orders_title:'Projects', filter_active:'Active', filter_done:'Done', filter_unit:'',
     btn_add:'+ Add', btn_stamp:'🎨 Stamps', btn_close:'Close', btn_cancel:'Cancel', btn_save:'Save',

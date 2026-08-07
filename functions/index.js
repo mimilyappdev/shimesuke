@@ -16,6 +16,41 @@ const PRICE_IDS = {
 // TODO: アプリの公開URLに変更
 const APP_URL = 'https://mimilyapp.web.app/pro';
 
+function planFromPriceId(priceId) {
+  return Object.keys(PRICE_IDS).find(plan => PRICE_IDS[plan] === priceId) || null;
+}
+
+function subscriptionData(sub, isProOverride) {
+  const item = sub.items && sub.items.data && sub.items.data[0];
+  const priceId = item && item.price ? item.price.id : null;
+  const isActive = ['active', 'trialing'].includes(sub.status);
+  return {
+    isPro: isProOverride !== undefined ? isProOverride : isActive,
+    stripeCustomerId: sub.customer,
+    subscriptionId: sub.id,
+    subscriptionStatus: sub.status,
+    cancelAtPeriodEnd: sub.cancel_at_period_end === true,
+    currentPeriodEnd: sub.current_period_end || null,
+    priceId,
+    plan: planFromPriceId(priceId),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  };
+}
+
+async function findUserBySubscription(db, sub) {
+  let snapshot = await db.collection('users')
+    .where('subscriptionId', '==', sub.id)
+    .limit(1)
+    .get();
+  if (!snapshot.empty) return snapshot.docs[0].ref;
+
+  snapshot = await db.collection('users')
+    .where('stripeCustomerId', '==', sub.customer)
+    .limit(1)
+    .get();
+  return snapshot.empty ? null : snapshot.docs[0].ref;
+}
+
 /* ─────────────────────────────────────────
    チェックアウトセッション作成
    HTML側から firebase.functions().httpsCallable('createCheckoutSession') で呼ぶ
@@ -41,6 +76,28 @@ exports.createCheckoutSession = onCall(
       success_url: `${APP_URL}?checkout=success`,
       cancel_url:  `${APP_URL}?checkout=cancel`,
       locale: 'ja',
+    });
+
+    return { url: session.url };
+  }
+);
+
+exports.createCustomerPortalSession = onCall(
+  { secrets: [STRIPE_SECRET_KEY], region: 'asia-northeast1' },
+  async (request) => {
+    if (!request.auth) throw new Error('unauthenticated');
+
+    const uid = request.auth.uid;
+    const db = admin.firestore();
+    const userDoc = await db.collection('users').doc(uid).get();
+    const stripeCustomerId = userDoc.exists ? userDoc.data().stripeCustomerId : null;
+
+    if (!stripeCustomerId) throw new Error('stripe customer not found');
+
+    const stripe = new Stripe(STRIPE_SECRET_KEY.value());
+    const session = await stripe.billingPortal.sessions.create({
+      customer: stripeCustomerId,
+      return_url: APP_URL,
     });
 
     return { url: session.url };
@@ -76,29 +133,29 @@ exports.stripeWebhook = onRequest(
           const session = event.data.object;
           const uid     = session.client_reference_id;
           if (uid) {
-            await db.collection('users').doc(uid).set({
-              isPro:            true,
-              stripeCustomerId: session.customer,
-              subscriptionId:   session.subscription,
-              updatedAt:        admin.firestore.FieldValue.serverTimestamp(),
-            }, { merge: true });
+            const sub = await stripe.subscriptions.retrieve(session.subscription);
+            await db.collection('users').doc(uid).set(subscriptionData(sub, true), { merge: true });
             console.log(`isPro: true → uid=${uid}`);
           }
           break;
         }
 
+        case 'customer.subscription.updated': {
+          const sub = event.data.object;
+          const userRef = await findUserBySubscription(db, sub);
+          if (userRef) {
+            await userRef.set(subscriptionData(sub), { merge: true });
+            console.log(`subscription updated customer=${sub.customer}`);
+          }
+          break;
+        }
+
         case 'customer.subscription.deleted': {
-          const sub      = event.data.object;
-          const snapshot = await db.collection('users')
-            .where('stripeCustomerId', '==', sub.customer)
-            .limit(1)
-            .get();
-          if (!snapshot.empty) {
-            await snapshot.docs[0].ref.set({
-              isPro:     false,
-              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            }, { merge: true });
-            console.log(`isPro: false → customer=${sub.customer}`);
+          const sub = event.data.object;
+          const userRef = await findUserBySubscription(db, sub);
+          if (userRef) {
+            await userRef.set(subscriptionData(sub, false), { merge: true });
+            console.log(`isPro: false customer=${sub.customer}`);
           }
           break;
         }
