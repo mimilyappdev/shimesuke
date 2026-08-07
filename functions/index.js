@@ -30,7 +30,7 @@ function subscriptionData(sub, isProOverride) {
     subscriptionId: sub.id,
     subscriptionStatus: sub.status,
     cancelAtPeriodEnd: sub.cancel_at_period_end === true,
-    currentPeriodEnd: sub.current_period_end || null,
+    currentPeriodEnd: sub.current_period_end || item?.current_period_end || sub.cancel_at || null,
     priceId,
     plan: planFromPriceId(priceId),
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
