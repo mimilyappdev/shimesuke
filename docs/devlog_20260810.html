@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SchedulEX Devlog 2026-08-10</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.8; color: #24302f; background: #f8fbfa; margin: 0; }
+    main { max-width: 880px; margin: 0 auto; padding: 32px 18px 56px; }
+    h1 { font-size: 28px; margin: 0 0 10px; }
+    h2 { font-size: 20px; margin: 28px 0 8px; border-bottom: 2px solid #68c9bd; padding-bottom: 4px; }
+    p, li { font-size: 15px; }
+    code { background: #eef6f4; padding: 2px 5px; border-radius: 4px; }
+    .note { background: #fff8d7; border-left: 5px solid #f3ca4d; padding: 12px 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>SchedulEX Devlog 2026-08-10</h1>
+  <p>Stripeサブスクリプション解約・管理導線まわりの確認と、スマホ幅を考慮したUI調整の記録。</p>
+
+  <h2>対応内容</h2>
+  <ul>
+    <li>Stripe Customer Portal連携を使う「サブスク管理」導線を、ヘッダーから設定画面内へ移動。</li>
+    <li>ProユーザーかつStripe Customer IDがある場合のみ、設定画面に「サブスク管理」セクションを表示するよう調整。</li>
+    <li>ヘッダーの横幅圧迫を避け、スマホ版でログアウトやユーザー表示と競合しにくい配置に変更。</li>
+    <li>日本語・英語の表示文言に設定画面用ラベルを追加。</li>
+  </ul>
+
+  <h2>サブスク状態確認</h2>
+  <ul>
+    <li>Firestore上のライブ契約ユーザーについて、StripeのSubscription情報を確認し、必要なフィールドを同期済み。</li>
+    <li>請求期間終了時キャンセル済みの契約は、期間終了までは<code>isPro: true</code>を維持する想定。</li>
+    <li>確認したキャンセル予定日時: 2026-08-14 12:53:31 JST。</li>
+  </ul>
+
+  <h2>関連コミット</h2>
+  <ul>
+    <li><code>87d47b2</code> Add Stripe subscription management</li>
+    <li><code>6a41f1d</code> Fix Stripe period end sync</li>
+  </ul>
+
+  <h2>確認済み</h2>
+  <ul>
+    <li><code>current/schedulex_pro.html</code> のインラインJavaScript構文チェック。</li>
+    <li>今回のUI差分が「サブスク管理」配置変更に限られていること。</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>未デプロイ注意:</strong> このDevlog作成時点では、最新のGit push後に本番反映するにはHostingのデプロイが必要。Functions側の<code>currentPeriodEnd</code>補正も、push済みだが別途Functionsデプロイが必要。</p>
+  </div>
+</main>
+</body>
+</html>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -949,6 +949,7 @@ input, select, textarea { font-family: inherit; }
         <div class="user-area" id="user-area" style="display:none;">
           <img class="user-avatar" id="user-avatar" src="" alt="">
           <span class="user-display-name" id="user-display-name"></span>
+          <button class="btn-signout" id="btn-billing-portal" data-i18n="btn_billing_portal" onclick="openCustomerPortal()" style="display:none;">サブスク管理</button>
           <button class="btn-signout" data-i18n="btn_logout" onclick="signOutUser()">ログアウト</button>
         </div>
         <button class="btn-header-upgrade" id="btn-header-upgrade" onclick="openUpgradeModal()">
@@ -1199,11 +1200,6 @@ input, select, textarea { font-family: inherit; }
         <button class="btn-add-tpl" id="btn-add-tpl" data-i18n="btn_add_tpl" onclick="openAddTemplate()">＋ テンプレートを追加</button>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
-      <div class="settings-section" id="subscription-settings-section" style="display:none;">
-        <p class="settings-label" data-i18n="settings_subscription">サブスク管理</p>
-        <button class="btn-primary" id="btn-billing-portal" data-i18n="btn_billing_portal" onclick="openCustomerPortal()" style="width:100%;margin-bottom:8px;">サブスク管理</button>
-      </div>
-      <div id="subscription-settings-divider" style="display:none;height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
         <p class="settings-label" data-i18n="settings_backup">バックアップ / 復元</p>
         <button class="btn-primary" data-i18n="btn_export" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
@@ -1393,12 +1389,7 @@ function updateHeaderUpgradeButton() {
 
 function updateBillingPortalButton() {
   const btn = document.getElementById('btn-billing-portal');
-  const section = document.getElementById('subscription-settings-section');
-  const divider = document.getElementById('subscription-settings-divider');
-  const show = userIsPro && currentStripeCustomerId;
-  if (section) section.style.display = show ? '' : 'none';
-  if (btn) btn.style.display = show ? '' : 'none';
-  if (divider) divider.style.display = show ? '' : 'none';
+  if (btn) btn.style.display = userIsPro && currentStripeCustomerId ? '' : 'none';
 }
 
 async function openCustomerPortal() {
@@ -1532,7 +1523,7 @@ const I18N = {
     phase_rough:'準備中', phase_fix:'作業中', phase_final:'仕上げ中', phase_done:'完了',
     label_schedule:'スケジュール設定（日数）', no_template:'テンプレートなし（手動入力）', template_hint:'※ テンプレートを選ぶと日数が自動で入ります',
     label_notes:'メモ', placeholder_notes:'キャラデザ：青系・猫耳・前金入金済 など',
-    modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する', settings_subscription:'サブスク管理',
+    modal_settings:'設定', settings_calendar:'カレンダー表示', settings_stamp_toggle:'〆切！スタンプを表示する',
     settings_default_phases:'デフォルトのフェーズ日数', settings_phase_hint:'案件追加時の手動入力デフォルト値になります',
     settings_templates:'フェーズテンプレート', btn_add_tpl:'＋ テンプレートを追加',
     settings_backup:'バックアップ / 復元', btn_export:'💾 JSONに書き出す', btn_import:'📂 JSONから復元',
@@ -1593,7 +1584,7 @@ const I18N = {
     phase_rough:'Preparing', phase_fix:'Working', phase_final:'Finishing', phase_done:'Done',
     label_schedule:'Schedule (days)', no_template:'No template (manual)', template_hint:'* Select a template to auto-fill days',
     label_notes:'Notes', placeholder_notes:'e.g. Blue palette, advance payment received',
-    modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp', settings_subscription:'Subscription',
+    modal_settings:'Settings', settings_calendar:'Calendar Display', settings_stamp_toggle:'Show deadline stamp',
     settings_default_phases:'Default Phase Days', settings_phase_hint:'Used as default values when adding a project',
     settings_templates:'Phase Templates', btn_add_tpl:'+ Add Template',
     settings_backup:'Backup / Restore', btn_export:'💾 Export as JSON', btn_import:'📂 Restore from JSON',
