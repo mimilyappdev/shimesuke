@@ -279,7 +279,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     </p>
     <div class="cta-group">
       <a href="./app/" class="btn-primary">Try for Free →</a>
-      <a href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-secondary">📦 Local Version (one-time)</a>
+      <a data-cta-placement="hero" href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-secondary">📦 Local Version (one-time)</a>
     </div>
     <p style="font-size:11px;color:var(--muted);margin-top:10px;">✅ Free tier: 5 active projects · No sign-up · Multi-device sync with subscription</p>
   </div>
@@ -645,7 +645,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           <li class="pi"><span class="ck">✓</span><span>Custom stamps<small>Your art as stamps (up to 5)</small></span></li>
           <li class="pi"><span class="na">—</span><span style="opacity:0.5;">Cloud sync &amp; login anywhere</span></li>
         </ul>
-        <a href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-free" style="text-align:center;text-decoration:none;display:block;margin-top:16px;">Buy on Booth</a>
+        <a data-cta-placement="pricing" href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-free" style="text-align:center;text-decoration:none;display:block;margin-top:16px;">Buy on Booth</a>
       </div>
 
       <div class="plan" style="border-color:rgba(138,144,204,0.6);position:relative;">
@@ -856,6 +856,20 @@ window.mkSwitch=function(v,i){
 
 init();
 })();
+</script>
+<script>
+/* BOOTHへのリンクのクリックを計測する */
+document.addEventListener("click",e=>{
+  const link=e.target.closest&&e.target.closest('a[href*="booth.pm"]');
+  if(link&&typeof gtag==="function"){
+    gtag("event","cta_click",{
+      site_id:"schedulex_lp_en",
+      cta_name:"schedulex_local_booth",
+      cta_placement:link.dataset.ctaPlacement||"other",
+      link_destination:"booth"
+    });
+  }
+});
 </script>
 </body>
 </html>
