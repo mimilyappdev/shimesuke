@@ -1277,12 +1277,12 @@ input, select, textarea { font-family: inherit; }
         <a id="upg-monthly-btn" href="https://buy.stripe.com/9B68wRaqv79M2KG16H9R601" target="_blank"
            style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:1.5px solid var(--light);background:var(--surface);text-decoration:none;color:var(--text);">
           <span style="font-weight:700;font-size:13px;" id="upg-monthly-label"></span>
-          <span style="font-size:16px;font-weight:700;color:var(--main);">¥380<span style="font-size:10px;font-weight:400;color:var(--muted);">/月</span></span>
+          <span style="font-size:16px;font-weight:700;color:var(--main);"><span id="upg-monthly-price">¥380</span><span style="font-size:10px;font-weight:400;color:var(--muted);" id="upg-monthly-unit">/月</span></span>
         </a>
         <a id="upg-annual-btn" href="https://buy.stripe.com/fZu28t0PV8dQ0CyaHh9R600" target="_blank"
            style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:10px;border:2px solid var(--main);background:var(--main);text-decoration:none;color:#fff;position:relative;">
           <span style="font-weight:700;font-size:13px;" id="upg-annual-label"></span>
-          <span style="font-size:16px;font-weight:700;">¥2,480<span style="font-size:10px;font-weight:400;opacity:.8;">/年</span></span>
+          <span style="font-size:16px;font-weight:700;"><span id="upg-annual-price">¥2,480</span><span style="font-size:10px;font-weight:400;opacity:.8;" id="upg-annual-unit">/年</span></span>
           <span style="position:absolute;top:-8px;right:12px;background:#E1B75B;color:#5A3A00;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;" id="upg-badge"></span>
         </a>
       </div>
@@ -1497,6 +1497,10 @@ function openUpgradeModal() {
   document.getElementById('upg-f5').textContent = t('upg_f5');
   document.getElementById('upg-monthly-label').textContent = t('upg_monthly');
   document.getElementById('upg-annual-label').textContent = t('upg_annual');
+  document.getElementById('upg-monthly-price').textContent = t('upg_monthly_price');
+  document.getElementById('upg-monthly-unit').textContent = t('upg_monthly_unit');
+  document.getElementById('upg-annual-price').textContent = t('upg_annual_price');
+  document.getElementById('upg-annual-unit').textContent = t('upg_annual_unit');
   document.getElementById('upg-badge').textContent = t('upg_badge');
   document.getElementById('upg-footer-text').textContent = t('upg_footer');
   document.getElementById('upg-monthly-btn').onclick = (e) => { e.preventDefault(); startCheckout('monthly'); };
@@ -1512,7 +1516,7 @@ async function startCheckout(plan) {
   btn.style.pointerEvents = 'none';
   try {
     const fn = firebase.app().functions('asia-northeast1').httpsCallable('createCheckoutSession');
-    const result = await fn({ plan });
+    const result = await fn({ plan, lang: lang() });
     window.location.href = result.data.url;
   } catch (e) {
     console.error(e);
@@ -1585,6 +1589,7 @@ const I18N = {
     upg_f1:'スマホ・PC・タブレット、どの端末からでもアクセス', upg_f2:'案件数 無制限＋クラウド自動バックアップ',
     upg_f3:'EasyReply連携（開発中）', upg_f4:'Googleカレンダー同期（開発中）', upg_f5:'収支管理（開発中）',
     upg_monthly:'月額プラン', upg_annual:'年額プラン', upg_badge:'約46%お得',
+    upg_monthly_price:'¥380', upg_monthly_unit:'/月', upg_annual_price:'¥2,480', upg_annual_unit:'/年',
     upg_footer:'決済はStripeで安全に処理されます',
   },
   en: {
@@ -1645,7 +1650,8 @@ const I18N = {
     upgrade_desc:'One planner\'s price. Access from any device, anytime.',
     upg_f1:'Access from any device — phone, PC, tablet', upg_f2:'Unlimited projects + auto cloud backup',
     upg_f3:'EasyReply sync (in development)', upg_f4:'Google Calendar sync (in development)', upg_f5:'Finance tracking (in development)',
-    upg_monthly:'Monthly plan', upg_annual:'Annual plan', upg_badge:'Save ~46%',
+    upg_monthly:'Monthly plan', upg_annual:'Annual plan', upg_badge:'Save ~40%',
+    upg_monthly_price:'$4', upg_monthly_unit:'/mo', upg_annual_price:'$29', upg_annual_unit:'/yr',
     upg_footer:'Payments processed securely by Stripe',
   }
 };
@@ -3144,6 +3150,12 @@ document.addEventListener('keydown', e => {
 ═══════════════════════════════ */
 // 言語初期化
 try { document.documentElement.lang = localStorage.getItem('shimesuke_lang') || 'ja'; } catch(e) { document.documentElement.lang = 'ja'; }
+// ?lang=en / ?lang=ja で開いたときはその言語にする（英語LPからの導線用）
+const qLang = new URLSearchParams(location.search).get('lang');
+if (qLang === 'en' || qLang === 'ja') {
+  document.documentElement.lang = qLang;
+  try { localStorage.setItem('shimesuke_lang', qLang); } catch(e) {}
+}
 
 // default mobile tab
 if (window.innerWidth < 768) {

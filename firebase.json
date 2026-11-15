@@ -16,7 +16,11 @@
       "Booth用データ/**",
       "fanbox_shimesuke.txt",
       "**/*.md",
-      ".git/**"
+      ".git/**",
+      "**/.*",
+      "**/.*/**",
+      "アーカイブ（古いファイル・見なくてOK）/**",
+      "画像/**"
     ],
     "rewrites": [
       { "source": "/pro", "destination": "/current/schedulex_pro.html" }

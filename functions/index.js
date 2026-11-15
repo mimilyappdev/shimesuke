@@ -11,6 +11,8 @@ const STRIPE_WEBHOOK_SECRET = defineSecret('STRIPE_WEBHOOK_SECRET');
 const PRICE_IDS = {
   monthly: 'price_1Tnu64RXW1evPVMUvua7DIeK', // ¥380/月
   annual:  'price_1Tnu7mRXW1evPVMUYnS0vJu1', // ¥2,480/年
+  monthly_usd: 'price_1Uc1RHRXW1evPVMU2dDSUDly', // $4/月（英語表示の人向け）
+  annual_usd:  'price_1Uc1RIRXW1evPVMUCeWibS2u', // $29/年（英語表示の人向け）
 };
 
 // TODO: アプリの公開URLに変更
@@ -60,22 +62,25 @@ exports.createCheckoutSession = onCall(
   async (request) => {
     if (!request.auth) throw new Error('unauthenticated');
 
-    const { plan } = request.data;
+    const { plan, lang } = request.data;
     const uid      = request.auth.uid;
     const email    = request.auth.token.email;
 
-    if (!PRICE_IDS[plan]) throw new Error('invalid plan');
+    if (!['monthly', 'annual'].includes(plan)) throw new Error('invalid plan');
+    // 英語表示の人はドル、それ以外は円
+    const isEn     = lang === 'en';
+    const priceKey = isEn ? `${plan}_usd` : plan;
 
     const stripe  = new Stripe(STRIPE_SECRET_KEY.value());
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
-      line_items: [{ price: PRICE_IDS[plan], quantity: 1 }],
+      line_items: [{ price: PRICE_IDS[priceKey], quantity: 1 }],
       customer_email: email,
       client_reference_id: uid,  // ← Webhook側でFirestore更新に使う
       success_url: `${APP_URL}?checkout=success`,
       cancel_url:  `${APP_URL}?checkout=cancel`,
-      locale: 'ja',
+      locale: isEn ? 'en' : 'ja',
     });
 
     return { url: session.url };
