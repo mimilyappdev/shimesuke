@@ -582,6 +582,19 @@ input, select, textarea { font-family: inherit; }
 }
 .phase-field input:focus { border-color: var(--light); }
 .phase-hint { font-size: 10px; color: var(--muted); text-align: center; margin-top: 2px; }
+/* 依頼カード */
+.req-box { border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.req-box summary { font-size: 12px; font-weight: 700; color: var(--main); cursor: pointer; }
+.req-box > * + * { margin-top: 10px; }
+.req-hint { font-size: 10px; color: var(--muted); line-height: 1.6; margin: 0; }
+.req-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.req-tip-btn { border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 50%; width: 18px; height: 18px; font-size: 10px; line-height: 1; cursor: pointer; margin-left: 4px; }
+.req-tip { display: block; font-size: 10px; font-weight: 400; color: var(--muted); line-height: 1.6; margin-top: 4px; }
+.req-tip[hidden] { display: none; }
+.req-send { display: flex; flex-direction: column; gap: 6px; }
+.req-send .req-status { font-size: 10px; color: var(--muted); }
+.req-send button { width: 100%; }
+.req-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 6px; background: var(--main); color: #fff; margin-left: 4px; }
 
 /* modal actions */
 .modal-actions {
@@ -1174,6 +1187,39 @@ input, select, textarea { font-family: inherit; }
         <textarea id="f-notes" placeholder="キャラデザ：青系・猫耳・前金入金済 など" data-i18n-placeholder="placeholder_notes"></textarea>
       </div>
 
+      <!-- 依頼カード（依頼の印と、金額・日付など） -->
+      <details class="req-box" id="f-req-box">
+        <summary data-i18n="req_summary">依頼の情報（任意）</summary>
+        <div class="setting-row" style="margin-top:10px;">
+          <span class="setting-row-label" data-i18n="req_toggle_label">依頼として記録する</span>
+          <button type="button" class="toggle-switch" id="f-req-toggle" onclick="toggleRequestFlag()"></button>
+        </div>
+        <p class="req-hint" id="f-req-auto-hint" data-i18n="req_auto_hint">依頼者名か金額を入れると自動でオンになります。手で切り替えたあとは、そのままになります。</p>
+        <div class="field">
+          <label data-i18n="req_client">依頼者名</label>
+          <input type="text" id="f-req-client" oninput="onRequestInput()" maxlength="60">
+        </div>
+        <div class="field">
+          <label data-i18n="req_amount">金額（源泉を引く前の請求額・税込・円）</label>
+          <input type="text" id="f-req-amount" inputmode="numeric" placeholder="30000" oninput="onRequestInput()" maxlength="15">
+        </div>
+        <div class="setting-row">
+          <span class="setting-row-label"><span data-i18n="req_gensen">源泉徴収あり</span>
+            <button type="button" class="req-tip-btn" onclick="this.nextElementSibling.hidden=!this.nextElementSibling.hidden">?</button>
+            <span class="req-tip" hidden data-i18n="req_gensen_tip">源泉徴収は、支払う側が報酬から所得税を差し引いて納める仕組みです。対象になるかどうかは、請求書や支払通知書の記載で確認できます。</span>
+          </span>
+          <button type="button" class="toggle-switch" id="f-req-gensen" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="req-dates">
+          <div class="field"><label data-i18n="req_requested">依頼日</label><input type="date" id="f-req-requested"></div>
+          <div class="field"><label data-i18n="req_delivered">納品日</label><input type="date" id="f-req-delivered"></div>
+          <div class="field"><label data-i18n="req_paid">入金日（任意）</label><input type="date" id="f-req-paid"></div>
+          <div class="field"><label data-i18n="req_paid_amount">入金額（任意・円）</label><input type="text" id="f-req-paid-amount" inputmode="numeric" maxlength="15"></div>
+        </div>
+        <p class="req-hint" data-i18n="req_paid_hint">入金日と入金額は、通帳や明細で確かめたら書き込めます。空のままでも保存できます。</p>
+        <div id="f-req-send" class="req-send"></div>
+      </details>
+
     </div>
     <div class="modal-actions" id="order-modal-actions">
       <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
@@ -1217,6 +1263,13 @@ input, select, textarea { font-family: inherit; }
         <p class="settings-label" data-i18n="settings_backup">バックアップ / 復元</p>
         <button class="btn-primary" data-i18n="btn_export" onclick="exportData()" style="width:100%;margin-bottom:8px;">💾 JSONに書き出す</button>
         <button class="btn-primary" data-i18n="btn_import" style="width:100%;margin-top:4px;" onclick="triggerImport()">📂 JSONから復元</button>
+      </div>
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+      <div class="settings-section">
+        <p class="settings-label" data-i18n="settings_requests">依頼のまとめ</p>
+        <p class="req-hint" id="req-summary-text"></p>
+        <button class="btn-primary" data-i18n="req_btn_csv" onclick="exportRequestsCSV()" style="width:100%;">📄 依頼だけCSVに書き出す</button>
+        <p class="req-hint" data-i18n="req_csv_hint">依頼の印が付いた案件だけを書き出します。</p>
       </div>
       <div style="height:1px;background:var(--border);margin:4px 0;"></div>
       <div class="settings-section">
@@ -1591,6 +1644,33 @@ const I18N = {
     upg_monthly:'月額プラン', upg_annual:'年額プラン', upg_badge:'約46%お得',
     upg_monthly_price:'¥380', upg_monthly_unit:'/月', upg_annual_price:'¥2,480', upg_annual_unit:'/年',
     upg_footer:'決済はStripeで安全に処理されます',
+    req_summary:'依頼の情報（任意）', req_toggle_label:'依頼として記録する',
+    req_auto_hint:'依頼者名か金額を入れると自動でオンになります。手で切り替えたあとは、そのままになります。',
+    req_client:'依頼者名', req_amount:'金額（源泉を引く前の請求額・税込・円）',
+    req_gensen:'源泉徴収あり',
+    req_gensen_tip:'源泉徴収は、支払う側が報酬から所得税を差し引いて納める仕組みです。対象になるかどうかは、請求書や支払通知書の記載で確認できます。',
+    req_requested:'依頼日', req_delivered:'納品日', req_paid:'入金日（任意）', req_paid_amount:'入金額（任意・円）',
+    req_paid_hint:'入金日と入金額は、通帳や明細で確かめたら書き込めます。空のままでも保存できます。',
+    req_btn_send:'📒 RakuThroughに送る', req_btn_copy:'引継ぎコードをコピー',
+    req_sent_at:'RakuThroughに渡した日時：{d}（取り込むかはRakuThroughの画面で決まります）', req_not_sent:'まだRakuThroughに送っていません',
+    req_changed_after_send:'送ったあとに内容が変わっています。もう一度送ると、RakuThroughで上書きするか確認が出ます。',
+    req_save_first:'保存すると、RakuThroughに送れるようになります。',
+    req_pro_only:'RakuThroughへの連携と依頼の書き出しは、サブスク版の機能です。',
+    req_confirm_send:'RakuThroughを開いて、取り込みの確認画面を出します。\n\n送る内容：金額・源泉の有無・依頼日・納品日・入金日・入金額・種類\n送らない内容：依頼者名・案件名・メモ\n\n取り込むかどうかは、RakuThroughの画面で決められます。',
+    req_paid_before:'※入金日が納品日より前です（前払いなど）。',
+    req_paid_empty:'※入金日が空なので、RakuThroughでは「未入金（売掛）」として届きます。入金されたら、RakuThroughで入金日を入れられます。',
+    req_zero_amount:'金額が0円の依頼は、RakuThroughに売上として送れません。',
+    req_need_amount:'金額を入れてください',req_need_delivered:'納品日を入れてください（売上の日付として使います）',
+    req_bad_amount:'金額は数字だけで入れてください（例：30000）', req_too_big:'金額が大きすぎます。桁を確かめてください',
+    req_copied:'引継ぎコードをコピーしました。RakuThroughの「SchedulEXから取り込む」に貼り付けてください。',
+    req_copy_fail:'コピーできませんでした。下のコードを長押しして、コピーしてください。',
+    req_badge:'依頼',
+    settings_requests:'依頼のまとめ',
+    req_summary_line:'{y}年の依頼：{n}件／請求額の合計 {sum}円／平均の制作日数 {avg}',
+    req_avg_none:'—', req_days:'日',
+    req_btn_csv:'📄 依頼だけCSVに書き出す',
+    req_csv_hint:'依頼の印が付いた案件だけを書き出します。RakuThroughで読み込めるほか、自分の記録としてExcelでも開けます。依頼者名も入るので、渡す相手に気をつけてください。',
+    req_no_requests:'依頼の印が付いた案件がありません',
   },
   en: {
     logo_sub:'Shimesuke!', tagline:'See your deadlines. Meet them.',
@@ -1653,6 +1733,33 @@ const I18N = {
     upg_monthly:'Monthly plan', upg_annual:'Annual plan', upg_badge:'Save ~40%',
     upg_monthly_price:'$4', upg_monthly_unit:'/mo', upg_annual_price:'$29', upg_annual_unit:'/yr',
     upg_footer:'Payments processed securely by Stripe',
+    req_summary:'Commission details (optional)', req_toggle_label:'Record as a commission',
+    req_auto_hint:'Turns on automatically when you enter a client or an amount. Once you switch it yourself, it stays as you set it.',
+    req_client:'Client', req_amount:'Amount (invoice total before withholding, JPY)',
+    req_gensen:'Withholding tax applies',
+    req_gensen_tip:'In Japan, some clients deduct income tax from the fee before paying. Your invoice or payment notice shows whether it applies.',
+    req_requested:'Requested on', req_delivered:'Delivered on', req_paid:'Paid on (optional)', req_paid_amount:'Amount received (optional)',
+    req_paid_hint:'Fill in the payment date and amount once you see them in your bank records. You can leave them empty.',
+    req_btn_send:'📒 Send to RakuThrough', req_btn_copy:'Copy handoff code',
+    req_sent_at:'Handed to RakuThrough: {d} (you confirm the import there)', req_not_sent:'Not sent to RakuThrough yet',
+    req_changed_after_send:'Changed after sending. If you send again, RakuThrough will ask before overwriting.',
+    req_save_first:'Save first to send it to RakuThrough.',
+    req_pro_only:'Sending to RakuThrough and exporting commissions are subscription features.',
+    req_confirm_send:'RakuThrough will open and ask whether to import this.\n\nSent: amount, withholding, requested/delivered/paid dates, amount received, type\nNot sent: client, project name, notes\n\nYou decide on the RakuThrough screen.',
+    req_paid_before:'* The payment date is before the delivery date (e.g. paid in advance).',
+    req_paid_empty:'* No payment date yet, so it arrives in RakuThrough as unpaid (receivable). You can add the date there later.',
+    req_zero_amount:'A ¥0 commission cannot be sent to RakuThrough as a sale.',
+    req_need_amount:'Please enter an amount',req_need_delivered:'Please enter the delivery date (used as the sales date)',
+    req_bad_amount:'Please enter numbers only (e.g. 30000)', req_too_big:'That amount is too large. Please check the digits',
+    req_copied:'Handoff code copied. Paste it into "Import from SchedulEX" in RakuThrough.',
+    req_copy_fail:'Could not copy. Press and hold the code below to copy it.',
+    req_badge:'Job',
+    settings_requests:'Commission summary',
+    req_summary_line:'{y} commissions: {n} / total invoiced ¥{sum} / average {avg}',
+    req_avg_none:'—', req_days:' days',
+    req_btn_csv:'📄 Export commissions as CSV',
+    req_csv_hint:'Exports only projects recorded as commissions. RakuThrough can import it, and Excel can open it. It includes client names, so be careful who you share it with.',
+    req_no_requests:'No projects are recorded as commissions',
   }
 };
 function lang() { return document.documentElement.lang || 'ja'; }
@@ -1965,6 +2072,7 @@ function renderOrders() {
       <div class="card-type-row">
         ${pict(order.type, utxt, 18)}
         <span class="card-type-label" style="color:${utxt};">${typeLabel(order.type)}</span>
+        ${order.request && order.request.isRequest ? `<span class="req-badge">${esc(t('req_badge'))}</span>` : ''}
       </div>
       <div class="phase-bar-row">${barHTML}</div>
       <div class="card-deadline-row" style="color:${utxt};">
@@ -2264,6 +2372,7 @@ function openAddOrder() {
   // phase fields
   renderPhaseFields('f-phases-row', settings.phases.map(p=>({...p})));
   renderTemplateSelect();
+  fillRequestFields(null);
 
   // actions
   document.getElementById('order-modal-actions').innerHTML = `
@@ -2291,6 +2400,7 @@ function openEditOrder(id) {
 
   const phases = order.phaseDays || settings.phases.map(p=>({...p}));
   renderPhaseFields('f-phases-row', phases);
+  fillRequestFields(order);
 
   document.getElementById('order-modal-actions').innerHTML = `
     <button class="btn-delete" onclick="deleteOrder('${id}')">${t('btn_delete')}</button>
@@ -2334,16 +2444,257 @@ function saveOrder() {
   if (!name)     { alert(t('alert_enter_name')); return; }
   if (!deadline) { alert(t('alert_enter_deadline')); return; }
 
+  const prev = editingId ? orders.find(o => o.id === editingId) : null;
+  const req  = readRequestFields(prev && prev.request);
+  if (req.error) { alert(t(req.error)); return; }
+
   if (editingId) {
     const idx = orders.findIndex(o => o.id === editingId);
-    if (idx > -1) orders[idx] = { ...orders[idx], name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays };
+    if (idx > -1) orders[idx] = { ...orders[idx], name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays, request: req.value };
   } else {
-    orders.push({ id: uid(), name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays });
+    const o = { id: uid(), name, type: selectedType, deadline, currentPhase: phase, notes, phaseDays };
+    if (req.value) o.request = req.value;
+    orders.push(o);
   }
 
   save();
   closeModal();
   render();
+}
+
+/* ═══════════════════════════════
+   依頼カード（依頼の印・金額・日付）とRakuThrough連携
+   引継ぎ票 mimily-handoff v1 は docs/引継ぎ票_v1.md を参照
+═══════════════════════════════ */
+const RT_APP_URL     = 'https://rakuthrough-app.netlify.app/';
+const REQ_MAX_AMOUNT = 100000000; // 1億円以上は桁の打ち間違いとみなす
+let reqManual = false;            // 編集中の案件で、印を手で切り替えたか
+
+// 「30,000」「３００００」「¥30000」「30000円」を 30000 にする。空なら null
+function parseYen(s) {
+  const raw = String(s || '').normalize('NFKC').replace(/[\s,，、¥\\$円]/g, '');
+  if (raw === '') return { value: null };
+  if (!/^\d+$/.test(raw)) return { error: 'req_bad_amount' };
+  const v = parseInt(raw, 10);
+  if (v >= REQ_MAX_AMOUNT) return { error: 'req_too_big' };
+  return { value: v };
+}
+
+function setReqToggle(on) {
+  document.getElementById('f-req-toggle').classList.toggle('on', !!on);
+}
+
+function fillRequestFields(order) {
+  const r = (order && order.request) || {};
+  reqManual = !!r.manual;
+  setReqToggle(r.isRequest);
+  document.getElementById('f-req-client').value      = r.client || '';
+  document.getElementById('f-req-amount').value      = r.amount ?? '';
+  document.getElementById('f-req-gensen').classList.toggle('on', !!r.gensen);
+  document.getElementById('f-req-requested').value   = r.requestedAt || '';
+  document.getElementById('f-req-delivered').value   = r.deliveredAt || '';
+  document.getElementById('f-req-paid').value        = r.paidAt || '';
+  document.getElementById('f-req-paid-amount').value = r.paidAmount ?? '';
+  document.getElementById('f-req-box').open = !!r.isRequest;
+  renderRequestSend(order);
+}
+
+// 依頼者名か金額が入ったら、手で切り替えていない限り自動でオンにする
+function onRequestInput() {
+  if (reqManual) return;
+  const client = document.getElementById('f-req-client').value.trim();
+  const amount = parseYen(document.getElementById('f-req-amount').value).value;
+  setReqToggle(!!client || amount > 0);
+}
+
+function toggleRequestFlag() {
+  reqManual = true;
+  const btn = document.getElementById('f-req-toggle');
+  setReqToggle(!btn.classList.contains('on'));
+}
+
+// フォームの値を読む。何も入っていなければ value: null（依頼の情報なし）
+function readRequestFields(prevReq) {
+  const isRequest = document.getElementById('f-req-toggle').classList.contains('on');
+  const client    = document.getElementById('f-req-client').value.trim();
+  const amount    = parseYen(document.getElementById('f-req-amount').value);
+  const paidAmt   = parseYen(document.getElementById('f-req-paid-amount').value);
+  if (amount.error)  return { error: amount.error };
+  if (paidAmt.error) return { error: paidAmt.error };
+  const value = {
+    isRequest,
+    manual:      reqManual,
+    client,
+    amount:      amount.value,
+    gensen:      document.getElementById('f-req-gensen').classList.contains('on'),
+    requestedAt: document.getElementById('f-req-requested').value || null,
+    deliveredAt: document.getElementById('f-req-delivered').value || null,
+    paidAt:      document.getElementById('f-req-paid').value || null,
+    paidAmount:  paidAmt.value,
+    sentAt:      (prevReq && prevReq.sentAt)  || null,
+    sentSig:     (prevReq && prevReq.sentSig) || null,
+  };
+  const empty = !isRequest && !client && value.amount === null && !value.gensen &&
+    !value.requestedAt && !value.deliveredAt && !value.paidAt && value.paidAmount === null && !value.sentAt;
+  return { value: empty ? null : value };
+}
+
+// 引継ぎ票（mimily-handoff v1）。依頼者名・案件名・メモは入れない
+function buildHandoff(order) {
+  const r = order.request;
+  return {
+    fmt: 'mimily-handoff', v: 1, src: 'schedulex',
+    id: order.id,
+    kind: order.type,
+    amount: r.amount,
+    currency: 'JPY',
+    withholding: !!r.gensen,
+    requestDate: r.requestedAt || null,
+    salesDate: r.deliveredAt,
+    paidDate: r.paidAt || null,
+    paidAmount: r.paidAmount ?? null,
+  };
+}
+
+function encodeHandoff(obj) {
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  let bin = '';
+  bytes.forEach(b => { bin += String.fromCharCode(b); });
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function renderRequestSend(order) {
+  const box = document.getElementById('f-req-send');
+  if (!box) return;
+  if (!order) { box.innerHTML = `<p class="req-hint">${esc(t('req_save_first'))}</p>`; return; }
+  const r = order.request || {};
+  let status = r.sentAt
+    ? t('req_sent_at').replace('{d}', new Date(r.sentAt).toLocaleString(lang() === 'ja' ? 'ja-JP' : 'en-US'))
+    : t('req_not_sent');
+  if (r.sentAt && r.isRequest && r.amount !== null && r.deliveredAt &&
+      r.sentSig !== JSON.stringify(buildHandoff(order))) {
+    status += '<br>' + esc(t('req_changed_after_send'));
+  }
+  box.innerHTML = `
+    <div class="req-status">${status}</div>
+    ${isPremium() ? '' : `<p class="req-hint">🔒 ${esc(t('req_pro_only'))}</p>`}
+    <button type="button" class="btn-primary" onclick="sendToRakuThrough()">${esc(t('req_btn_send'))}</button>
+    <button type="button" class="btn-secondary" onclick="copyHandoffCode()">${esc(t('req_btn_copy'))}</button>
+    <textarea id="f-req-code" readonly hidden style="font-size:10px;min-height:60px;"></textarea>`;
+}
+
+// 送る前に、いま画面に入っている内容を保存してから引継ぎ票を作る
+function commitRequestForTransfer() {
+  if (!isPremium()) { openUpgradeModal(); return null; }
+  const idx = orders.findIndex(o => o.id === editingId);
+  if (idx < 0) return null;
+  const req = readRequestFields(orders[idx].request);
+  if (req.error) { alert(t(req.error)); return null; }
+  if (!req.value || req.value.amount === null) { alert(t('req_need_amount')); return null; }
+  if (req.value.amount === 0) { alert(t('req_zero_amount')); return null; }
+  if (!req.value.deliveredAt) { alert(t('req_need_delivered')); return null; }
+  req.value.isRequest = true;
+  setReqToggle(true);
+  orders[idx] = { ...orders[idx], request: req.value };
+  return orders[idx];
+}
+
+function markSent(order) {
+  order.request.sentAt  = new Date().toISOString();
+  order.request.sentSig = JSON.stringify(buildHandoff(order));
+  save();
+  render();
+  renderRequestSend(order);
+}
+
+function sendToRakuThrough() {
+  const order = commitRequestForTransfer();
+  if (!order) return;
+  const r = order.request;
+  let msg = t('req_confirm_send');
+  if (!r.paidAt) msg += '\n\n' + t('req_paid_empty');
+  else if (r.paidAt < r.deliveredAt) msg += '\n\n' + t('req_paid_before');
+  if (!confirm(msg)) { save(); render(); return; }
+  window.open(RT_APP_URL + '#import=' + encodeHandoff(buildHandoff(order)), '_blank', 'noopener');
+  markSent(order);
+}
+
+function copyHandoffCode() {
+  const order = commitRequestForTransfer();
+  if (!order) return;
+  const code = 'SCHEDULEX1.' + encodeHandoff(buildHandoff(order));
+  const showCode = () => {
+    const ta = document.getElementById('f-req-code');
+    if (ta) { ta.hidden = false; ta.value = code; ta.select(); }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code)
+      .then(() => { showToast(t('req_copied')); markSent(order); })
+      .catch(() => { alert(t('req_copy_fail')); markSent(order); showCode(); });
+  } else {
+    alert(t('req_copy_fail')); markSent(order); showCode();
+  }
+}
+
+/* 依頼のまとめ・CSV（依頼の印が付いた案件だけ） */
+function requestOrders() {
+  return orders.filter(o => o.request && o.request.isRequest);
+}
+
+function daysBetween(a, b) {
+  const d1 = parseDate(a), d2 = parseDate(b);
+  if (!d1 || !d2) return null;
+  const n = Math.round((d2 - d1) / 86400000);
+  return n >= 0 ? n : null;
+}
+
+function renderRequestSummary() {
+  const el = document.getElementById('req-summary-text');
+  if (!el) return;
+  const y    = new Date().getFullYear();
+  const list = requestOrders().filter(o => (o.request.deliveredAt || o.deadline || '').slice(0, 4) === String(y));
+  if (list.length === 0) { el.textContent = t('req_no_requests'); return; }
+  const sum  = list.reduce((s, o) => s + (o.request.amount || 0), 0);
+  const ds   = list.map(o => daysBetween(o.request.requestedAt, o.request.deliveredAt)).filter(n => n !== null);
+  const avg  = ds.length ? Math.round(ds.reduce((a, b) => a + b, 0) / ds.length) + t('req_days') : t('req_avg_none');
+  el.textContent = t('req_summary_line')
+    .replace('{y}', y).replace('{n}', list.length)
+    .replace('{sum}', sum.toLocaleString()).replace('{avg}', avg);
+}
+
+function csvCell(v) {
+  if (v === null || v === undefined) return '';
+  let s = String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; // Excelで式として動かないように
+  return /[",\r\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+function exportRequestsCSV() {
+  if (!isPremium()) { openUpgradeModal(); return; }
+  const list = requestOrders();
+  if (list.length === 0) { alert(t('req_no_requests')); return; }
+  const head = ['形式','案件ID','種類','案件名','依頼者名','金額','源泉','依頼日','納品日','入金日','入金額','制作日数'];
+  const rows = list
+    .slice()
+    .sort((a, b) => (a.request.deliveredAt || a.deadline || '').localeCompare(b.request.deliveredAt || b.deadline || ''))
+    .map(o => {
+      const r = o.request;
+      return ['mimily-handoff/1', o.id, o.type, o.name, r.client, r.amount, r.gensen ? 'あり' : 'なし',
+        r.requestedAt, r.deliveredAt, r.paidAt, r.paidAmount, daysBetween(r.requestedAt, r.deliveredAt)];
+    });
+  const csv  = '﻿' + [head, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const name = `schedulex_requests_${dateKey(new Date()).replace(/-/g,'')}.csv`;
+  const file = typeof File === 'function' ? new File([blob], name, { type: 'text/csv' }) : null;
+  // スマホのPWAでは共有メニュー（ファイルに保存など）を使う。使えなければ通常のダウンロード
+  if (file && navigator.canShare && navigator.canShare({ files: [file] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    navigator.share({ files: [file], title: name }).catch(() => {});
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  const a   = document.createElement('a');
+  a.href = url; a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function deleteOrder(id) {
@@ -2469,6 +2820,7 @@ function openSettings() {
   showModal('settings-modal');
   initStampToggle();
   applyI18n();
+  renderRequestSummary();
 }
 
 function selectTheme(id) {

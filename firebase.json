@@ -10,6 +10,7 @@
       ".gitignore",
       "functions/**",
       "backup/**",
+      "backups/**",
       "dev/**",
       "dev_20260529/**",
       "docs/**",
