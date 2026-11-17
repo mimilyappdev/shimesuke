@@ -322,7 +322,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
     <span class="lang-btn active">JP</span>
     <a href="./index_en.html" class="lang-btn">EN</a>
   </div>
-  <a href="https://mimilyapp.web.app/pro" class="btn-nav">無料版を使う →</a>
+  <a data-cta-placement="nav" href="https://mimilyapp.web.app/pro" class="btn-nav">無料版を使う →</a>
 </header>
 
 <!-- HERO -->
@@ -337,7 +337,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
       ラフ・修正・納品を締め切りから逆算し、全案件をカレンダーで一目管理。
     </p>
     <div class="cta-group">
-      <a href="https://mimilyapp.web.app/pro" class="btn-primary">無料版を使う →</a>
+      <a data-cta-placement="hero" href="https://mimilyapp.web.app/pro" class="btn-primary">無料版を使う →</a>
       <a data-cta-placement="hero" href="https://mimily7.booth.pm/items/8439241" target="_blank" class="btn-secondary">📦 ローカル版（買い切り）</a>
     </div>
     <p style="font-size:11px;color:var(--muted);margin-top:10px;">✅ 無料版は案件5件まで · 登録不要 · マルチデバイスはサブスク版で</p>
@@ -723,7 +723,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
           <li class="pi"><span class="na">—</span><span style="opacity:0.5;">カスタムスタンプ（ローカル版のみ）</span></li>
           <li class="pi" style="background:rgba(138,144,204,0.15);border-radius:8px;padding:6px 8px;"><span class="ck">✓</span><span><strong>📱💻🖥 PC・スマホ・タブレット同期</strong><small>どの端末からでも同じデータ</small></span></li>
         </ul>
-        <a href="https://mimilyapp.web.app/pro" class="btn-primary" style="text-align:center;text-decoration:none;display:block;margin-top:16px;">サブスクを始める →</a>
+        <a data-cta-placement="pricing" href="https://mimilyapp.web.app/pro" class="btn-primary" style="text-align:center;text-decoration:none;display:block;margin-top:16px;">サブスクを始める →</a>
       </div>
 
     </div>
@@ -735,7 +735,7 @@ footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex;
   <p class="eyebrow">Get started</p>
   <h2 class="fcta-title">今日から、締め切りに<br>追われない制作を。</h2>
   <p class="fcta-sub">登録不要。ブラウザですぐ使えます。</p>
-  <a href="https://mimilyapp.web.app/pro" class="btn-primary">無料で使い始める →</a>
+  <a data-cta-placement="bottom" href="https://mimilyapp.web.app/pro" class="btn-primary">無料で使い始める →</a>
 </section>
 
 <!-- FOOTER -->
@@ -918,15 +918,16 @@ init();
 })();
 </script>
 <script>
-/* BOOTHへのリンクのクリックを計測する */
+/* BOOTH・PRO（サブスク）へのリンクのクリックを計測する */
 document.addEventListener("click",e=>{
-  const link=e.target.closest&&e.target.closest('a[href*="booth.pm"]');
+  const link=e.target.closest&&e.target.closest('a[href*="booth.pm"],a[href*="mimilyapp.web.app/pro"]');
   if(link&&typeof gtag==="function"){
+    const isBooth=link.href.includes("booth.pm");
     gtag("event","cta_click",{
       site_id:"schedulex_lp",
-      cta_name:"schedulex_local_booth",
+      cta_name:isBooth?"schedulex_local_booth":"schedulex_pro",
       cta_placement:link.dataset.ctaPlacement||"other",
-      link_destination:"booth"
+      link_destination:isBooth?"booth":"pro"
     });
   }
 });
