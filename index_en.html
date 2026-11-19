@@ -6,8 +6,12 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    /* EU・EEA・英国・スイスは同意なしでCookieを使わない */
+    gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'] });
     gtag('js', new Date());
     gtag('config', 'G-7Y1QD7RYSJ', { site_id: 'schedulex_lp_en' });
+    /* 海外向けプロパティ mimily_global（2026-11-20から1か月は旧IDと両方に送る） */
+    gtag('config', 'G-H3WKN1885X', { site_id: 'schedulex_lp_en' });
   </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
